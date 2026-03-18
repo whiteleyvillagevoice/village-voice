@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Village Voice</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#fff;}
+
+.page{display:none;}
+.page.on{display:block;}
+
+/* LOGIN */
+#login{padding:32px 20px;}
+.logo{width:48px;height:48px;border-radius:50%;background:#0F6E56;display:flex;align-items:center;justify-content:center;margin-bottom:20px;}
+h1{font-size:24px;font-weight:700;color:#1a1a1a;margin-bottom:6px;}
+.sub{font-size:14px;color:#666;margin-bottom:28px;line-height:1.5;}
+.label{font-size:13px;font-weight:600;color:#666;margin-bottom:12px;}
+.namebtn{display:flex;align-items:center;gap:12px;padding:16px;border:1px solid #e0e0d8;border-radius:12px;background:#fff;width:100%;text-align:left;margin-bottom:8px;cursor:pointer;font-family:inherit;font-size:15px;}
+.namebtn:active{background:#f0faf5;border-color:#9FE1CB;}
+.av{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0;}
+.av-amber{background:#FAEEDA;color:#854F0B;}
+.av-purple{background:#EEEDFE;color:#534AB7;}
+.av-blue{background:#E6F1FB;color:#185FA5;}
+.av-coral{background:#FAECE7;color:#993C1D;}
+.av-teal{background:#E1F5EE;color:#0F6E56;}
+.nametxt{font-weight:600;color:#1a1a1a;display:block;}
+.cotagetxt{font-size:12px;color:#888;display:block;}
+.panelbadge{margin-left:auto;font-size:11px;background:#E1F5EE;color:#0F6E56;padding:4px 10px;border-radius:20px;font-weight:600;}
+.panel-row{border-color:#9FE1CB;}
+
+/* HOME */
+#home{padding:0;}
+.topbar{padding:14px 18px;background:#fff;border-bottom:1px solid #f0f0ea;display:flex;align-items:center;justify-content:space-between;}
+.appname{font-size:17px;font-weight:700;color:#1a1a1a;}
+.datestr{font-size:12px;color:#888;}
+.signout{font-size:12px;color:#aaa;background:none;border:none;cursor:pointer;font-family:inherit;padding:6px 10px;}
+.greeting{padding:20px 18px 0;font-size:22px;font-weight:700;color:#1a1a1a;line-height:1.3;}
+.seclabel{font-size:13px;font-weight:700;color:#888;padding:18px 18px 10px;}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 18px 20px;}
+.tile{padding:16px;border:1px solid #e0e0d8;border-radius:14px;cursor:pointer;background:#fff;}
+.tile:active{background:#f8f8f4;}
+.tile.green{background:#f0faf5;border-color:#9FE1CB;}
+.tileicon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:8px;}
+.tilename{font-size:14px;font-weight:600;color:#1a1a1a;}
+.tilehint{font-size:11px;color:#888;margin-top:3px;}
+
+/* NAV */
+.nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #f0f0ea;display:flex;z-index:99;}
+.navbtn{flex:1;padding:10px 4px 8px;background:none;border:none;cursor:pointer;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:3px;}
+.navlbl{font-size:10px;color:#aaa;}
+.navbtn.on .navlbl{color:#0F6E56;font-weight:700;}
+
+/* SECTIONS */
+.section{display:none;padding:14px 18px;padding-bottom:80px;}
+.section.on{display:block;}
+.section h2{font-size:18px;font-weight:700;color:#1a1a1a;margin-bottom:14px;}
+.card{background:#fff;border:1px solid #e0e0d8;border-radius:12px;padding:14px;margin-bottom:10px;}
+.card h3{font-size:14px;font-weight:600;color:#1a1a1a;margin-bottom:5px;}
+.card p{font-size:13px;color:#666;line-height:1.6;}
+.tag{font-size:11px;padding:3px 8px;border-radius:20px;font-weight:600;display:inline-block;margin-bottom:7px;}
+.tag-teal{background:#E1F5EE;color:#0F6E56;}
+.tag-blue{background:#E6F1FB;color:#185FA5;}
+.tag-amber{background:#FAEEDA;color:#854F0B;}
+.tag-purple{background:#EEEDFE;color:#534AB7;}
+.callrow{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:#fff;border:1px solid #e0e0d8;border-radius:12px;margin-bottom:8px;}
+.callname{font-size:14px;font-weight:600;color:#1a1a1a;}
+.callhrs{font-size:11px;color:#aaa;}
+.callbtn{background:#E1F5EE;color:#0F6E56;border:none;border-radius:20px;padding:8px 14px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation;}
+.redbtn{background:#A32D2D;color:#fff;border:none;border-radius:10px;padding:12px;font-size:16px;font-weight:700;cursor:pointer;width:100%;margin-top:10px;font-family:inherit;touch-action:manipulation;}
+.amberbtn{background:#854F0B;color:#fff;border:none;border-radius:10px;padding:12px;font-size:16px;font-weight:700;cursor:pointer;width:100%;margin-top:10px;font-family:inherit;touch-action:manipulation;}
+.redbanner{background:#FCEBEB;border:1px solid #F7C1C1;border-radius:12px;padding:14px;margin-bottom:10px;}
+.redbanner h3{color:#A32D2D;}
+.redbanner p{color:#791F1F;}
+.amberbanner{background:#FAEEDA;border:1px solid #FAC775;border-radius:12px;padding:14px;margin-bottom:10px;}
+.amberbanner h3{color:#854F0B;}
+.amberbanner p{color:#633806;}
+
+/* BOARD */
+.notice{background:#E6F1FB;border-radius:10px;padding:10px 13px;font-size:12px;color:#185FA5;line-height:1.6;margin-bottom:12px;}
+.postcard{background:#fff;border:1px solid #e0e0d8;border-radius:12px;padding:13px;margin-bottom:10px;cursor:pointer;touch-action:manipulation;}
+.postcard:active{background:#f8f8f4;}
+.postmeta{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.postav{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+.postauthor{font-size:13px;font-weight:600;color:#1a1a1a;}
+.posttime{font-size:11px;color:#aaa;}
+.posttitle{font-size:14px;font-weight:600;color:#1a1a1a;margin-bottom:4px;}
+.postbody{font-size:13px;color:#666;line-height:1.5;}
+.postft{display:flex;align-items:center;justify-content:space-between;margin-top:9px;padding-top:9px;border-top:1px solid #f0f0ea;}
+.likesbtn{display:flex;align-items:center;gap:5px;font-size:12px;color:#888;background:none;border:none;cursor:pointer;font-family:inherit;touch-action:manipulation;}
+.cattag{font-size:11px;padding:3px 8px;border-radius:20px;font-weight:600;}
+.cat-h{background:#FAEEDA;color:#854F0B;}
+.cat-m{background:#E6F1FB;color:#185FA5;}
+.cat-e{background:#EEEDFE;color:#534AB7;}
+.fab{position:fixed;bottom:70px;right:20px;width:52px;height:52px;border-radius:50%;background:#0F6E56;border:none;cursor:pointer;color:#fff;font-size:28px;line-height:1;box-shadow:0 2px 8px rgba(15,110,86,0.35);touch-action:manipulation;z-index:90;}
+
+/* MODAL */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:100;align-items:flex-end;justify-content:center;}
+.overlay.on{display:flex;}
+.sheet{background:#fff;border-radius:22px 22px 0 0;width:100%;max-width:480px;padding:24px 18px 36px;max-height:85vh;overflow-y:auto;}
+.sheet h3{font-size:17px;font-weight:700;margin-bottom:4px;color:#1a1a1a;}
+.sheet p{font-size:12px;color:#888;margin-bottom:18px;line-height:1.6;}
+.flabel{font-size:13px;font-weight:600;color:#666;display:block;margin-bottom:6px;}
+.fgroup{margin-bottom:14px;}
+.finput{width:100%;padding:12px;border:1px solid #ddd;border-radius:10px;font-size:14px;font-family:inherit;color:#1a1a1a;}
+.finput:focus{outline:none;border-color:#0F6E56;}
+.catsel{display:flex;gap:7px;flex-wrap:wrap;}
+.catopt{padding:8px 14px;border-radius:20px;border:1px solid #e0e0d8;font-size:13px;cursor:pointer;background:#fff;color:#888;font-family:inherit;touch-action:manipulation;}
+.catopt.sel-h{background:#FAEEDA;color:#854F0B;border-color:#FAC775;}
+.catopt.sel-m{background:#E6F1FB;color:#185FA5;border-color:#B5D4F4;}
+.catopt.sel-e{background:#EEEDFE;color:#534AB7;border-color:#CECBF6;}
+.submitbtn{width:100%;padding:14px;background:#0F6E56;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation;}
+.cancelbtn{width:100%;padding:10px;background:none;border:none;font-size:13px;color:#888;cursor:pointer;margin-top:6px;font-family:inherit;touch-action:manipulation;}
+
+/* CALL CONFIRM */
+.calloverlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:110;align-items:center;justify-content:center;padding:24px;}
+.calloverlay.on{display:flex;}
+.callbox{background:#fff;border-radius:18px;width:100%;max-width:320px;padding:26px 22px 20px;text-align:center;}
+.callbox-icon{width:54px;height:54px;border-radius:50%;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;}
+.callbox h4{font-size:15px;color:#666;margin-bottom:4px;}
+.callbox-name{font-size:17px;font-weight:700;color:#1a1a1a;margin-bottom:4px;}
+.callbox-num{font-size:24px;font-weight:700;margin-bottom:10px;}
+.callbox-note{font-size:12px;color:#888;line-height:1.6;margin-bottom:20px;}
+.callbox-btns{display:flex;gap:10px;}
+.callbox-cancel{flex:1;padding:13px;border:1px solid #e0e0d8;border-radius:10px;background:#f8f8f4;color:#666;font-size:15px;cursor:pointer;font-family:inherit;touch-action:manipulation;}
+.callbox-go{flex:2;padding:13px;border:none;border-radius:10px;color:#fff;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation;}
+
+/* EVENTS */
+.evcard{background:#fff;border:1px solid #e0e0d8;border-radius:12px;padding:14px;margin-bottom:10px;}
+.evcard.bh{background:#fafaf7;}
+.evinner{display:flex;gap:12px;}
+.evdate{width:44px;text-align:center;background:#f8f8f4;border-radius:10px;padding:8px 4px;flex-shrink:0;}
+.evdate.bh{background:#f0f0e8;}
+.evday{font-size:20px;font-weight:700;color:#1a1a1a;line-height:1;}
+.evmon{font-size:10px;color:#888;text-transform:uppercase;margin-top:2px;}
+.evinfo{flex:1;}
+.evtitle{font-size:14px;font-weight:600;color:#1a1a1a;margin-bottom:3px;}
+.evmeta{font-size:12px;color:#666;}
+.evcat{font-size:11px;padding:3px 8px;border-radius:20px;font-weight:600;display:inline-block;margin-top:6px;}
+.calbtn{display:flex;gap:7px;margin-top:10px;}
+.calbtn a{flex:1;display:flex;align-items:center;justify-content:center;gap:4px;padding:7px;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;border:1px solid;text-decoration:none;font-family:inherit;touch-action:manipulation;}
+.cal-g{background:#E6F1FB;color:#185FA5;border-color:#B5D4F4;}
+.cal-a{background:#f8f8f4;color:#444;border-color:#ddd;}
+.cal-i{background:#EEEDFE;color:#534AB7;border-color:#CECBF6;}
+
+/* NEWS */
+.newscard{background:#fff;border:1px solid #e0e0d8;border-radius:12px;padding:15px;margin-bottom:10px;}
+.newsdate{font-size:11px;color:#aaa;margin-top:8px;}
+
+/* SERVICES */
+.svccard{background:#fff;border:1px solid #e0e0d8;border-radius:12px;padding:13px;margin-bottom:8px;}
+.svctop{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:3px;}
+.svcname{font-size:14px;font-weight:600;color:#1a1a1a;}
+.svcbadge{font-size:11px;padding:3px 8px;border-radius:20px;font-weight:600;margin-left:6px;}
+.open{background:#E1F5EE;color:#0F6E56;}
+.check{background:#E6F1FB;color:#185FA5;}
+.svcaddr{font-size:12px;color:#888;}
+.svcphone{font-size:13px;font-weight:600;color:#185FA5;margin-top:4px;cursor:pointer;touch-action:manipulation;}
+.svcdist{font-size:11px;color:#aaa;margin-top:2px;}
+.svcgroup{margin-bottom:16px;}
+.svclabel{font-size:13px;font-weight:700;color:#888;margin-bottom:8px;}
+
+/* MUSIC */
+.musicbar{display:none;position:fixed;left:0;right:0;bottom:56px;background:#fff;border-top:1px solid #f0f0ea;padding:9px 14px;align-items:center;gap:10px;z-index:89;}
+.musicbar.on{display:flex;}
+.musicplay{width:36px;height:36px;border-radius:50%;background:#E1F5EE;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;touch-action:manipulation;}
+.musicinfo{flex:1;}
+.musictitle{font-size:12px;font-weight:600;color:#1a1a1a;}
+.musicartist{font-size:11px;color:#888;}
+.musicvol{width:60px;accent-color:#0F6E56;}
+.musicclose{background:none;border:none;font-size:18px;color:#aaa;cursor:pointer;touch-action:manipulation;}
+</style>
+</head>
+<body>
+
+<!-- LOGIN PAGE -->
+<div id="login" class="page on">
+  <div class="logo">
+    <svg width="26" height="26" viewBox="0 0 20 20" fill="none">
+      <path d="M10 2C6 2 3 5 3 9c0 2.5 1.2 4.7 3 6.1V17l2-1.2 2 1.2v-1.9c1.8-1.4 3-3.6 3-6.1 0-4-3-7-5-7z" fill="white" opacity="0.9"/>
+      <circle cx="10" cy="9" r="2.5" fill="#0F6E56"/>
+    </svg>
+  </div>
+  <h1>Village Voice</h1>
+  <p class="sub">Your companion for village life -- news, services, community and your voice, all in one place.</p>
+  <p class="label">Select your name to continue</p>
+
+  <button class="namebtn" onclick="doLogin('margaret','Margaret H','Cottage 14, Octagon Road','MH','av-amber',false)">
+    <div class="av av-amber">MH</div>
+    <div><span class="nametxt">Margaret H</span><span class="cotagetxt">Cottage 14, Octagon Road</span></div>
+  </button>
+  <button class="namebtn" onclick="doLogin('dorothy','Dorothy S','Cottage 7, Heath Drive','DS','av-purple',false)">
+    <div class="av av-purple">DS</div>
+    <div><span class="nametxt">Dorothy S</span><span class="cotagetxt">Cottage 7, Heath Drive</span></div>
+  </button>
+  <button class="namebtn" onclick="doLogin('harold','Harold C','Cottage 22, Walton Lane','HC','av-blue',false)">
+    <div class="av av-blue">HC</div>
+    <div><span class="nametxt">Harold C</span><span class="cotagetxt">Cottage 22, Walton Lane</span></div>
+  </button>
+  <button class="namebtn" onclick="doLogin('eileen','Eileen P','Cottage 3, Village Walk','EP','av-coral',false)">
+    <div class="av av-coral">EP</div>
+    <div><span class="nametxt">Eileen P</span><span class="cotagetxt">Cottage 3, Village Walk</span></div>
+  </button>
+  <button class="namebtn" onclick="doLogin('george','George B','Cottage 18, South Path','GB','av-teal',false)">
+    <div class="av av-teal">GB</div>
+    <div><span class="nametxt">George B</span><span class="cotagetxt">Cottage 18, South Path</span></div>
+  </button>
+  <button class="namebtn" onclick="doLogin('sylvia','Sylvia M','Cottage 11, Octagon Road','SM','av-purple',false)">
+    <div class="av av-purple">SM</div>
+    <div><span class="nametxt">Sylvia M</span><span class="cotagetxt">Cottage 11, Octagon Road</span></div>
+  </button>
+  <button class="namebtn panel-row" onclick="doLogin('panel1','Panel Member','Village Voice Panel','VP','av-teal',true)">
+    <div class="av av-teal">VP</div>
+    <div><span class="nametxt">Panel Member</span><span class="cotagetxt">Village Voice Panel</span></div>
+    <span class="panelbadge">Panel</span>
+  </button>
+</div>
+
+<!-- HOME PAGE -->
+<div id="home" class="page">
+  <div class="topbar">
+    <div>
+      <div class="appname">Village Voice</div>
+      <div class="datestr" id="datestr"></div>
+    </div>
+    <button class="signout" onclick="doSignOut()">Sign out</button>
+  </div>
+  <div class="greeting" id="greeting"></div>
+  <div class="seclabel">What do you need today?</div>
+  <div class="tiles">
+    <div class="tile green" onclick="showSection('board')">
+      <div class="tileicon" style="background:#E1F5EE;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="#0F6E56" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </div>
+      <div class="tilename">Message Board</div>
+      <div class="tilehint" id="boardcount"></div>
+    </div>
+    <div class="tile" onclick="showSection('emergency')">
+      <div class="tileicon" style="background:#FCEBEB;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M22 16.92v3a2 2 0 01-2.18 2A19.79 19.79 0 012.11 5.18 2 2 0 014.11 3h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 10.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 17.92z" stroke="#A32D2D" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </div>
+      <div class="tilename">Emergency</div>
+      <div class="tilehint">Contacts</div>
+    </div>
+    <div class="tile" onclick="showSection('services')">
+      <div class="tileicon" style="background:#E6F1FB;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" stroke="#185FA5" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </div>
+      <div class="tilename">Local Services</div>
+      <div class="tilehint">GP, pharmacy</div>
+    </div>
+    <div class="tile" onclick="showSection('events')">
+      <div class="tileicon" style="background:#EEEDFE;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="18" rx="2" stroke="#534AB7" stroke-width="1.5"/><line x1="16" y1="2" x2="16" y2="6" stroke="#534AB7" stroke-width="1.5" stroke-linecap="round"/><line x1="8" y1="2" x2="8" y2="6" stroke="#534AB7" stroke-width="1.5" stroke-linecap="round"/><line x1="3" y1="10" x2="21" y2="10" stroke="#534AB7" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </div>
+      <div class="tilename">Events</div>
+      <div class="tilehint">What's on</div>
+    </div>
+  </div>
+  <div class="seclabel">Latest from the Trust</div>
+  <div style="padding:0 18px 20px;">
+    <div class="card" onclick="showSection('news')">
+      <span class="tag tag-amber">Trust update</span>
+      <h3>Insulation programme -- phase 2 begins 24 March</h3>
+      <p>Loft insulation works will start in Octagon Road properties. Tap to read all news.</p>
+    </div>
+  </div>
+  <button class="namebtn" style="margin:0 18px 16px;width:calc(100% - 36px);" onclick="startMusic()">
+    <div class="av av-teal">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 18V5l12-2v13" stroke="#0F6E56" stroke-width="1.5" stroke-linecap="round"/><circle cx="6" cy="18" r="3" stroke="#0F6E56" stroke-width="1.5"/><circle cx="18" cy="16" r="3" stroke="#0F6E56" stroke-width="1.5"/></svg>
+    </div>
+    <div><span class="nametxt" id="musiclabel">Play calming music</span><span class="cotagetxt">Optional background piano</span></div>
+  </button>
+</div>
+
+<!-- SECTIONS (shown inside home page, hidden by nav) -->
+<div id="sec-board" class="section">
+  <h2>Message Board</h2>
+  <div class="notice">Your submissions are read by the Village Voice Panel. For urgent matters use Emergency Contacts.</div>
+  <div id="boardfeed"></div>
+</div>
+
+<div id="sec-emergency" class="section">
+  <h2>Emergency &amp; Contacts</h2>
+  <div class="redbanner">
+    <h3>Emergency services</h3>
+    <p>For life-threatening emergencies, fire, or crime in progress</p>
+    <button class="redbtn" onclick="dial('Emergency services','999','999','#A32D2D','Call 999 for emergencies only.')">Call 999</button>
+  </div>
+  <div class="amberbanner">
+    <h3>Non-emergency police</h3>
+    <p>For non-urgent matters, antisocial behaviour, or to report a crime</p>
+    <button class="amberbtn" onclick="dial('Non-emergency police','101','101','#854F0B','Use 101 for non-urgent police matters.')">Call 101</button>
+  </div>
+  <div class="svclabel" style="margin-top:14px;">Village Voice Trust</div>
+  <div class="callrow"><div><div class="callname">Main office</div><div class="callhrs">Mon-Fri 9am-5pm</div></div><button class="callbtn" onclick="dial('Trust Main office','01932 861 000','01932861000','#0F6E56','')">01932 861 000</button></div>
+  <div class="callrow"><div><div class="callname">Out of hours</div><div class="callhrs">Evenings &amp; weekends</div></div><button class="callbtn" onclick="dial('Trust Out of hours','01932 861 001','01932861001','#0F6E56','For urgent matters outside office hours.')">01932 861 001</button></div>
+  <div class="svclabel" style="margin-top:14px;">NHS &amp; Health</div>
+  <div class="callrow"><div><div class="callname">NHS non-emergency</div><div class="callhrs">24 hours, 7 days</div></div><button class="callbtn" onclick="dial('NHS 111','111','111','#185FA5','For urgent medical concerns that are not life-threatening.')">111</button></div>
+  <div class="callrow"><div><div class="callname">The Manor Practice</div><div class="callhrs">Your local GP</div></div><button class="callbtn" onclick="dial('The Manor Practice','01932 220 900','01932220900','#0F6E56','')">01932 220 900</button></div>
+</div>
+
+<div id="sec-services" class="section">
+  <h2>Local Services</h2>
+  <div class="svcgroup">
+    <div class="svclabel">GP surgeries</div>
+    <div class="svccard"><div class="svctop"><div class="svcname">The Manor Practice</div><span class="svcbadge open">Accepting patients</span></div><div class="svcaddr">Manor Road South, Esher, KT10 0AD</div><div class="svcphone" onclick="dial('The Manor Practice','01932 220 900','01932220900','#0F6E56','')">01932 220 900 -- tap to call</div><div class="svcdist">1.2 miles - Mon-Fri 8am-6:30pm</div></div>
+    <div class="svccard"><div class="svctop"><div class="svcname">Walton Health Centre</div><span class="svcbadge check">Check availability</span></div><div class="svcaddr">Hersham Road, Walton-on-Thames, KT12 1LE</div><div class="svcphone" onclick="dial('Walton Health Centre','01932 253 400','01932253400','#185FA5','')">01932 253 400 -- tap to call</div><div class="svcdist">1.8 miles - Mon-Fri 8am-6pm</div></div>
+  </div>
+  <div class="svcgroup">
+    <div class="svclabel">Dentist</div>
+    <div class="svccard"><div class="svctop"><div class="svcname">Hersham Dental Practice</div><span class="svcbadge check">NHS &amp; private</span></div><div class="svcaddr">5 The Green, Hersham, KT12 4HW</div><div class="svcphone" onclick="dial('Hersham Dental Practice','01932 248 348','01932248348','#0F6E56','NHS adult places limited.')">01932 248 348 -- tap to call</div><div class="svcdist">0.6 miles</div></div>
+    <div class="svccard"><div class="svctop"><div class="svcname">Windsor House Dental</div><span class="svcbadge check">NHS &amp; private</span></div><div class="svcaddr">20 Queens Road, Hersham, KT12 5LR</div><div class="svcphone" onclick="dial('Windsor House Dental','01932 229 977','01932229977','#185FA5','')">01932 229 977 -- tap to call</div><div class="svcdist">0.9 miles</div></div>
+  </div>
+  <div class="svcgroup">
+    <div class="svclabel">Pharmacy</div>
+    <div class="svccard"><div class="svctop"><div class="svcname">Boots Pharmacy, Walton</div><span class="svcbadge open">Open today</span></div><div class="svcaddr">3-5 High Street, Walton-on-Thames, KT12 1DE</div><div class="svcphone" onclick="dial('Boots Pharmacy','01932 222 476','01932222476','#0F6E56','')">01932 222 476 -- tap to call</div><div class="svcdist">1.6 miles - Mon-Sat 9am-5:30pm</div></div>
+    <div class="svccard"><div class="svctop"><div class="svcname">Lloyds Pharmacy, Hersham</div><span class="svcbadge open">Open today</span></div><div class="svcaddr">Hersham Village, KT12 4LF</div><div class="svcphone" onclick="dial('Lloyds Pharmacy','01932 229 331','01932229331','#0F6E56','')">01932 229 331 -- tap to call</div><div class="svcdist">0.7 miles - Mon-Fri 9am-6pm</div></div>
+  </div>
+  <div class="svcgroup">
+    <div class="svclabel">Hospital</div>
+    <div class="svccard"><div class="svctop"><div class="svcname">St Peter's Hospital</div><span class="svcbadge open">A&amp;E open 24hrs</span></div><div class="svcaddr">Guildford Road, Chertsey, KT16 0PZ</div><div class="svcphone" onclick="dial('St Peters Hospital','01932 872 000','01932872000','#185FA5','')">01932 872 000 -- tap to call</div><div class="svcdist">5.4 miles</div></div>
+  </div>
+  <div class="svcgroup">
+    <div class="svclabel">Transport</div>
+    <div class="svccard"><div class="svctop"><div class="svcname">Hersham Rail Station</div><span class="svcbadge open">London Waterloo</span></div><div class="svcaddr">Station Road, Hersham, KT12 4BB</div><div class="svcphone" onclick="dial('National Rail','03457 484950','03457484950','#185FA5','')">03457 484950 -- tap to call</div><div class="svcdist">0.9 miles</div></div>
+    <div class="svccard"><div class="svctop"><div class="svcname">Surrey Community Transport</div><span class="svcbadge check">Booking required</span></div><div class="svcaddr">Door-to-door for those with mobility needs</div><div class="svcphone" onclick="dial('Surrey Community Transport','0300 200 1003','03002001003','#0F6E56','Booking required in advance.')">0300 200 1003 -- tap to call</div><div class="svcdist">Covers this area</div></div>
+  </div>
+</div>
+
+<div id="sec-news" class="section">
+  <h2>Village News</h2>
+  <div class="newscard"><span class="tag tag-teal">Trust update</span><h3 style="font-size:15px;font-weight:600;color:#1a1a1a;margin-bottom:5px;">Insulation programme -- phase 2 begins 24 March</h3><p style="font-size:13px;color:#666;line-height:1.6;">Loft insulation works will begin in Octagon Road properties from 24 March. Individual appointment letters have been posted to all affected residents. Contractors will carry Trust identification.</p><div class="newsdate">Today, 9:00am</div></div>
+  <div class="newscard"><span class="tag tag-purple">Panel report</span><h3 style="font-size:15px;font-weight:600;color:#1a1a1a;margin-bottom:5px;">Village Voice Panel -- February summary</h3><p style="font-size:13px;color:#666;line-height:1.6;">The Panel met on 12 February and discussed 14 resident submissions. Key themes included heating concerns and requests for improved social activities. A summary has been submitted to the Trust Board.</p><div class="newsdate">28 February</div></div>
+  <div class="newscard"><span class="tag tag-blue">Trust update</span><h3 style="font-size:15px;font-weight:600;color:#1a1a1a;margin-bottom:5px;">Spring grounds maintenance schedule</h3><p style="font-size:13px;color:#666;line-height:1.6;">Hedge cutting and path repairs throughout March and April. Some footpaths may be temporarily closed.</p><div class="newsdate">10 March</div></div>
+  <div class="newscard"><span class="tag tag-amber">Notice</span><h3 style="font-size:15px;font-weight:600;color:#1a1a1a;margin-bottom:5px;">Village Voice app -- trial underway</h3><p style="font-size:13px;color:#666;line-height:1.6;">The Village Voice Panel has launched this app on a trial basis. Your feedback is very welcome via the Message Board.</p><div class="newsdate">1 March</div></div>
+</div>
+
+<div id="sec-events" class="section">
+  <h2>Events &amp; Social</h2>
+  <p style="font-size:13px;color:#888;margin-bottom:12px;">Listed in date order -- tap a button to add to your calendar</p>
+  <div id="evlist"></div>
+</div>
+
+<!-- NAV BAR -->
+<div class="nav" id="navbar" style="display:none;">
+  <button class="navbtn on" id="nav-home" onclick="goHome()">
+    <svg class="nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" stroke="currentColor" stroke-width="1.5"/><polyline points="9 22 9 12 15 12 15 22" stroke="currentColor" stroke-width="1.5"/></svg>
+    <span class="navlbl">Home</span>
+  </button>
+  <button class="navbtn" id="nav-news" onclick="showSection('news')">
+    <svg class="nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 22h16a2 2 0 002-2V4a2 2 0 00-2-2H8a2 2 0 00-2 2v16" stroke="currentColor" stroke-width="1.5"/><path d="M2 20a2 2 0 004 0V4" stroke="currentColor" stroke-width="1.5"/><line x1="10" y1="8" x2="18" y2="8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="10" y1="12" x2="18" y2="12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    <span class="navlbl">News</span>
+  </button>
+  <button class="navbtn" id="nav-events" onclick="showSection('events')">
+    <svg class="nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.5"/><line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    <span class="navlbl">Events</span>
+  </button>
+  <button class="navbtn" id="nav-board" onclick="showSection('board')">
+    <svg class="nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    <span class="navlbl">Board</span>
+  </button>
+  <button class="navbtn" id="nav-emergency" onclick="showSection('emergency')">
+    <svg class="nav-icon" width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M22 16.92v3a2 2 0 01-2.18 2A19.79 19.79 0 012.11 5.18 2 2 0 014.11 3h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 10.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 17.92z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    <span class="navlbl">Contacts</span>
+  </button>
+</div>
+
+<!-- MUSIC BAR -->
+<div class="musicbar" id="musicbar">
+  <button class="musicplay" id="musicplaybtn" onclick="togglePlay()">
+    <svg id="musicicon" width="14" height="14" viewBox="0 0 24 24" fill="none"><polygon points="5,3 19,12 5,21" fill="#0F6E56"/></svg>
+  </button>
+  <div class="musicinfo">
+    <div class="musictitle" id="musictitle">Gentle piano</div>
+    <div class="musicartist">Calming background music</div>
+  </div>
+  <input type="range" class="musicvol" id="musicvol" min="0" max="1" step="0.05" value="0.4" oninput="setVol(this.value)">
+  <button class="musicclose" onclick="hideMusic()">&times;</button>
+</div>
+
+<!-- FAB (board) -->
+<button class="fab" id="fab" style="display:none;" onclick="openPost()">+</button>
+
+<!-- POST MODAL -->
+<div class="overlay" id="postmodal" onclick="if(event.target===this)closePost()">
+  <div class="sheet">
+    <h3>Share your view</h3>
+    <p>Submissions are read by the Village Voice Panel. They do not go directly to the Trust.</p>
+    <div class="fgroup">
+      <label class="flabel">Topic</label>
+      <div class="catsel">
+        <button class="catopt" onclick="pickCat('h',this)">Heating</button>
+        <button class="catopt" onclick="pickCat('m',this)">Maintenance</button>
+        <button class="catopt" onclick="pickCat('e',this)">Events &amp; social</button>
+      </div>
+    </div>
+    <div class="fgroup"><label class="flabel">Subject</label><input class="finput" id="ptitle" maxlength="80" placeholder="Brief description"></div>
+    <div class="fgroup"><label class="flabel">Your comment</label><textarea class="finput" id="pbody" rows="4" maxlength="500" placeholder="Share as much detail as you are comfortable with..."></textarea></div>
+    <button class="submitbtn" onclick="submitPost()">Submit to the panel</button>
+    <button class="cancelbtn" onclick="closePost()">Cancel</button>
+  </div>
+</div>
+
+<!-- CALL CONFIRM MODAL -->
+<div class="calloverlay" id="callmodal" onclick="if(event.target===this)closeCall()">
+  <div class="callbox">
+    <div class="callbox-icon" id="callicon"></div>
+    <h4>Call this number?</h4>
+    <div class="callbox-name" id="callname"></div>
+    <div class="callbox-num" id="callnum"></div>
+    <div class="callbox-note" id="callnote"></div>
+    <div class="callbox-btns">
+      <button class="callbox-cancel" onclick="closeCall()">Cancel</button>
+      <button class="callbox-go" id="callgo" onclick="doCall()">Confirm call</button>
+    </div>
+  </div>
+</div>
+
+<script>
+var currentUser = null;
+var isPanel = false;
+var posts = [
+  {id:1,name:'Margaret H',ini:'MH',av:'av-amber',cat:'h',title:'Bedroom very cold since thermostat changed',body:'Since the new thermostatic valves were fitted last month my bedroom has been noticeably colder. I have the dial turned up but it does not seem to make a difference.',time:'Today, 9:14am',likes:7,replies:1},
+  {id:2,name:'Harold C',ini:'HC',av:'av-blue',cat:'m',title:'Pedestrian gate on Walton Lane very stiff',body:'The gate is extremely difficult to open, especially for those of us using walking aids. I feel it is a safety issue worth recording formally.',time:'Yesterday',likes:5,replies:0},
+  {id:3,name:'Eileen P',ini:'EP',av:'av-coral',cat:'e',title:'Would love a regular coffee morning',body:'Several of us have mentioned that a regular informal coffee morning would be very welcome. Perhaps once a fortnight in the pavilion.',time:'2 days ago',likes:11,replies:1},
+  {id:4,name:'Harold C',ini:'HC',av:'av-blue',cat:'h',title:'Draughts around listed windows',body:'My cottage has the original sash windows which are beautiful but let in a great deal of cold air in winter. Are there approved draught-proofing options?',time:'3 days ago',likes:9,replies:0},
+  {id:5,name:'George B',ini:'GB',av:'av-teal',cat:'e',title:'Suggestion: guided heritage walk for new residents',body:'A guided walk for newer residents led by a long-standing resident would be a lovely way to build community.',time:'4 days ago',likes:6,replies:0}
+];
+var liked = {};
+var selCat = '';
+var pendingNum = '';
+
+var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+var EVENTS = [
+  {date:'2026-01-01',title:"New Year's Day",bh:true},
+  {date:'2026-03-18',title:'Afternoon tea -- pavilion',bh:false,time:'2:00pm - 4:00pm',loc:'Pavilion',cat:'Social',catbg:'#EEEDFE',catcol:'#534AB7'},
+  {date:'2026-03-22',title:'Bird spotting walk -- south grounds',bh:false,time:'10:00am - 12:00pm',loc:'South Gate',cat:'Outdoors',catbg:'#E1F5EE',catcol:'#0F6E56'},
+  {date:'2026-03-24',title:'Insulation works begin -- Octagon Road',bh:false,time:'From 8:00am',loc:'Octagon Road',cat:'Trust',catbg:'#FAEEDA',catcol:'#854F0B'},
+  {date:'2026-04-03',title:'Good Friday',bh:true},
+  {date:'2026-04-01',title:'Village Voice Panel meeting',bh:false,time:'2:30pm - 4:30pm',loc:'Village Voice',cat:'Panel',catbg:'#EEEDFE',catcol:'#534AB7'},
+  {date:'2026-04-05',title:'Easter coffee morning',bh:false,time:'10:30am - 12:00pm',loc:'Pavilion',cat:'Social',catbg:'#EEEDFE',catcol:'#534AB7'},
+  {date:'2026-04-06',title:'Easter Monday',bh:true},
+  {date:'2026-04-12',title:'Heritage walk for new residents',bh:false,time:'11:00am - 1:00pm',loc:'Main Gate',cat:'Outdoors',catbg:'#E1F5EE',catcol:'#0F6E56'},
+  {date:'2026-05-04',title:'Early May bank holiday',bh:true},
+  {date:'2026-05-25',title:'Spring bank holiday',bh:true},
+  {date:'2026-08-31',title:'Summer bank holiday',bh:true},
+  {date:'2026-12-25',title:'Christmas Day',bh:true},
+  {date:'2026-12-28',title:'Boxing Day (substitute)',bh:true}
+];
+EVENTS.sort(function(a,b){return a.date < b.date ? -1 : 1;});
+
+function doLogin(uid, name, cottage, ini, av, panel) {
+  currentUser = {uid:uid, name:name, cottage:cottage, ini:ini, av:av, panel:panel};
+  isPanel = panel;
+  var now = new Date();
+  var hr = now.getHours();
+  var greet = (hr < 12 ? 'Good morning, ' : 'Good afternoon, ') + name.split(' ')[0] + '.';
+  document.getElementById('greeting').textContent = greet;
+  document.getElementById('datestr').textContent = now.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  document.getElementById('boardcount').textContent = posts.length + ' submissions';
+  renderBoard();
+  renderEvents();
+  document.getElementById('login').classList.remove('on');
+  document.getElementById('home').classList.add('on');
+  document.getElementById('navbar').style.display = 'flex';
+  document.getElementById('fab').style.display = 'flex';
+  document.querySelectorAll('.section').forEach(function(s){s.classList.remove('on');});
+  document.querySelectorAll('.navbtn').forEach(function(b){b.classList.remove('on');});
+  document.getElementById('nav-home').classList.add('on');
+}
+
+function doSignOut() {
+  currentUser = null;
+  isPanel = false;
+  document.getElementById('home').classList.remove('on');
+  document.getElementById('navbar').style.display = 'none';
+  document.getElementById('fab').style.display = 'none';
+  document.getElementById('musicbar').classList.remove('on');
+  document.querySelectorAll('.section').forEach(function(s){s.classList.remove('on');});
+  document.getElementById('login').classList.add('on');
+  stopMusic();
+}
+
+function goHome() {
+  document.querySelectorAll('.section').forEach(function(s){s.classList.remove('on');});
+  document.querySelectorAll('.navbtn').forEach(function(b){b.classList.remove('on');});
+  document.getElementById('nav-home').classList.add('on');
+  document.getElementById('fab').style.display = 'none';
+}
+
+function showSection(sec) {
+  document.querySelectorAll('.section').forEach(function(s){s.classList.remove('on');});
+  document.querySelectorAll('.navbtn').forEach(function(b){b.classList.remove('on');});
+  var el = document.getElementById('sec-' + sec);
+  if (el) el.classList.add('on');
+  var nav = document.getElementById('nav-' + sec);
+  if (nav) nav.classList.add('on');
+  document.getElementById('fab').style.display = (sec === 'board') ? 'flex' : 'none';
+  window.scrollTo(0,0);
+}
+
+function renderBoard() {
+  var cats = {h:'cat-h',m:'cat-m',e:'cat-e'};
+  var catnames = {h:'Heating',m:'Maintenance',e:'Events & social'};
+  var html = '';
+  for (var i = 0; i < posts.length; i++) {
+    var p = posts[i];
+    var lk = liked[p.id] ? '#0F6E56' : '#888';
+    html += '<div class="postcard" onclick="alert(\'Post: ' + p.title.replace(/'/g,"\\'") + '\')">';
+    html += '<div class="postmeta"><div class="postav ' + p.av + '">' + p.ini + '</div>';
+    html += '<div><div class="postauthor">' + p.name + '</div><div class="posttime">' + p.time + '</div></div>';
+    html += '<span class="cattag ' + cats[p.cat] + '" style="margin-left:auto;">' + catnames[p.cat] + '</span></div>';
+    html += '<div class="posttitle">' + p.title + '</div>';
+    html += '<div class="postbody">' + (p.body.length > 100 ? p.body.slice(0,100) + '...' : p.body) + '</div>';
+    html += '<div class="postft"><button class="likesbtn" style="color:' + lk + ';" onclick="event.stopPropagation();doLike(' + p.id + ')"><svg width="14" height="14" viewBox="0 0 16 16" fill="' + (liked[p.id]?'#0F6E56':'none') + '" stroke="' + lk + '" stroke-width="1.5"><path d="M8 13.5S2 10 2 5.5A3.5 3.5 0 018 3a3.5 3.5 0 016 2c0 4.5-6 8.5-6 8.5z"/></svg> ' + p.likes + ' share this view</button>';
+    html += '<span style="font-size:11px;color:#aaa;">' + p.replies + ' comment' + (p.replies !== 1 ? 's' : '') + '</span></div></div>';
+  }
+  document.getElementById('boardfeed').innerHTML = html;
+}
+
+function doLike(id) {
+  for (var i = 0; i < posts.length; i++) {
+    if (posts[i].id === id) {
+      if (liked[id]) { posts[i].likes--; delete liked[id]; }
+      else { posts[i].likes++; liked[id] = true; }
+      break;
+    }
+  }
+  renderBoard();
+}
+
+function openPost() {
+  selCat = '';
+  document.querySelectorAll('.catopt').forEach(function(o){o.className='catopt';});
+  document.getElementById('ptitle').value = '';
+  document.getElementById('pbody').value = '';
+  document.getElementById('postmodal').classList.add('on');
+}
+function closePost() { document.getElementById('postmodal').classList.remove('on'); }
+
+function pickCat(c, el) {
+  selCat = c;
+  document.querySelectorAll('.catopt').forEach(function(o){o.className='catopt';});
+  el.classList.add('sel-' + c);
+}
+
+function submitPost() {
+  var t = document.getElementById('ptitle').value.trim();
+  var b = document.getElementById('pbody').value.trim();
+  if (!t || !b || !selCat) { alert('Please choose a topic and fill in both fields.'); return; }
+  var catnames = {h:'Heating',m:'Maintenance',e:'Events & social'};
+  posts.unshift({id:Date.now(),name:currentUser.name,ini:currentUser.ini,av:currentUser.av,cat:selCat,title:t,body:b,time:'Just now',likes:0,replies:0});
+  closePost();
+  renderBoard();
+  document.getElementById('boardcount').textContent = posts.length + ' submissions';
+}
+
+function renderEvents() {
+  var html = '';
+  for (var i = 0; i < EVENTS.length; i++) {
+    var ev = EVENTS[i];
+    var d = new Date(ev.date + 'T12:00:00');
+    var day = d.getDate();
+    var mon = MONTHS[d.getMonth()];
+    if (ev.bh) {
+      html += '<div class="evcard bh"><div class="evinner">';
+      html += '<div class="evdate bh"><div class="evday">' + day + '</div><div class="evmon">' + mon + '</div></div>';
+      html += '<div class="evinfo"><div class="evtitle">' + ev.title + '</div>';
+      html += '<div class="evmeta">England bank holiday -- all day</div>';
+      html += '<span class="evcat" style="background:#f0f0e8;color:#555;border:1px solid #ddd;">Bank holiday</span></div></div>';
+      var ds = ev.date.replace(/-/g,'');
+      var dn = new Date(d); dn.setDate(dn.getDate()+1);
+      var de = dn.toISOString().slice(0,10).replace(/-/g,'');
+      var gtitle = encodeURIComponent(ev.title + ' -- Bank Holiday');
+      var gcal = 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=' + gtitle + '&dates=' + ds + '/' + de;
+      var ics = encodeURIComponent('BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nDTSTART;VALUE=DATE:' + ds + '\nDTEND;VALUE=DATE:' + de + '\nSUMMARY:' + ev.title + '\nEND:VEVENT\nEND:VCALENDAR');
+      html += '<div class="calbtn"><a class="cal-g" href="' + gcal + '" target="_blank">Google</a><a class="cal-a" href="data:text/calendar;charset=utf8,' + ics + '" download="bh.ics">Apple</a><a class="cal-i" href="data:text/calendar;charset=utf8,' + ics + '" download="bh.ics">iCal</a></div></div>';
+    } else {
+      html += '<div class="evcard"><div class="evinner">';
+      html += '<div class="evdate"><div class="evday">' + day + '</div><div class="evmon">' + mon + '</div></div>';
+      html += '<div class="evinfo"><div class="evtitle">' + ev.title + '</div>';
+      html += '<div class="evmeta">' + (ev.time||'') + (ev.loc ? ' -- ' + ev.loc : '') + '</div>';
+      html += '<span class="evcat" style="background:' + ev.catbg + ';color:' + ev.catcol + ';">' + ev.cat + '</span></div></div>';
+      var ds2 = ev.date.replace(/-/g,'');
+      var st = (ev.startcode || '100000'), en = (ev.endcode || '120000');
+      var gtitle2 = encodeURIComponent(ev.title);
+      var gloc = encodeURIComponent(ev.loc || 'Village Voice');
+      var gcal2 = 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=' + gtitle2 + '&dates=' + ds2 + 'T' + st + '/' + ds2 + 'T' + en + '&location=' + gloc;
+      var ics2 = encodeURIComponent('BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nDTSTART:' + ds2 + 'T' + st + '\nDTEND:' + ds2 + 'T' + en + '\nSUMMARY:' + ev.title + '\nLOCATION:' + (ev.loc||'') + '\nEND:VEVENT\nEND:VCALENDAR');
+      html += '<div class="calbtn"><a class="cal-g" href="' + gcal2 + '" target="_blank">Google</a><a class="cal-a" href="data:text/calendar;charset=utf8,' + ics2 + '" download="ev.ics">Apple</a><a class="cal-i" href="data:text/calendar;charset=utf8,' + ics2 + '" download="ev.ics">iCal</a></div></div>';
+    }
+  }
+  document.getElementById('evlist').innerHTML = html;
+}
+
+function dial(name, display, raw, color, note) {
+  pendingNum = raw;
+  document.getElementById('callicon').style.background = (color === '#A32D2D') ? '#FCEBEB' : (color === '#854F0B') ? '#FAEEDA' : (color === '#185FA5') ? '#E6F1FB' : '#E1F5EE';
+  document.getElementById('callname').textContent = name;
+  document.getElementById('callnum').textContent = display;
+  document.getElementById('callnum').style.color = color;
+  document.getElementById('callnote').textContent = note || 'Your phone will open the dialler. Tap Confirm to proceed.';
+  document.getElementById('callgo').style.background = color;
+  document.getElementById('callmodal').classList.add('on');
+}
+function doCall() { window.location.href = 'tel:' + pendingNum; closeCall(); }
+function closeCall() { document.getElementById('callmodal').classList.remove('on'); }
+
+// MUSIC
+var audioCtx = null;
+var musicOn = false;
+var musicShown = false;
+var musicTimer = null;
+var nextNote = 0;
+var patI = 0;
+var noteI = 0;
+var vol = 0.4;
+var NOTES = [261.63,293.66,329.63,392.00,440.00,523.25,587.33,659.25,783.99,880.00];
+var PATS = [[0,2,4,2,1,3,2,1],[4,2,0,2,3,1,2,3],[0,1,2,4,2,1,0,2],[2,4,3,2,1,0,1,2]];
+
+function getCtx() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
+}
+
+function playNote(freq, t, dur) {
+  var ctx = getCtx();
+  var osc = ctx.createOscillator();
+  var gain = ctx.createGain();
+  osc.type = 'sine';
+  osc.frequency.setValueAtTime(freq, t);
+  gain.gain.setValueAtTime(0, t);
+  gain.gain.linearRampToValueAtTime(vol * 0.18, t + 0.04);
+  gain.gain.exponentialRampToValueAtTime(vol * 0.06, t + dur * 0.6);
+  gain.gain.linearRampToValueAtTime(0.0001, t + dur);
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  osc.start(t);
+  osc.stop(t + dur + 0.05);
+}
+
+function sched() {
+  if (!musicOn) return;
+  var ctx = getCtx();
+  while (nextNote < ctx.currentTime + 0.15) {
+    var pat = PATS[patI % PATS.length];
+    playNote(NOTES[pat[noteI % pat.length]], nextNote, 1.6);
+    nextNote += 1.52;
+    noteI++;
+    if (noteI >= pat.length) { noteI = 0; patI++; }
+  }
+}
+
+function startMusic() {
+  if (!musicShown) {
+    musicShown = true;
+    document.getElementById('musicbar').classList.add('on');
+  }
+  if (!musicOn) togglePlay();
+}
+
+function togglePlay() {
+  if (!musicShown) { musicShown = true; document.getElementById('musicbar').classList.add('on'); }
+  var ctx = getCtx();
+  if (ctx.state === 'suspended') ctx.resume();
+  musicOn = !musicOn;
+  if (musicOn) {
+    nextNote = ctx.currentTime + 0.1;
+    noteI = 0;
+    sched();
+    musicTimer = setInterval(sched, 80);
+    document.getElementById('musicicon').innerHTML = '<rect x="6" y="4" width="4" height="16" fill="#0F6E56"/><rect x="14" y="4" width="4" height="16" fill="#0F6E56"/>';
+    document.getElementById('musictitle').textContent = 'Gentle piano -- playing';
+    document.getElementById('musiclabel').textContent = 'Music is playing';
+  } else {
+    stopMusic();
+  }
+}
+
+function stopMusic() {
+  musicOn = false;
+  if (musicTimer) { clearInterval(musicTimer); musicTimer = null; }
+  document.getElementById('musicicon').innerHTML = '<polygon points="5,3 19,12 5,21" fill="#0F6E56"/>';
+  document.getElementById('musictitle').textContent = 'Gentle piano -- paused';
+  document.getElementById('musiclabel').textContent = 'Resume music';
+}
+
+function hideMusic() {
+  stopMusic();
+  musicShown = false;
+  document.getElementById('musicbar').classList.remove('on');
+  document.getElementById('musiclabel').textContent = 'Play calming music';
+}
+
+function setVol(v) { vol = parseFloat(v); }
+</script>
+</body>
+</html>
