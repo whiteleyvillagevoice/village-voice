@@ -30,13 +30,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .time-row{display:flex;gap:10px;}
 .time-row .form-group{flex:1;}
 .cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;}
-.cat-opt{padding:8px 6px;border-radius:10px;border:1px solid #e8e8e2;font-size:12px;cursor:pointer;background:#fff;color:#888;font-family:inherit;text-align:center;font-weight:600;transition:all 0.12s;}
-.cat-opt:hover{border-color:#ccc;}
-.cat-opt.sel-social  {background:#EEEDFE;color:#534AB7;border-color:#CECBF6;}
-.cat-opt.sel-outdoors{background:#E1F5EE;color:#0F6E56;border-color:#9FE1CB;}
-.cat-opt.sel-trust   {background:#FAEEDA;color:#854F0B;border-color:#FAC775;}
-.cat-opt.sel-panel   {background:#EEEDFE;color:#534AB7;border-color:#CECBF6;}
-.cat-opt.sel-other   {background:#f8f8f4;color:#444;border-color:#ddd;}
+.cat-opt{padding:8px 6px;border-radius:10px;border:2px solid #e8e8e2;font-size:12px;cursor:pointer;background:#fff;color:#888;font-family:inherit;text-align:center;font-weight:600;transition:all 0.12s;}
+.cat-opt:hover{border-color:#ccc;background:#f8f8f4;}
+.cat-opt.sel-social  {background:#EEEDFE;color:#534AB7;border-color:#534AB7;font-weight:700;}
+.cat-opt.sel-outdoors{background:#E1F5EE;color:#0F6E56;border-color:#0F6E56;font-weight:700;}
+.cat-opt.sel-trust   {background:#FAEEDA;color:#854F0B;border-color:#854F0B;font-weight:700;}
+.cat-opt.sel-panel   {background:#EEEDFE;color:#534AB7;border-color:#534AB7;font-weight:700;}
+.cat-opt.sel-other   {background:#f0f0e8;color:#444;border-color:#888;font-weight:700;}
 
 .btn-row{display:flex;gap:10px;margin-top:4px;}
 .btn-save{flex:2;padding:12px;background:#0F6E56;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;}
@@ -114,10 +114,40 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .msg-tag-opt.sel-amber{background:#FAEEDA;color:#854F0B;border-color:#FAC775;}
 .msg-tag-opt.sel-purple{background:#EEEDFE;color:#534AB7;border-color:#CECBF6;}
 .msg-live{background:#E1F5EE;border-radius:10px;padding:10px 14px;font-size:13px;color:#0F6E56;margin-top:10px;display:none;font-weight:600;}
+
+/* ADMIN LOGIN */
+.admin-login{position:fixed;inset:0;background:#f5f5f0;z-index:200;display:flex;align-items:center;justify-content:center;padding:24px;}
+.admin-login-box{background:#fff;border-radius:18px;width:100%;max-width:360px;padding:32px 28px;text-align:center;box-shadow:0 4px 24px rgba(0,0,0,0.08);}
+.admin-login-logo{width:52px;height:52px;border-radius:50%;background:#0F6E56;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;}
+.admin-login-title{font-size:20px;font-weight:700;color:#1a1a1a;margin-bottom:6px;}
+.admin-login-sub{font-size:13px;color:#888;margin-bottom:24px;line-height:1.5;}
+.admin-pw-input{width:100%;padding:14px;border:1px solid #ddd;border-radius:10px;font-size:16px;text-align:center;letter-spacing:0.1em;font-family:inherit;margin-bottom:8px;}
+.admin-pw-input:focus{outline:none;border-color:#0F6E56;}
+.admin-pw-error{font-size:12px;color:#A32D2D;min-height:16px;margin-bottom:14px;}
+.admin-pw-btn{width:100%;padding:14px;background:#0F6E56;color:#fff;border:none;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;font-family:inherit;}
+.admin-pw-btn:hover{background:#0a5a44;}
 </style>
 </head>
 <body>
-<div class="page">
+
+<!-- ADMIN LOGIN SCREEN -->
+<div class="admin-login" id="admin-login">
+  <div class="admin-login-box">
+    <div class="admin-login-logo">
+      <svg width="24" height="24" viewBox="0 0 20 20" fill="none">
+        <path d="M10 2C6 2 3 5 3 9c0 2.5 1.2 4.7 3 6.1V17l2-1.2 2 1.2v-1.9c1.8-1.4 3-3.6 3-6.1 0-4-3-7-5-7z" fill="white" opacity="0.9"/>
+        <circle cx="10" cy="9" r="2.5" fill="#0F6E56"/>
+      </svg>
+    </div>
+    <div class="admin-login-title">Village Voice Admin</div>
+    <div class="admin-login-sub">Enter the administrator password to continue.</div>
+    <input class="admin-pw-input" id="admin-pw-input" type="password" placeholder="Password" maxlength="20" onkeydown="if(event.key==='Enter'){ var p=document.getElementById('admin-pw-input').value; if(p==='panel2026'){ document.getElementById('admin-login').style.display='none'; document.getElementById('admin-page').style.display='block'; } else { document.getElementById('admin-pw-error').textContent='Incorrect password. Please try again.'; this.value=''; this.focus(); } }"/>
+    <div class="admin-pw-error" id="admin-pw-error"></div>
+    <button type="button" class="admin-pw-btn" onclick="var p=document.getElementById('admin-pw-input').value; if(p==='panel2026'){ document.getElementById('admin-login').style.display='none'; document.getElementById('admin-page').style.display='block'; } else { document.getElementById('admin-pw-error').textContent='Incorrect password. Please try again.'; document.getElementById('admin-pw-input').value=''; document.getElementById('admin-pw-input').focus(); }">Enter</button>
+  </div>
+</div>
+
+<div class="page" id="admin-page" style="display:none;">
 
   <div class="header">
     <div class="logo-mark">
@@ -128,14 +158,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
     </div>
     <div>
       <div class="page-title">Village Voice — Events Admin</div>
-      <div class="page-sub">Village Voice Panel &amp; Trust coordinator use only</div>
     </div>
     <div class="admin-badge">Admin</div>
   </div>
 
-  <div class="notice">
-    <strong>How this works:</strong> Add and manage village events below. Use the Export button to download a JSON file, then share it with your web developer to publish the events to the resident app. Bank holidays are shown for reference and cannot be edited here.
-  </div>
 
   <div class="grid">
 
@@ -206,12 +232,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
           <svg viewBox="0 0 24 24" fill="none"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="#185FA5" stroke-width="2" stroke-linecap="round"/></svg>
           Post a message
         </div>
-        <p style="font-size:13px;color:#888;line-height:1.6;margin-bottom:16px;">Paste in a message from the Trust (e.g. forwarded from +44 7723 402201) and it will appear in the Village News feed in the app.</p>
+        <p style="font-size:13px;color:#888;line-height:1.6;margin-bottom:16px;">Post a message here and it will appear in the Village News feed in the app.</p>
         <div class="form-group">
           <label class="form-label">Tag</label>
           <div class="msg-tag-sel" id="msg-tag-sel">
-            <button type="button" class="msg-tag-opt sel-teal" onclick="selMsgTag('teal',this)">Trust update</button>
-            <button type="button" class="msg-tag-opt" onclick="selMsgTag('purple',this)">Panel report</button>
+            <button type="button" class="msg-tag-opt sel-teal" onclick="selMsgTag('teal',this)">Trust</button>
+            <button type="button" class="msg-tag-opt" onclick="selMsgTag('purple',this)">Panel</button>
             <button type="button" class="msg-tag-opt" onclick="selMsgTag('blue',this)">Notice</button>
             <button type="button" class="msg-tag-opt" onclick="selMsgTag('amber',this)">Urgent</button>
           </div>
@@ -267,6 +293,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 </div>
 
 <script>
+}
+
 var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
 var BANK_HOLIDAYS = [
@@ -545,12 +573,13 @@ function smsBdClose(e) {
   if(e.target === document.getElementById('sms-modal')) closeSmsModal();
 }
 
+
 // -- INIT ----------------------------------------------------------------------
 // Set default date to today
 document.getElementById('f-date').value = new Date().toISOString().slice(0,10);
 // -- TRUST MESSAGES --
 var selMsgTagVal = 'teal';
-var TAG_LABELS = {teal:'Trust update', purple:'Panel report', blue:'Notice', amber:'Urgent'};
+var TAG_LABELS = {teal:'Trust', purple:'Panel', blue:'Notice', amber:'Urgent'};
 var TAG_CSS = {
   teal:'background:#E1F5EE;color:#0F6E56;',
   purple:'background:#EEEDFE;color:#534AB7;',
