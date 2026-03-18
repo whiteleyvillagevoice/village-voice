@@ -621,15 +621,24 @@ var vol = 0.4;
 var NOTES = [261.63,293.66,329.63,392.00,440.00,523.25,587.33,659.25,783.99,880.00];
 var PATS = [[0,2,4,2,1,3,2,1],[4,2,0,2,3,1,2,3],[0,1,2,4,2,1,0,2],[2,4,3,2,1,0,1,2]];
 
-function getCtx() {
-  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  return audioCtx;
+function unlockAudio(callback) {
+  // iOS requires AudioContext to be created AND resumed inside a direct user gesture
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  if (audioCtx.state === 'suspended') {
+    audioCtx.resume().then(function() {
+      if (callback) callback();
+    });
+  } else {
+    if (callback) callback();
+  }
 }
 
 function playNote(freq, t, dur) {
-  var ctx = getCtx();
-  var osc = ctx.createOscillator();
-  var gain = ctx.createGain();
+  if (!audioCtx) return;
+  var osc = audioCtx.createOscillator();
+  var gain = audioCtx.createGain();
   osc.type = 'sine';
   osc.frequency.setValueAtTime(freq, t);
   gain.gain.setValueAtTime(0, t);
@@ -637,15 +646,14 @@ function playNote(freq, t, dur) {
   gain.gain.exponentialRampToValueAtTime(vol * 0.06, t + dur * 0.6);
   gain.gain.linearRampToValueAtTime(0.0001, t + dur);
   osc.connect(gain);
-  gain.connect(ctx.destination);
+  gain.connect(audioCtx.destination);
   osc.start(t);
   osc.stop(t + dur + 0.05);
 }
 
 function sched() {
-  if (!musicOn) return;
-  var ctx = getCtx();
-  while (nextNote < ctx.currentTime + 0.15) {
+  if (!musicOn || !audioCtx) return;
+  while (nextNote < audioCtx.currentTime + 0.15) {
     var pat = PATS[patI % PATS.length];
     playNote(NOTES[pat[noteI % pat.length]], nextNote, 1.6);
     nextNote += 1.52;
@@ -655,26 +663,39 @@ function sched() {
 }
 
 function startMusic() {
+  // This is called directly by user tap - safe to unlock audio here
   if (!musicShown) {
     musicShown = true;
     document.getElementById('musicbar').classList.add('on');
   }
-  if (!musicOn) togglePlay();
+  if (!musicOn) {
+    unlockAudio(function() {
+      musicOn = true;
+      nextNote = audioCtx.currentTime + 0.1;
+      noteI = 0;
+      sched();
+      musicTimer = setInterval(sched, 80);
+      document.getElementById('musicicon').innerHTML = '<rect x="6" y="4" width="4" height="16" fill="#0F6E56"/><rect x="14" y="4" width="4" height="16" fill="#0F6E56"/>';
+      document.getElementById('musictitle').textContent = 'Gentle piano -- playing';
+      document.getElementById('musiclabel').textContent = 'Music is playing';
+    });
+  }
 }
 
 function togglePlay() {
+  // Called directly by user tap on play/pause button
   if (!musicShown) { musicShown = true; document.getElementById('musicbar').classList.add('on'); }
-  var ctx = getCtx();
-  if (ctx.state === 'suspended') ctx.resume();
-  musicOn = !musicOn;
-  if (musicOn) {
-    nextNote = ctx.currentTime + 0.1;
-    noteI = 0;
-    sched();
-    musicTimer = setInterval(sched, 80);
-    document.getElementById('musicicon').innerHTML = '<rect x="6" y="4" width="4" height="16" fill="#0F6E56"/><rect x="14" y="4" width="4" height="16" fill="#0F6E56"/>';
-    document.getElementById('musictitle').textContent = 'Gentle piano -- playing';
-    document.getElementById('musiclabel').textContent = 'Music is playing';
+  if (!musicOn) {
+    unlockAudio(function() {
+      musicOn = true;
+      nextNote = audioCtx.currentTime + 0.1;
+      noteI = 0;
+      sched();
+      musicTimer = setInterval(sched, 80);
+      document.getElementById('musicicon').innerHTML = '<rect x="6" y="4" width="4" height="16" fill="#0F6E56"/><rect x="14" y="4" width="4" height="16" fill="#0F6E56"/>';
+      document.getElementById('musictitle').textContent = 'Gentle piano -- playing';
+      document.getElementById('musiclabel').textContent = 'Music is playing';
+    });
   } else {
     stopMusic();
   }
