@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Village Voice Admin</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f0;color:#1a1a1a;}
+
+/* LOGIN */
+.login-screen{position:fixed;inset:0;background:#f5f5f0;display:flex;align-items:center;justify-content:center;padding:24px;z-index:100;}
+.login-box{background:#fff;border-radius:18px;width:100%;max-width:360px;padding:36px 28px;text-align:center;box-shadow:0 4px 24px rgba(0,0,0,0.08);}
+.login-logo{width:54px;height:54px;border-radius:50%;background:#0F6E56;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;}
+.login-title{font-size:22px;font-weight:700;color:#1a1a1a;margin-bottom:6px;}
+.login-sub{font-size:14px;color:#888;margin-bottom:24px;}
+.login-input{width:100%;padding:14px;border:1px solid #ddd;border-radius:10px;font-size:18px;text-align:center;letter-spacing:0.1em;font-family:inherit;margin-bottom:8px;}
+.login-input:focus{outline:none;border-color:#0F6E56;}
+.login-error{font-size:13px;color:#A32D2D;min-height:18px;margin-bottom:14px;}
+.login-btn{width:100%;padding:14px;background:#0F6E56;color:#fff;border:none;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;font-family:inherit;}
+
+/* PAGE */
+.page{display:none;max-width:800px;margin:0 auto;padding:24px 20px 60px;}
+.page-header{display:flex;align-items:center;gap:14px;margin-bottom:28px;padding-bottom:20px;border-bottom:2px solid #e8e8e2;}
+.page-logo{width:44px;height:44px;border-radius:50%;background:#0F6E56;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.page-title{font-size:22px;font-weight:700;color:#1a1a1a;}
+.admin-badge{margin-left:auto;background:#E1F5EE;color:#0F6E56;border-radius:20px;padding:5px 14px;font-size:13px;font-weight:700;}
+
+/* PANELS */
+.panel{background:#fff;border:1px solid #e8e8e2;border-radius:16px;padding:22px;margin-bottom:24px;}
+.panel-title{font-size:16px;font-weight:700;color:#1a1a1a;margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+.panel-title svg{width:18px;height:18px;flex-shrink:0;}
+
+/* FORMS */
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+.form-group{margin-bottom:12px;}
+.form-label{font-size:13px;font-weight:600;color:#555;display:block;margin-bottom:5px;}
+.form-input{width:100%;padding:11px 12px;border:1px solid #ddd;border-radius:10px;font-size:14px;font-family:inherit;color:#1a1a1a;background:#fff;}
+.form-input:focus{outline:none;border-color:#0F6E56;}
+
+/* CATEGORY BUTTONS */
+.cat-grid{display:flex;gap:8px;flex-wrap:wrap;}
+.cat-btn{padding:8px 16px;border-radius:20px;border:2px solid #e8e8e2;font-size:13px;font-weight:600;cursor:pointer;background:#fff;color:#888;font-family:inherit;}
+
+/* TAG BUTTONS */
+.tag-row{display:flex;gap:8px;flex-wrap:wrap;}
+.tag-btn{padding:8px 16px;border-radius:20px;border:2px solid #e8e8e2;font-size:13px;font-weight:600;cursor:pointer;background:#fff;color:#888;font-family:inherit;}
+
+/* BUTTONS */
+.btn-save{width:100%;padding:13px;background:#0F6E56;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:4px;}
+.btn-delete{width:100%;padding:11px;background:#FCEBEB;color:#A32D2D;border:1px solid #F7C1C1;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:8px;}
+.btn-outline{padding:8px 16px;background:#fff;color:#0F6E56;border:1px solid #0F6E56;border-radius:20px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;}
+.btn-small{padding:5px 12px;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;border:none;}
+.btn-approve{background:#E1F5EE;color:#0F6E56;}
+.btn-remove{background:#FCEBEB;color:#A32D2D;}
+
+/* STATUS */
+.status-bar{padding:10px 14px;border-radius:10px;font-size:13px;font-weight:600;margin-bottom:14px;display:none;}
+.status-ok{background:#E1F5EE;color:#0F6E56;}
+.status-err{background:#FCEBEB;color:#A32D2D;}
+
+/* EVENT LIST */
+.ev-item{background:#fff;border:1px solid #e8e8e2;border-radius:12px;padding:13px 16px;margin-bottom:8px;display:flex;gap:12px;align-items:flex-start;}
+.ev-item.is-bh{background:#fafaf7;border-color:#e8e8d8;}
+.ev-item.selected{border-color:#0F6E56;border-width:2px;}
+.ev-date-box{width:44px;text-align:center;background:#f8f8f4;border-radius:10px;padding:7px 4px;flex-shrink:0;}
+.ev-date-box.bh{background:#f0f0e8;}
+.ev-day{font-size:20px;font-weight:700;line-height:1;}
+.ev-mon{font-size:12px;font-weight:700;color:#555;text-transform:uppercase;margin-top:2px;}
+.ev-body{flex:1;}
+.ev-name{font-size:14px;font-weight:600;color:#1a1a1a;margin-bottom:2px;}
+.ev-meta{font-size:12px;color:#666;}
+.ev-tag{font-size:11px;padding:2px 8px;border-radius:20px;font-weight:700;display:inline-block;margin-top:5px;}
+.ev-actions{display:flex;flex-direction:column;gap:5px;align-items:flex-end;flex-shrink:0;}
+
+/* EXPORT */
+.export-btns{display:flex;gap:8px;flex-wrap:wrap;}
+
+/* RESIDENTS */
+.res-item{background:#fff;border:1px solid #e8e8e2;border-radius:12px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:flex-start;gap:10px;}
+.res-av{width:38px;height:38px;border-radius:50%;background:#E1F5EE;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#0F6E56;flex-shrink:0;}
+.res-name{font-size:14px;font-weight:700;}
+.res-detail{font-size:12px;color:#888;margin-top:1px;}
+.res-badge{font-size:11px;padding:2px 8px;border-radius:20px;font-weight:700;margin-left:6px;vertical-align:middle;}
+.badge-pending{background:#FAEEDA;color:#854F0B;}
+.badge-active{background:#E1F5EE;color:#0F6E56;}
+.res-btns{display:flex;gap:6px;margin-left:auto;flex-shrink:0;}
+
+/* MSG PREVIEW */
+.msg-preview{background:#f8f8f4;border:1px solid #e8e8e2;border-radius:10px;padding:13px;margin-bottom:12px;min-height:60px;}
+
+/* SMS MODAL */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:50;align-items:center;justify-content:center;padding:20px;}
+.modal-bg.open{display:flex;}
+.modal-box{background:#fff;border-radius:16px;width:100%;max-width:420px;padding:24px 20px;}
+.modal-title{font-size:16px;font-weight:700;margin-bottom:12px;}
+.modal-close{float:right;background:none;border:none;font-size:20px;cursor:pointer;color:#888;margin-top:-4px;}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-screen" id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">
+      <svg width="22" height="22" viewBox="0 0 20 20" fill="none">
+        <path d="M10 2C6 2 3 5 3 9c0 2.5 1.2 4.7 3 6.1V17l2-1.2 2 1.2v-1.9c1.8-1.4 3-3.6 3-6.1 0-4-3-7-5-7z" fill="white" opacity="0.9"/>
+        <circle cx="10" cy="9" r="2.5" fill="#0F6E56"/>
+      </svg>
+    </div>
+    <div class="login-title">Village Voice Admin</div>
+    <div class="login-sub">Enter the administrator password to continue</div>
+    <input class="login-input" id="pw-input" type="password" placeholder="Password" maxlength="20"/>
+    <div class="login-error" id="pw-error"></div>
+    <button class="login-btn" onclick="checkLogin()">Enter</button>
+  </div>
+</div>
+
+<!-- ADMIN PAGE -->
+<div class="page" id="admin-page">
+
+  <div class="page-header">
+    <div class="page-logo">
+      <svg width="22" height="22" viewBox="0 0 20 20" fill="none">
+        <path d="M10 2C6 2 3 5 3 9c0 2.5 1.2 4.7 3 6.1V17l2-1.2 2 1.2v-1.9c1.8-1.4 3-3.6 3-6.1 0-4-3-7-5-7z" fill="white" opacity="0.9"/>
+        <circle cx="10" cy="9" r="2.5" fill="#0F6E56"/>
+      </svg>
+    </div>
+    <div class="page-title">Village Voice - Events Admin</div>
+    <div class="admin-badge">Admin</div>
+  </div>
+
+  <div class="status-bar" id="status-bar"></div>
+
+  <!-- ADD / EDIT EVENT -->
+  <div class="panel">
+    <div class="panel-title">
+      <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="18" rx="2" stroke="#0F6E56" stroke-width="2"/><line x1="16" y1="2" x2="16" y2="6" stroke="#0F6E56" stroke-width="2" stroke-linecap="round"/><line x1="8" y1="2" x2="8" y2="6" stroke="#0F6E56" stroke-width="2" stroke-linecap="round"/><line x1="3" y1="10" x2="21" y2="10" stroke="#0F6E56" stroke-width="2" stroke-linecap="round"/></svg>
+      <span id="form-title">Add an event</span>
+    </div>
+    <div class="form-group">
+      <div class="form-label">Category</div>
+      <div class="cat-grid" id="cat-grid">
+        <button class="cat-btn" onclick="pickCat('social',this)">Social</button>
+        <button class="cat-btn" onclick="pickCat('outdoors',this)">Outdoors</button>
+        <button class="cat-btn" onclick="pickCat('trust',this)">Trust</button>
+        <button class="cat-btn" onclick="pickCat('panel',this)">Panel</button>
+        <button class="cat-btn" onclick="pickCat('other',this)">Other</button>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Event title</label>
+      <input class="form-input" id="ev-title" placeholder="e.g. Coffee morning at the pavilion" maxlength="80"/>
+    </div>
+    <div class="form-row">
+      <div><label class="form-label">Date</label><input class="form-input" id="ev-date" type="date"/></div>
+      <div></div>
+    </div>
+    <div class="form-row">
+      <div><label class="form-label">Start time</label><input class="form-input" id="ev-start" type="time"/></div>
+      <div><label class="form-label">End time</label><input class="form-input" id="ev-end" type="time"/></div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Location</label>
+      <input class="form-input" id="ev-loc" placeholder="e.g. Pavilion, Village Voice" maxlength="100"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Details (optional)</label>
+      <textarea class="form-input" id="ev-details" rows="2" placeholder="Any extra information..." maxlength="300"></textarea>
+    </div>
+    <button class="btn-save" onclick="saveEvent()">Save event</button>
+    <button class="btn-delete" id="btn-delete" onclick="deleteEvent()" style="display:none;">Remove this event</button>
+    <button class="btn-outline" onclick="clearForm()" style="display:block;margin-top:10px;width:100%;text-align:center;">Clear form</button>
+  </div>
+
+  <!-- EVENT LIST -->
+  <div class="panel">
+    <div class="panel-title">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M9 11l3 3L22 4" stroke="#0F6E56" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" stroke="#0F6E56" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Events list
+    </div>
+    <div class="form-group">
+      <input class="form-input" id="search-input" placeholder="Search events..." oninput="renderList()"/>
+    </div>
+    <div id="ev-list"></div>
+  </div>
+
+  <!-- EXPORT -->
+  <div class="panel">
+    <div class="panel-title">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" stroke="#0F6E56" stroke-width="2" stroke-linecap="round"/><polyline points="7 10 12 15 17 10" stroke="#0F6E56" stroke-width="2" stroke-linecap="round"/><line x1="12" y1="15" x2="12" y2="3" stroke="#0F6E56" stroke-width="2" stroke-linecap="round"/></svg>
+      Export
+    </div>
+    <div class="export-btns">
+      <button class="btn-outline" onclick="exportJSON()">JSON</button>
+      <button class="btn-outline" onclick="exportCSV()">CSV</button>
+      <button class="btn-outline" onclick="exportICS()">iCal</button>
+    </div>
+  </div>
+
+  <!-- POST A MESSAGE -->
+  <div class="panel">
+    <div class="panel-title">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="#185FA5" stroke-width="2" stroke-linecap="round"/></svg>
+      Post a message
+    </div>
+    <p style="font-size:13px;color:#888;margin-bottom:16px;">Post a message here and it will appear in the Village News feed in the app.</p>
+    <div class="form-group">
+      <div class="form-label">Tag</div>
+      <div class="tag-row" id="tag-row">
+        <button class="tag-btn" id="tag-trust" onclick="pickTag('trust')">Trust</button>
+        <button class="tag-btn" id="tag-panel" onclick="pickTag('panel')">Panel</button>
+        <button class="tag-btn" id="tag-notice" onclick="pickTag('notice')">Notice</button>
+        <button class="tag-btn" id="tag-urgent" onclick="pickTag('urgent')">Urgent</button>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Headline</label>
+      <input class="form-input" id="msg-title" placeholder="e.g. Water supply update" maxlength="80" oninput="updatePreview()"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Message</label>
+      <textarea class="form-input" id="msg-body" rows="4" placeholder="Type or paste message here..." maxlength="600" oninput="updatePreview()"></textarea>
+    </div>
+    <div class="form-label" style="margin-bottom:8px;">Preview</div>
+    <div class="msg-preview" id="msg-preview">Your message will appear here.</div>
+    <button class="btn-save" style="background:#185FA5;" onclick="postMsg()">Post to News feed</button>
+    <div style="margin-top:18px;">
+      <div class="form-label" style="margin-bottom:8px;">Posted messages</div>
+      <div id="msg-list"></div>
+    </div>
+  </div>
+
+  <!-- RESIDENT MANAGEMENT -->
+  <div class="panel">
+    <div class="panel-title">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" stroke="#0F6E56" stroke-width="2" stroke-linecap="round"/><circle cx="9" cy="7" r="4" stroke="#0F6E56" stroke-width="2"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke="#0F6E56" stroke-width="2" stroke-linecap="round"/></svg>
+      Resident management
+    </div>
+    <div class="form-row">
+      <div><label class="form-label">First name</label><input class="form-input" id="res-first" placeholder="First name" maxlength="50"/></div>
+      <div><label class="form-label">Surname</label><input class="form-input" id="res-last" placeholder="Surname" maxlength="50"/></div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Email address</label>
+      <input class="form-input" id="res-email" type="email" placeholder="email@example.com" maxlength="100"/>
+    </div>
+    <div class="form-row">
+      <div><label class="form-label">Mobile <span style="font-weight:400;color:#aaa;">(optional)</span></label><input class="form-input" id="res-mobile" type="tel" placeholder="07700 900123" maxlength="20"/></div>
+      <div><label class="form-label">Cottage / address</label><input class="form-input" id="res-address" placeholder="Cottage 14, Octagon Road" maxlength="100"/></div>
+    </div>
+    <button class="btn-save" onclick="addResident()">Add resident</button>
+    <div style="margin-top:18px;">
+      <div class="form-label" style="margin-bottom:8px;">Registered residents <span id="res-count" style="font-weight:400;color:#aaa;"></span></div>
+      <div id="res-list"></div>
+    </div>
+  </div>
+
+</div><!-- end admin-page -->
+
+<!-- SMS MODAL -->
+<div class="modal-bg" id="sms-modal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeSms()">&times;</button>
+    <div class="modal-title">SMS Reminder</div>
+    <div class="form-group"><label class="form-label">Message</label><textarea class="form-input" id="sms-text" rows="6"></textarea></div>
+    <div style="font-size:12px;color:#aaa;margin-bottom:12px;" id="sms-count"></div>
+    <button class="btn-save" onclick="sendSms()">Open Messages app</button>
+  </div>
+</div>
+
+<script>
+var ADMIN_PW = 'panel2026';
+var selCatVal = '';
+var selTagVal = '';
+var editId = null;
+var smsTarget = null;
+
+var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+var MONTHS_LONG = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+var DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
+var CAT = {
+  social:   {label:'Social',   bg:'#EEEDFE', color:'#534AB7'},
+  outdoors: {label:'Outdoors', bg:'#E1F5EE', color:'#0F6E56'},
+  trust:    {label:'Trust',    bg:'#FAEEDA', color:'#854F0B'},
+  panel:    {label:'Panel',    bg:'#EEEDFE', color:'#534AB7'},
+  other:    {label:'Other',    bg:'#f0f0e8', color:'#555'},
+  bh:       {label:'Bank holiday', bg:'#f0f0e8', color:'#555'}
+};
+
+var TAG = {
+  trust:  {label:'Trust',  bg:'#E1F5EE', color:'#0F6E56'},
+  panel:  {label:'Panel',  bg:'#EEEDFE', color:'#534AB7'},
+  notice: {label:'Notice', bg:'#E6F1FB', color:'#185FA5'},
+  urgent: {label:'Urgent', bg:'#FAEEDA', color:'#854F0B'}
+};
+
+var BANK_HOLIDAYS = [
+  {id:'bh1', date:'2026-01-01', title:"New Year's Day",         cat:'bh', bh:true},
+  {id:'bh2', date:'2026-04-03', title:'Good Friday',            cat:'bh', bh:true},
+  {id:'bh3', date:'2026-04-06', title:'Easter Monday',          cat:'bh', bh:true},
+  {id:'bh4', date:'2026-05-04', title:'Early May bank holiday', cat:'bh', bh:true},
+  {id:'bh5', date:'2026-05-25', title:'Spring bank holiday',    cat:'bh', bh:true},
+  {id:'bh6', date:'2026-08-31', title:'Summer bank holiday',    cat:'bh', bh:true},
+  {id:'bh7', date:'2026-12-25', title:'Christmas Day',          cat:'bh', bh:true},
+  {id:'bh8', date:'2026-12-28', title:'Boxing Day (substitute)',cat:'bh', bh:true}
+];
+
+var SEED_EVENTS = [
+  {id:'e1', date:'2026-03-18', title:'Afternoon tea - pavilion',             cat:'social',   start:'14:00', end:'16:00', loc:'Pavilion, Village Voice', details:'Informal afternoon tea. All welcome.'},
+  {id:'e2', date:'2026-03-22', title:'Bird spotting walk - south grounds',   cat:'outdoors', start:'10:00', end:'12:00', loc:'South Gate, Village Voice', details:'Gentle walk led by George B.'},
+  {id:'e3', date:'2026-03-24', title:'Insulation works begin - Octagon Road',cat:'trust',    start:'08:00', end:'17:00', loc:'Octagon Road, Village Voice', details:'Phase 2 loft insulation programme.'},
+  {id:'e4', date:'2026-04-01', title:'Village Voice Panel meeting',           cat:'panel',    start:'14:30', end:'16:30', loc:'Village Voice', details:'Monthly Panel meeting.'},
+  {id:'e5', date:'2026-04-05', title:'Easter coffee morning',                 cat:'social',   start:'10:30', end:'12:00', loc:'Pavilion, Village Voice', details:'Easter coffee morning. All welcome.'},
+  {id:'e6', date:'2026-04-12', title:'Heritage walk for new residents',       cat:'outdoors', start:'11:00', end:'13:00', loc:'Main Gate, Village Voice', details:'Guided heritage walk. All welcome.'}
+];
+
+var events = [];
+var messages = [];
+var residents = [];
+
+function loadData() {
+  try {
+    var ev = localStorage.getItem('vv_events');
+    events = ev ? JSON.parse(ev) : JSON.parse(JSON.stringify(SEED_EVENTS));
+  } catch(e) { events = JSON.parse(JSON.stringify(SEED_EVENTS)); }
+  try {
+    var mg = localStorage.getItem('vv_trust_messages');
+    messages = mg ? JSON.parse(mg) : [];
+  } catch(e) { messages = []; }
+  try {
+    var rs = localStorage.getItem('vv_residents');
+    residents = rs ? JSON.parse(rs) : [];
+  } catch(e) { residents = []; }
+  try {
+    var regs = localStorage.getItem('vv_registrations');
+    if (regs) {
+      var arr = JSON.parse(regs);
+      for (var i = 0; i < arr.length; i++) {
+        var r = arr[i];
+        var found = false;
+        for (var j = 0; j < residents.length; j++) {
+          if (residents[j].id === r.id) { found = true; break; }
+        }
+        if (!found) {
+          residents.push({id:r.id, first:r.first, last:r.last, email:r.email,
+            mobile:r.mobile||'', address:r.address||'', status:'pending', date:r.date||''});
+        }
+      }
+    }
+  } catch(e) {}
+}
+
+function saveEvents()    { try { localStorage.setItem('vv_events', JSON.stringify(events)); } catch(e) {} }
+function saveMessages()  { try { localStorage.setItem('vv_trust_messages', JSON.stringify(messages)); } catch(e) {} }
+function saveResidents() { try { localStorage.setItem('vv_residents', JSON.stringify(residents)); } catch(e) {} }
+
+// LOGIN
+function checkLogin() {
+  var val = document.getElementById('pw-input').value;
+  if (val === ADMIN_PW) {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('admin-page').style.display = 'block';
+    loadData();
+    renderList();
+    renderMessages();
+    renderResidents();
+    var d = new Date();
+    document.getElementById('ev-date').value = d.toISOString().slice(0,10);
+  } else {
+    document.getElementById('pw-error').textContent = 'Incorrect password. Please try again.';
+    document.getElementById('pw-input').value = '';
+  }
+}
+
+document.getElementById('pw-input').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') checkLogin();
+});
+
+// STATUS
+function showStatus(msg, ok) {
+  var el = document.getElementById('status-bar');
+  el.textContent = msg;
+  el.className = 'status-bar ' + (ok ? 'status-ok' : 'status-err');
+  el.style.display = 'block';
+  setTimeout(function() { el.style.display = 'none'; }, 3000);
+}
+
+// CATEGORY PICKER
+function pickCat(c, el) {
+  selCatVal = c;
+  var btns = document.getElementById('cat-grid').getElementsByTagName('button');
+  for (var i = 0; i < btns.length; i++) {
+    btns[i].style.background = '#fff';
+    btns[i].style.color = '#888';
+    btns[i].style.borderColor = '#e8e8e2';
+  }
+  var cs = CAT[c] || CAT.other;
+  el.style.background = cs.bg;
+  el.style.color = cs.color;
+  el.style.borderColor = cs.color;
+}
+
+// TAG PICKER
+function pickTag(t) {
+  selTagVal = t;
+  var ids = ['tag-trust','tag-panel','tag-notice','tag-urgent'];
+  var tagKeys = ['trust','panel','notice','urgent'];
+  for (var i = 0; i < ids.length; i++) {
+    var btn = document.getElementById(ids[i]);
+    btn.style.background = '#fff';
+    btn.style.color = '#888';
+    btn.style.borderColor = '#e8e8e2';
+  }
+  var ts = TAG[t] || TAG.trust;
+  var activeBtn = document.getElementById('tag-' + t);
+  if (activeBtn) {
+    activeBtn.style.background = ts.bg;
+    activeBtn.style.color = ts.color;
+    activeBtn.style.borderColor = ts.color;
+  }
+  updatePreview();
+}
+
+// FORM
+function clearForm() {
+  editId = null;
+  selCatVal = '';
+  document.getElementById('form-title').textContent = 'Add an event';
+  document.getElementById('btn-delete').style.display = 'none';
+  document.getElementById('ev-title').value = '';
+  document.getElementById('ev-start').value = '';
+  document.getElementById('ev-end').value = '';
+  document.getElementById('ev-loc').value = '';
+  document.getElementById('ev-details').value = '';
+  var btns = document.getElementById('cat-grid').getElementsByTagName('button');
+  for (var i = 0; i < btns.length; i++) {
+    btns[i].style.background = '#fff';
+    btns[i].style.color = '#888';
+    btns[i].style.borderColor = '#e8e8e2';
+  }
+  var d = new Date();
+  document.getElementById('ev-date').value = d.toISOString().slice(0,10);
+}
+
+function loadIntoForm(ev) {
+  editId = ev.id;
+  selCatVal = ev.cat;
+  document.getElementById('form-title').textContent = 'Edit event';
+  document.getElementById('btn-delete').style.display = 'block';
+  document.getElementById('ev-title').value = ev.title || '';
+  document.getElementById('ev-date').value = ev.date || '';
+  document.getElementById('ev-start').value = ev.start || '';
+  document.getElementById('ev-end').value = ev.end || '';
+  document.getElementById('ev-loc').value = ev.loc || '';
+  document.getElementById('ev-details').value = ev.details || '';
+  var btns = document.getElementById('cat-grid').getElementsByTagName('button');
+  var catKeys = ['social','outdoors','trust','panel','other'];
+  for (var i = 0; i < btns.length; i++) {
+    var cs = CAT[catKeys[i]] || CAT.other;
+    if (catKeys[i] === ev.cat) {
+      btns[i].style.background = cs.bg;
+      btns[i].style.color = cs.color;
+      btns[i].style.borderColor = cs.color;
+    } else {
+      btns[i].style.background = '#fff';
+      btns[i].style.color = '#888';
+      btns[i].style.borderColor = '#e8e8e2';
+    }
+  }
+  window.scrollTo(0, 0);
+}
+
+function saveEvent() {
+  var title = document.getElementById('ev-title').value.trim();
+  var date = document.getElementById('ev-date').value;
+  var start = document.getElementById('ev-start').value;
+  var end = document.getElementById('ev-end').value;
+  var loc = document.getElementById('ev-loc').value.trim();
+  var details = document.getElementById('ev-details').value.trim();
+  if (!title) { showStatus('Please enter a title.', false); return; }
+  if (!date) { showStatus('Please select a date.', false); return; }
+  if (!selCatVal) { showStatus('Please select a category.', false); return; }
+  if (editId) {
+    for (var i = 0; i < events.length; i++) {
+      if (events[i].id === editId) {
+        events[i].title = title; events[i].date = date; events[i].cat = selCatVal;
+        events[i].start = start; events[i].end = end; events[i].loc = loc; events[i].details = details;
+        break;
+      }
+    }
+    showStatus('Event updated.', true);
+  } else {
+    events.push({id:'ev_'+Date.now(), title:title, date:date, cat:selCatVal,
+      start:start, end:end, loc:loc, details:details});
+    showStatus('Event added.', true);
+  }
+  saveEvents();
+  clearForm();
+  renderList();
+}
+
+function deleteEvent() {
+  if (!editId) return;
+  if (!confirm('Remove this event?')) return;
+  for (var i = 0; i < events.length; i++) {
+    if (events[i].id === editId) { events.splice(i, 1); break; }
+  }
+  saveEvents();
+  clearForm();
+  renderList();
+  showStatus('Event removed.', true);
+}
+
+// UTILS
+function fmtTime(t) {
+  if (!t) return '';
+  var parts = t.split(':');
+  var h = parseInt(parts[0]);
+  var m = parts[1];
+  var ampm = h >= 12 ? 'pm' : 'am';
+  var h12 = h % 12 || 12;
+  return h12 + ':' + m + ampm;
+}
+
+function fmtDateLong(dateStr) {
+  var d = new Date(dateStr + 'T12:00:00');
+  return DAYS[d.getDay()] + ' ' + d.getDate() + ' ' + MONTHS_LONG[d.getMonth()];
+}
+
+// RENDER EVENT LIST
+function renderList() {
+  var q = (document.getElementById('search-input').value || '').toLowerCase();
+  var all = [];
+  for (var i = 0; i < BANK_HOLIDAYS.length; i++) all.push(BANK_HOLIDAYS[i]);
+  for (var i = 0; i < events.length; i++) all.push(events[i]);
+  all.sort(function(a,b) { return a.date < b.date ? -1 : 1; });
+  if (q) {
+    var filtered = [];
+    for (var i = 0; i < all.length; i++) {
+      if (all[i].title.toLowerCase().indexOf(q) > -1 || (all[i].loc||'').toLowerCase().indexOf(q) > -1) {
+        filtered.push(all[i]);
+      }
+    }
+    all = filtered;
+  }
+  var list = document.getElementById('ev-list');
+  if (!all.length) {
+    list.innerHTML = '<div style="font-size:13px;color:#aaa;padding:8px 0;">No events found.</div>';
+    return;
+  }
+  var html = '';
+  for (var i = 0; i < all.length; i++) {
+    var ev = all[i];
+    var d = new Date(ev.date + 'T12:00:00');
+    var day = d.getDate();
+    var mon = MONTHS[d.getMonth()];
+    var cs = CAT[ev.cat] || CAT.other;
+    var isBH = ev.bh ? true : false;
+    var meta = isBH ? 'England bank holiday - all day' : '';
+    if (!isBH) {
+      var parts = [];
+      if (ev.start) parts.push(fmtTime(ev.start) + (ev.end ? ' - ' + fmtTime(ev.end) : ''));
+      if (ev.loc) parts.push(ev.loc);
+      meta = parts.join(' | ');
+    }
+    var isSelected = (ev.id === editId);
+    html += '<div class="ev-item' + (isBH ? ' is-bh' : '') + (isSelected ? ' selected' : '') + '">';
+    html += '<div class="ev-date-box' + (isBH ? ' bh' : '') + '"><div class="ev-day">' + day + '</div><div class="ev-mon">' + mon + '</div></div>';
+    html += '<div class="ev-body"><div class="ev-name">' + ev.title + '</div><div class="ev-meta">' + meta + '</div>';
+    html += '<span class="ev-tag" style="background:' + cs.bg + ';color:' + cs.color + ';">' + cs.label + '</span></div>';
+    if (!isBH) {
+      html += '<div class="ev-actions">';
+      html += '<button class="btn-small btn-approve" onclick="editEv(' + i + ')">Edit</button>';
+      html += '<button class="btn-small" style="background:#FAEEDA;color:#854F0B;" onclick="openSms(' + i + ')">Remind</button>';
+      html += '</div>';
+    }
+    html += '</div>';
+  }
+  list.innerHTML = html;
+  window._allEvents = all;
+}
+
+function editEv(idx) {
+  var ev = window._allEvents[idx];
+  if (ev && !ev.bh) loadIntoForm(ev);
+}
+
+function openSms(idx) {
+  var ev = window._allEvents[idx];
+  if (!ev || ev.bh) return;
+  smsTarget = ev;
+  var txt = 'Village Voice reminder:\n\n' + ev.title + '\n' + fmtDateLong(ev.date);
+  if (ev.start) txt += '\n' + fmtTime(ev.start) + (ev.end ? ' - ' + fmtTime(ev.end) : '');
+  if (ev.loc) txt += '\n' + ev.loc;
+  txt += '\n\nSee the Village Voice app for details.';
+  document.getElementById('sms-text').value = txt;
+  var len = txt.length;
+  document.getElementById('sms-count').textContent = len + ' characters (' + Math.ceil(len/160) + ' SMS)';
+  document.getElementById('sms-modal').classList.add('open');
+}
+
+function sendSms() {
+  var txt = document.getElementById('sms-text').value;
+  window.location.href = 'sms:?body=' + encodeURIComponent(txt);
+  closeSms();
+}
+
+function closeSms() {
+  document.getElementById('sms-modal').classList.remove('open');
+}
+
+// EXPORT
+function dl(content, filename, type) {
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([content], {type:type}));
+  a.download = filename;
+  a.click();
+}
+
+function exportJSON() {
+  var out = [];
+  for (var i = 0; i < events.length; i++) {
+    var e = events[i];
+    out.push({title:e.title, date:e.date, cat:e.cat, start:e.start, end:e.end, loc:e.loc, details:e.details});
+  }
+  dl(JSON.stringify(out, null, 2), 'VillageVoice_Events.json', 'application/json');
+}
+
+function exportCSV() {
+  var rows = [['Title','Date','Category','Start','End','Location','Details']];
+  for (var i = 0; i < events.length; i++) {
+    var e = events[i];
+    rows.push([e.title||'', e.date||'', e.cat||'', e.start||'', e.end||'', e.loc||'', e.details||'']);
+  }
+  var csv = '';
+  for (var i = 0; i < rows.length; i++) {
+    var row = '';
+    for (var j = 0; j < rows[i].length; j++) {
+      if (j > 0) row += ',';
+      row += '"' + String(rows[i][j]).replace(/"/g, '""') + '"';
+    }
+    csv += row + '\n';
+  }
+  dl(csv, 'VillageVoice_Events.csv', 'text/csv');
+}
+
+function exportICS() {
+  var ics = ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Village Voice//Admin//EN','CALSCALE:GREGORIAN'];
+  for (var i = 0; i < events.length; i++) {
+    var e = events[i];
+    var ds = e.date.replace(/-/g, '');
+    var st = e.start ? e.start.replace(':','') + '00' : '090000';
+    var en = e.end ? e.end.replace(':','') + '00' : '100000';
+    ics.push('BEGIN:VEVENT');
+    ics.push('DTSTART:' + ds + 'T' + st);
+    ics.push('DTEND:' + ds + 'T' + en);
+    ics.push('SUMMARY:' + e.title);
+    ics.push('DESCRIPTION:' + (e.details||''));
+    ics.push('LOCATION:' + (e.loc||''));
+    ics.push('END:VEVENT');
+  }
+  ics.push('END:VCALENDAR');
+  dl(ics.join('\r\n'), 'VillageVoice_Events.ics', 'text/calendar');
+}
+
+// MESSAGES
+function updatePreview() {
+  var title = document.getElementById('msg-title').value || 'Your headline here';
+  var body = document.getElementById('msg-body').value || 'Your message will appear here.';
+  var ts = TAG[selTagVal] || TAG.trust;
+  var prev = document.getElementById('msg-preview');
+  prev.innerHTML = '<span style="font-size:11px;padding:3px 9px;border-radius:20px;font-weight:700;display:inline-block;margin-bottom:8px;background:' + ts.bg + ';color:' + ts.color + ';">' + ts.label + '</span>' +
+    '<div style="font-size:14px;font-weight:700;color:#1a1a1a;margin-bottom:5px;">' + title + '</div>' +
+    '<div style="font-size:13px;color:#666;line-height:1.6;">' + body + '</div>';
+}
+
+function postMsg() {
+  var title = document.getElementById('msg-title').value.trim();
+  var body = document.getElementById('msg-body').value.trim();
+  if (!title || !body) { showStatus('Please enter a headline and message.', false); return; }
+  if (!selTagVal) { showStatus('Please select a tag.', false); return; }
+  var ts = TAG[selTagVal] || TAG.trust;
+  var d = new Date();
+  messages.unshift({
+    id: 'msg_' + Date.now(),
+    tag: selTagVal,
+    label: ts.label,
+    title: title,
+    body: body,
+    date: d.toLocaleDateString('en-GB', {day:'numeric', month:'long', year:'numeric'})
+  });
+  saveMessages();
+  document.getElementById('msg-title').value = '';
+  document.getElementById('msg-body').value = '';
+  selTagVal = '';
+  var tagIds = ['tag-trust','tag-panel','tag-notice','tag-urgent'];
+  for (var i = 0; i < tagIds.length; i++) {
+    var btn = document.getElementById(tagIds[i]);
+    btn.style.background = '#fff';
+    btn.style.color = '#888';
+    btn.style.borderColor = '#e8e8e2';
+  }
+  updatePreview();
+  renderMessages();
+  showStatus('Message posted to News feed.', true);
+}
+
+function deleteMsg(id) {
+  for (var i = 0; i < messages.length; i++) {
+    if (messages[i].id === id) { messages.splice(i, 1); break; }
+  }
+  saveMessages();
+  renderMessages();
+}
+
+function renderMessages() {
+  var list = document.getElementById('msg-list');
+  if (!messages.length) {
+    list.innerHTML = '<div style="font-size:13px;color:#aaa;">No messages posted yet.</div>';
+    return;
+  }
+  var html = '';
+  for (var i = 0; i < messages.length; i++) {
+    var m = messages[i];
+    var ts = TAG[m.tag] || TAG.trust;
+    html += '<div style="background:#fff;border:1px solid #e8e8e2;border-radius:10px;padding:12px 14px;margin-bottom:8px;">';
+    html += '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">';
+    html += '<span style="font-size:11px;padding:2px 8px;border-radius:20px;font-weight:700;background:' + ts.bg + ';color:' + ts.color + ';">' + ts.label + '</span>';
+    html += '<button class="btn-small btn-remove" onclick="deleteMsg(\'' + m.id + '\')">Remove</button></div>';
+    html += '<div style="font-size:13px;font-weight:700;color:#1a1a1a;margin-bottom:3px;">' + m.title + '</div>';
+    html += '<div style="font-size:12px;color:#666;">' + m.body.slice(0,100) + (m.body.length > 100 ? '...' : '') + '</div>';
+    html += '<div style="font-size:11px;color:#aaa;margin-top:5px;">' + m.date + '</div></div>';
+  }
+  list.innerHTML = html;
+}
+
+// RESIDENTS
+function addResident() {
+  var first = document.getElementById('res-first').value.trim();
+  var last = document.getElementById('res-last').value.trim();
+  var email = document.getElementById('res-email').value.trim();
+  var mobile = document.getElementById('res-mobile').value.trim();
+  var address = document.getElementById('res-address').value.trim();
+  if (!first || !last || !email) { showStatus('Please enter first name, surname and email.', false); return; }
+  residents.push({
+    id: 'r_' + Date.now(), first:first, last:last, email:email,
+    mobile:mobile, address:address, status:'active',
+    date: new Date().toLocaleDateString('en-GB', {day:'numeric', month:'long', year:'numeric'})
+  });
+  saveResidents();
+  document.getElementById('res-first').value = '';
+  document.getElementById('res-last').value = '';
+  document.getElementById('res-email').value = '';
+  document.getElementById('res-mobile').value = '';
+  document.getElementById('res-address').value = '';
+  renderResidents();
+  showStatus('Resident added.', true);
+}
+
+function approveResident(id) {
+  for (var i = 0; i < residents.length; i++) {
+    if (residents[i].id === id) { residents[i].status = 'active'; break; }
+  }
+  saveResidents();
+  renderResidents();
+}
+
+function removeResident(id) {
+  if (!confirm('Remove this resident?')) return;
+  for (var i = 0; i < residents.length; i++) {
+    if (residents[i].id === id) { residents.splice(i, 1); break; }
+  }
+  saveResidents();
+  renderResidents();
+}
+
+function renderResidents() {
+  var count = document.getElementById('res-count');
+  var list = document.getElementById('res-list');
+  var pending = 0;
+  for (var i = 0; i < residents.length; i++) { if (residents[i].status === 'pending') pending++; }
+  count.textContent = '(' + residents.length + ' total' + (pending > 0 ? ', ' + pending + ' pending' : '') + ')';
+  if (!residents.length) {
+    list.innerHTML = '<div style="font-size:13px;color:#aaa;">No residents registered yet.</div>';
+    return;
+  }
+  var html = '';
+  for (var i = 0; i < residents.length; i++) {
+    var r = residents[i];
+    var ini = (r.first.charAt(0) + r.last.charAt(0)).toUpperCase();
+    html += '<div class="res-item">';
+    html += '<div class="res-av">' + ini + '</div>';
+    html += '<div style="flex:1;min-width:0;"><div class="res-name">' + r.first + ' ' + r.last;
+    html += '<span class="res-badge ' + (r.status === 'pending' ? 'badge-pending' : 'badge-active') + '">' + r.status + '</span></div>';
+    html += '<div class="res-detail">' + r.email + '</div>';
+    if (r.mobile) html += '<div class="res-detail">' + r.mobile + '</div>';
+    if (r.address) html += '<div class="res-detail">' + r.address + '</div>';
+    html += '<div class="res-detail">' + (r.date||'') + '</div></div>';
+    html += '<div class="res-btns">';
+    if (r.status === 'pending') html += '<button class="btn-small btn-approve" onclick="approveResident(\'' + r.id + '\')">Approve</button>';
+    html += '<button class="btn-small btn-remove" onclick="removeResident(\'' + r.id + '\')">Remove</button>';
+    html += '</div></div>';
+  }
+  list.innerHTML = html;
+}
+</script>
+</body>
+</html>
