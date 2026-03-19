@@ -2,6 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+<meta http-equiv="Pragma" content="no-cache"/>
+<meta http-equiv="Expires" content="0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Village Voice</title>
 <style>
@@ -862,7 +865,8 @@ function renderEvents() {
       var monthName = MONTHS_L[d.getMonth()].toLowerCase();
       var monthShort = MONTHS[d.getMonth()].toLowerCase();
       var dayName = DAYS_L[d.getDay()].toLowerCase();
-      var searchStr = (ev.title + ' ' + (ev.loc||'') + ' ' + (ev.details||'') + ' ' + monthName + ' ' + monthShort + ' ' + dayName + ' ' + ev.date).toLowerCase();
+      var catLabel = isBH ? 'bank holiday' : (CAT_EV[ev.cat] ? CAT_EV[ev.cat].label.toLowerCase() : (ev.cat||''));
+        var searchStr = (ev.title + ' ' + (ev.loc||'') + ' ' + (ev.details||'') + ' ' + monthName + ' ' + monthShort + ' ' + dayName + ' ' + ev.date + ' ' + catLabel + ' ' + (ev.cat||'')).toLowerCase();
       if (searchStr.indexOf(q) > -1) filtered.push(ev);
     }
     all = filtered;
