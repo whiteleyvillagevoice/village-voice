@@ -205,6 +205,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <div><label class="form-label">Mobile <span style="font-weight:400;color:#aaa;">(optional)</span></label><input class="form-input" id="res-mobile" type="tel" placeholder="07700 900123" maxlength="20"/></div>
       <div><label class="form-label">Cottage / address</label><input class="form-input" id="res-address" placeholder="Cottage 14, Octagon Road" maxlength="100"/></div>
     </div>
+    <div style="margin:4px 0 12px;padding-top:12px;border-top:1px solid #f0f0ea;">
+      <div style="font-size:13px;font-weight:700;color:#888;margin-bottom:10px;">Nominated emergency contact <span style="font-weight:400;">(optional)</span></div>
+      <div class="form-row">
+        <div><label class="form-label">Contact name</label><input class="form-input" id="res-ec-name" placeholder="e.g. Jane Smith" maxlength="100"/></div>
+        <div><label class="form-label">Relationship</label><input class="form-input" id="res-ec-relation" placeholder="e.g. Daughter" maxlength="50"/></div>
+      </div>
+      <div class="form-group"><label class="form-label">Contact phone number</label><input class="form-input" id="res-ec-phone" type="tel" placeholder="e.g. 07700 900456" maxlength="20"/></div>
+    </div>
     <button class="btn-save" onclick="addResident()">Add resident</button>
     <div style="margin-top:18px;">
       <div class="form-label" style="margin-bottom:4px;">Registered residents <span id="res-count" style="font-weight:400;color:#aaa;"></span></div>
@@ -241,6 +249,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <div><label class="form-label" style="font-size:12px;">Mobile</label><input class="form-input" id="edit-res-mobile" type="tel" maxlength="20"/></div>
       <div><label class="form-label" style="font-size:12px;">Cottage / address</label><input class="form-input" id="edit-res-address" maxlength="100"/></div>
     </div>
+    <div style="margin:4px 0 12px;padding-top:12px;border-top:1px solid #f0f0ea;">
+      <div style="font-size:12px;font-weight:700;color:#888;margin-bottom:10px;">Emergency contact</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
+        <div><label class="form-label" style="font-size:12px;">Contact name</label><input class="form-input" id="edit-ec-name" maxlength="100"/></div>
+        <div><label class="form-label" style="font-size:12px;">Relationship</label><input class="form-input" id="edit-ec-relation" maxlength="50"/></div>
+      </div>
+      <div style="margin-bottom:10px;"><label class="form-label" style="font-size:12px;">Phone number</label><input class="form-input" id="edit-ec-phone" type="tel" maxlength="20"/></div>
+    </div>
     <div style="margin-bottom:16px;"><label class="form-label" style="font-size:12px;">Status</label>
       <select class="form-input" id="edit-res-status">
         <option value="active">Active</option>
@@ -258,7 +274,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 var SUPA_URL = 'https://wkjkmmmhftmjjkkmczbz.supabase.co';
 var SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndramttbW1oZnRtampra21jemJ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5MjU5NzQsImV4cCI6MjA4OTUwMTk3NH0.VFceyx0IwbmWK8WJJzgeenGHE8kBbmBdoLrPp7IrM5M';
 
-var ADMIN_PW = 'panel2026';
+var ADMIN_HASH = 'e10ca518d53808191a832621e76d8c6495ce26f049622ed7912fdfd8936e2e47';
 var selCatVal = '';
 var selTagVal = '';
 var editId = null;
@@ -314,18 +330,21 @@ function sbFetch(path, opts) {
 
 function checkLogin() {
   var val = document.getElementById('pw-input').value;
-  if (val === ADMIN_PW) {
-    document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('admin-page').style.display = 'block';
-    var d = new Date();
-    document.getElementById('ev-date').value = d.toISOString().slice(0,10);
-    loadEvents();
-    renderMessages();
-    renderResidents();
-  } else {
-    document.getElementById('pw-error').textContent = 'Incorrect password. Please try again.';
-    document.getElementById('pw-input').value = '';
-  }
+  crypto.subtle.digest('SHA-256', new TextEncoder().encode(val)).then(function(buf) {
+    var hash = Array.from(new Uint8Array(buf)).map(function(b){ return b.toString(16).padStart(2,'0'); }).join('');
+    if (hash === ADMIN_HASH) {
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('admin-page').style.display = 'block';
+      var d = new Date();
+      document.getElementById('ev-date').value = d.toISOString().slice(0,10);
+      loadEvents();
+      renderMessages();
+      renderResidents();
+    } else {
+      document.getElementById('pw-error').textContent = 'Incorrect password. Please try again.';
+      document.getElementById('pw-input').value = '';
+    }
+  });
 }
 document.getElementById('pw-input').addEventListener('keydown', function(e) {
   if (e.key === 'Enter') checkLogin();
@@ -690,6 +709,9 @@ function addResident() {
     body: {
       id: 'r_' + Date.now(), first:first, last:last, email:email,
       mobile:mobile, address:address, status:'active',
+      emergency_name: document.getElementById('res-ec-name').value.trim(),
+      emergency_phone: document.getElementById('res-ec-phone').value.trim(),
+      emergency_relation: document.getElementById('res-ec-relation').value.trim(),
       date: new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})
     }
   }).then(function() {
@@ -698,6 +720,9 @@ function addResident() {
     document.getElementById('res-email').value = '';
     document.getElementById('res-mobile').value = '';
     document.getElementById('res-address').value = '';
+    document.getElementById('res-ec-name').value = '';
+    document.getElementById('res-ec-phone').value = '';
+    document.getElementById('res-ec-relation').value = '';
     renderResidents();
     showStatus('Resident added.', true);
   }).catch(function() { showStatus('Could not add resident.', false); });
@@ -740,7 +765,10 @@ function renderResidents() {
           html += '<div class="res-detail">' + r.email + '</div>';
           if (r.mobile) html += '<div class="res-detail">' + r.mobile + '</div>';
           if (r.address) html += '<div class="res-detail">' + r.address + '</div>';
-          html += '<div class="res-detail">' + (r.date||'') + '</div></div>';
+          if (r.emergency_name) html += '<div class="res-detail" style="color:#534AB7;">EC: ' + r.emergency_name + (r.emergency_relation ? ' (' + r.emergency_relation + ')' : '') + (r.emergency_phone ? ' - ' + r.emergency_phone : '') + '</div>';
+          html += '<div class="res-detail">' + (r.date||'') + '</div>';
+          if (r.emergency_name) html += '<div class="res-detail" style="color:#534AB7;">EC: ' + r.emergency_name + (r.emergency_relation ? ' (' + r.emergency_relation + ')' : '') + (r.emergency_phone ? ' - ' + r.emergency_phone : '') + '</div>';
+          html += '</div>';
           html += '<div class="res-btns"><button type="button" class="btn-small btn-remove" onclick="removeResident(\'' + r.id + '\')">Remove</button></div></div>';
         }
       }
@@ -752,10 +780,16 @@ function renderResidents() {
 }
 
 function approveReg(id, first, last, email, mobile, address) {
-  sbFetch('residents', {
-    method: 'POST',
-    body: {id:'r_'+Date.now(), first:first, last:last, email:email, mobile:mobile, address:address, status:'active',
-      date: new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})}
+  sbFetch('registrations?id=eq.' + id).then(function(regData) {
+    var reg = (regData && regData.length) ? regData[0] : {};
+    return sbFetch('residents', {
+      method: 'POST',
+      body: {id:'r_'+Date.now(), first:first, last:last, email:email, mobile:mobile, address:address, status:'active',
+        emergency_name: reg.emergency_name || '',
+        emergency_phone: reg.emergency_phone || '',
+        emergency_relation: reg.emergency_relation || '',
+        date: new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})}
+    });
   }).then(function() {
     return sbFetch('registrations?id=eq.' + id, {method:'DELETE'});
   }).then(function() {
@@ -791,6 +825,9 @@ function openResEdit(id) {
     document.getElementById('edit-res-mobile').value = r.mobile || '';
     document.getElementById('edit-res-address').value = r.address || '';
     document.getElementById('edit-res-status').value = r.status || 'active';
+    document.getElementById('edit-ec-name').value = r.emergency_name || '';
+    document.getElementById('edit-ec-phone').value = r.emergency_phone || '';
+    document.getElementById('edit-ec-relation').value = r.emergency_relation || '';
     document.getElementById('res-edit-modal').classList.add('open');
   });
 }
@@ -809,7 +846,10 @@ function saveResEdit() {
       first:first, last:last, email:email,
       mobile: document.getElementById('edit-res-mobile').value.trim(),
       address: document.getElementById('edit-res-address').value.trim(),
-      status: document.getElementById('edit-res-status').value
+      status: document.getElementById('edit-res-status').value,
+      emergency_name: document.getElementById('edit-ec-name').value.trim(),
+      emergency_phone: document.getElementById('edit-ec-phone').value.trim(),
+      emergency_relation: document.getElementById('edit-ec-relation').value.trim()
     }
   }).then(function() {
     closeResEdit();

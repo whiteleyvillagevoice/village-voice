@@ -461,6 +461,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <div class="form-group"><label class="form-label">Relationship</label><input class="form-input" id="reg-ec-relation" placeholder="e.g. Daughter, Son, Friend" maxlength="50"/></div>
       <div class="form-group"><label class="form-label">Contact phone number</label><input class="form-input" id="reg-ec-phone" type="tel" placeholder="e.g. 07700 900456" maxlength="20"/></div>
     </div>
+    <div style="margin:16px 0 14px;padding:14px;background:#f8f8f4;border-radius:10px;border:1px solid #e8e8e2;">
+      <label style="display:flex;align-items:flex-start;gap:12px;cursor:pointer;">
+        <input type="checkbox" id="reg-consent" style="width:20px;height:20px;margin-top:2px;flex-shrink:0;accent-color:#0F6E56;cursor:pointer;"/>
+        <span style="font-size:13px;color:#444;line-height:1.6;">I agree that my personal details (name, address, email and emergency contact if provided) will be stored securely by VoiceVillage for the purpose of the Village Voice resident trial. My details will not be shared with third parties and I can ask for them to be removed at any time by contacting the Panel administrator.</span>
+      </label>
+    </div>
     <button class="submit-btn" onclick="submitReg()">Submit registration</button>
     <button class="cancel-btn" onclick="closeReg()">Cancel</button>
   </div>
@@ -923,6 +929,7 @@ document.getElementById('pw-input').addEventListener('keydown', function(e){ if(
 function openReg() {
   var fields = ['reg-first','reg-last','reg-email','reg-mobile','reg-address','reg-ec-name','reg-ec-phone','reg-ec-relation'];
   for (var i = 0; i < fields.length; i++) document.getElementById(fields[i]).value = '';
+  var cb = document.getElementById('reg-consent'); if (cb) cb.checked = false;
   document.getElementById('reg-modal').classList.add('on');
 }
 function closeReg() { document.getElementById('reg-modal').classList.remove('on'); }
@@ -936,6 +943,8 @@ function submitReg() {
   var ecPhone = document.getElementById('reg-ec-phone').value.trim();
   var ecRelation = document.getElementById('reg-ec-relation').value.trim();
   if (!first || !last || !email || !address) { alert('Please fill in your name, email and cottage address.'); return; }
+  var consent = document.getElementById('reg-consent');
+  if (!consent || !consent.checked) { alert('Please tick the consent box before submitting your registration.'); return; }
   var now = new Date();
   sbFetch('registrations', {
     method: 'POST',
@@ -944,7 +953,9 @@ function submitReg() {
       first: first, last: last, email: email,
       mobile: mobile, address: address, status: 'pending',
       emergency_name: ecName, emergency_phone: ecPhone, emergency_relation: ecRelation,
-      date: now.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})
+      date: now.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}),
+      consent: true,
+      consent_date: now.toISOString()
     }
   }).then(function() {
     closeReg();
