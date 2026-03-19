@@ -39,7 +39,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .start-btn{font-size:12px;color:#534AB7;background:none;border:none;cursor:pointer;font-family:inherit;touch-action:manipulation;padding:4px 6px;display:none;}
 .sos-btn{position:fixed;top:14px;right:14px;z-index:95;background:#A32D2D;color:#fff;border:none;border-radius:20px;padding:8px 14px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation;display:none;align-items:center;gap:6px;box-shadow:0 2px 8px rgba(163,45,45,0.35);}
 .sos-btn.on{display:flex;}
-.fab{position:fixed;top:12px;left:50%;transform:translateX(-50%);width:44px;height:44px;border-radius:50%;background:#0F6E56;border:none;cursor:pointer;box-shadow:0 2px 8px rgba(15,110,86,0.3);touch-action:manipulation;z-index:94;display:none;align-items:center;justify-content:center;}
+.fab{width:36px;height:36px;border-radius:50%;background:#0F6E56;border:none;cursor:pointer;box-shadow:0 2px 6px rgba(15,110,86,0.3);touch-action:manipulation;display:none;align-items:center;justify-content:center;flex-shrink:0;}
 .fab.on{display:flex;}
 .home-body{padding:0 0 80px;}
 .greeting{padding:16px 18px 0;font-size:20px;font-weight:700;color:#1a1a1a;line-height:1.3;}
@@ -185,9 +185,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   Emergency
 </button>
 
-<button class="fab" id="fab" onclick="openPost()">
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="white" stroke-width="2.5" stroke-linecap="round"/></svg>
-</button>
 
 <!-- LOGIN -->
 <div class="screen on" id="s-login">
@@ -271,6 +268,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <!-- EMERGENCY -->
   <div class="section" id="sec-emergency">
     <h2>Emergency &amp; Contacts</h2>
+    <div id="ec-card" style="display:none;background:#f5f3ff;border:1px solid #CECBF6;border-radius:12px;padding:14px;margin-bottom:12px;">
+      <div style="font-size:13px;font-weight:700;color:#534AB7;margin-bottom:8px;">Your nominated emergency contact</div>
+      <div id="ec-name" style="font-size:15px;font-weight:600;color:#1a1a1a;"></div>
+      <div id="ec-relation" style="font-size:12px;color:#888;margin-top:2px;"></div>
+      <div id="ec-phone-row" style="margin-top:8px;display:flex;align-items:center;justify-content:space-between;">
+        <div id="ec-phone" style="font-size:14px;font-weight:600;color:#534AB7;"></div>
+        <button id="ec-call-btn" class="call-chip" style="background:#EEEDFE;color:#534AB7;" onclick="dialEcContact()">Call</button>
+      </div>
+    </div>
     <div class="red-banner">
       <h3>Emergency services</h3>
       <p>For life-threatening emergencies, fire, or crime in progress</p>
@@ -348,7 +354,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
   <!-- BOARD -->
   <div class="section" id="sec-board">
-    <h2>Message Board</h2>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+      <h2 style="margin-bottom:0;">Message Board</h2>
+      <button class="fab" id="fab" onclick="openPost()" title="Add post"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="white" stroke-width="2.5" stroke-linecap="round"/></svg></button>
+    </div>
     <div class="board-notice">Your submissions are read by the Village Voice Panel. For urgent matters use Emergency Contacts.</div>
     <div id="board-feed"><div class="loading">Loading posts...</div></div>
   </div>
@@ -446,6 +455,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div class="form-group"><label class="form-label">Email address</label><input class="form-input" id="reg-email" type="email" placeholder="email@example.com" maxlength="100"/></div>
     <div class="form-group"><label class="form-label">Mobile <span style="font-weight:400;color:#aaa;">(optional)</span></label><input class="form-input" id="reg-mobile" type="tel" placeholder="07700 900123" maxlength="20"/></div>
     <div class="form-group"><label class="form-label">Cottage / address</label><input class="form-input" id="reg-address" placeholder="e.g. Cottage 14, Octagon Road" maxlength="100"/></div>
+    <div style="margin:16px 0 8px;padding-top:16px;border-top:1px solid #f0f0ea;">
+      <div style="font-size:13px;font-weight:700;color:#888;margin-bottom:12px;">Nominated emergency contact <span style="font-weight:400;">(optional but recommended)</span></div>
+      <div class="form-group"><label class="form-label">Contact name</label><input class="form-input" id="reg-ec-name" placeholder="e.g. Jane Smith" maxlength="100"/></div>
+      <div class="form-group"><label class="form-label">Relationship</label><input class="form-input" id="reg-ec-relation" placeholder="e.g. Daughter, Son, Friend" maxlength="50"/></div>
+      <div class="form-group"><label class="form-label">Contact phone number</label><input class="form-input" id="reg-ec-phone" type="tel" placeholder="e.g. 07700 900456" maxlength="20"/></div>
+    </div>
     <button class="submit-btn" onclick="submitReg()">Submit registration</button>
     <button class="cancel-btn" onclick="closeReg()">Cancel</button>
   </div>
@@ -580,6 +595,7 @@ function doLogin(uid, name, cottage, ini, av, panel) {
   document.getElementById('sos-btn').classList.add('on');
   document.getElementById('main-nav').classList.add('on');
   loadBoardCount();
+  loadEmergencyContact(uid);
   renderBoard();
   renderEvents();
   showScreen('s-home');
@@ -591,7 +607,7 @@ function doSignOut() {
   isPanel = false;
   document.getElementById('sos-btn').classList.remove('on');
   document.getElementById('main-nav').classList.remove('on');
-  document.getElementById('fab').classList.remove('on');
+  var fab = document.getElementById('fab'); if (fab) fab.classList.remove('on');
   var sb = document.getElementById('start-btn');
   var sb2 = document.getElementById('start-btn2');
   if (sb) sb.style.display = 'none';
@@ -619,7 +635,7 @@ function showScreen(id) {
 function goHome() {
   showScreen('s-home');
   setNav('nav-home');
-  document.getElementById('fab').classList.remove('on');
+  var fab = document.getElementById('fab'); if (fab) fab.classList.remove('on');
   var sos = document.getElementById('sos-btn');
   if (sos) sos.style.opacity = '1';
 }
@@ -631,7 +647,8 @@ function showSection(sec) {
   var el = document.getElementById('sec-' + sec);
   if (el) el.classList.add('on');
   setNav('nav-' + sec);
-  document.getElementById('fab').classList[sec === 'board' ? 'add' : 'remove']('on');
+  var fab = document.getElementById('fab');
+  if (fab) fab.classList[sec === 'board' ? 'add' : 'remove']('on');
   var sos = document.getElementById('sos-btn');
   if (sos) sos.style.opacity = sec === 'emergency' ? '0' : '1';
   if (sec === 'news') loadTrustMsgs();
@@ -904,7 +921,7 @@ document.getElementById('pw-input').addEventListener('keydown', function(e){ if(
 
 // REGISTRATION
 function openReg() {
-  var fields = ['reg-first','reg-last','reg-email','reg-mobile','reg-address'];
+  var fields = ['reg-first','reg-last','reg-email','reg-mobile','reg-address','reg-ec-name','reg-ec-phone','reg-ec-relation'];
   for (var i = 0; i < fields.length; i++) document.getElementById(fields[i]).value = '';
   document.getElementById('reg-modal').classList.add('on');
 }
@@ -915,6 +932,9 @@ function submitReg() {
   var email = document.getElementById('reg-email').value.trim();
   var mobile = document.getElementById('reg-mobile').value.trim();
   var address = document.getElementById('reg-address').value.trim();
+  var ecName = document.getElementById('reg-ec-name').value.trim();
+  var ecPhone = document.getElementById('reg-ec-phone').value.trim();
+  var ecRelation = document.getElementById('reg-ec-relation').value.trim();
   if (!first || !last || !email || !address) { alert('Please fill in your name, email and cottage address.'); return; }
   var now = new Date();
   sbFetch('registrations', {
@@ -923,6 +943,7 @@ function submitReg() {
       id: 'reg_' + Date.now(),
       first: first, last: last, email: email,
       mobile: mobile, address: address, status: 'pending',
+      emergency_name: ecName, emergency_phone: ecPhone, emergency_relation: ecRelation,
       date: now.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})
     }
   }).then(function() {
@@ -932,6 +953,31 @@ function submitReg() {
     alert('Could not submit registration. Please try again.');
   });
 }
+// EMERGENCY CONTACT
+var ecPendingNum = '';
+
+function loadEmergencyContact(uid) {
+  if (uid === 'panel1') return;
+  sbFetch('residents?id=eq.' + uid).then(function(data) {
+    if (!data || !data.length) return;
+    var r = data[0];
+    if (!r.emergency_name && !r.emergency_phone) return;
+    var card = document.getElementById('ec-card');
+    if (!card) return;
+    card.style.display = 'block';
+    document.getElementById('ec-name').textContent = r.emergency_name || '';
+    document.getElementById('ec-relation').textContent = r.emergency_relation || '';
+    document.getElementById('ec-phone').textContent = r.emergency_phone || '';
+    ecPendingNum = (r.emergency_phone || '').replace(/\s/g,'');
+  }).catch(function() {});
+}
+
+function dialEcContact() {
+  var name = document.getElementById('ec-name').textContent;
+  var phone = document.getElementById('ec-phone').textContent;
+  dial(name, phone, ecPendingNum, '#534AB7', 'This is your nominated emergency contact.');
+}
+
 </script>
 </body>
 </html>
