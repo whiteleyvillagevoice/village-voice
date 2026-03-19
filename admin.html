@@ -93,7 +93,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 
 <!-- ADMIN PAGE -->
-<div class="page" id="admin-page">
+<div class="page" id="admin-page" style="display:none;">
 
   <div class="page-header">
     <div class="page-logo">
@@ -104,6 +104,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </div>
     <div class="page-title">Village Voice - Events Admin</div>
     <div class="admin-badge">Admin</div>
+    <a href="index.html" style="margin-left:10px;font-size:13px;font-weight:600;color:#0F6E56;text-decoration:none;background:#E1F5EE;padding:6px 14px;border-radius:20px;white-space:nowrap;">&#8592; App</a>
   </div>
 
   <div class="status-bar" id="status-bar"></div>
@@ -507,9 +508,13 @@ function renderList() {
   if (q) {
     var filtered = [];
     for (var i = 0; i < all.length; i++) {
-      if (all[i].title.toLowerCase().indexOf(q) > -1 || (all[i].loc||'').toLowerCase().indexOf(q) > -1) {
-        filtered.push(all[i]);
-      }
+      var ev = all[i];
+      var d = new Date(ev.date + 'T12:00:00');
+      var monthName = MONTHS_LONG[d.getMonth()].toLowerCase();
+      var monthShort = MONTHS[d.getMonth()].toLowerCase();
+      var dayName = DAYS[d.getDay()].toLowerCase();
+      var searchStr = (ev.title + ' ' + (ev.loc||'') + ' ' + (ev.details||'') + ' ' + monthName + ' ' + monthShort + ' ' + dayName + ' ' + ev.date).toLowerCase();
+      if (searchStr.indexOf(q) > -1) filtered.push(ev);
     }
     all = filtered;
   }
