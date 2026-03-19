@@ -348,6 +348,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <!-- EVENTS -->
   <div class="section" id="sec-events">
     <h2>Events and Social</h2>
+    <div style="margin-bottom:12px;">
+      <input style="width:100%;padding:10px 14px;border:1px solid #ddd;border-radius:10px;font-size:14px;font-family:inherit;color:#1a1a1a;" id="ev-search" placeholder="Search events..." oninput="renderEvents()"/>
+    </div>
     <p style="font-size:13px;color:#888;margin-bottom:12px;">Listed in date order -- tap a button to add to your calendar</p>
     <div id="ev-list"><div class="loading">Loading events...</div></div>
   </div>
@@ -486,6 +489,8 @@ var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov',
 var MONTHS_L = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 var DAYS_L = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 
+var storedEvents = [];
+
 var BH = [
   {id:'bh1',date:'2026-01-01',title:"New Year's Day",bh:true},
   {id:'bh2',date:'2026-04-03',title:'Good Friday',bh:true},
@@ -603,7 +608,7 @@ function doLogin(uid, name, cottage, ini, av, panel) {
   loadBoardCount();
   loadEmergencyContact(uid);
   renderBoard();
-  renderEvents();
+  loadEventsData();
   showScreen('s-home');
   setNav('nav-home');
 }
@@ -659,7 +664,7 @@ function showSection(sec) {
   if (sos) sos.style.opacity = sec === 'emergency' ? '0' : '1';
   if (sec === 'news') loadTrustMsgs();
   if (sec === 'board') renderBoard();
-  if (sec === 'events') renderEvents();
+  if (sec === 'events') loadEventsData();
   window.scrollTo(0,0);
 }
 
@@ -828,45 +833,68 @@ function icsData(ev) {
   return 'data:text/calendar;charset=utf8,' + encodeURIComponent(lines.join('\r\n'));
 }
 
-function renderEvents() {
+function loadEventsData() {
   var list = document.getElementById('ev-list');
-  if (!list) return;
+  if (list) list.innerHTML = '<div class="loading">Loading events...</div>';
   sbFetch('events?order=date.asc').then(function(data) {
-    var evs = data || [];
-    var all = [];
-    for (var i = 0; i < BH.length; i++) all.push(BH[i]);
-    for (var i = 0; i < evs.length; i++) all.push(evs[i]);
-    all.sort(function(a,b){ return a.date < b.date ? -1 : 1; });
-    var html = '';
-    for (var i = 0; i < all.length; i++) {
-      var ev = all[i];
-      var d = new Date(ev.date + 'T12:00:00');
-      var day = d.getDate();
-      var mon = MONTHS[d.getMonth()];
-      var isBH = ev.bh ? true : false;
-      var cs = CAT_EV[ev.cat] || {bg:'#f0f0e8',color:'#555',label:'Bank holiday'};
-      if (isBH) cs = {bg:'#f0f0e8',color:'#555',label:'Bank holiday'};
-      var st = ev.start_time || ev.start || '';
-      var en = ev.end_time || ev.end || '';
-      var meta = isBH ? 'England bank holiday - all day' : (fmtTime(st) + (en ? ' - ' + fmtTime(en) : '') + (ev.loc ? '  |  ' + ev.loc : ''));
-      var fn = ev.title.replace(/[^a-zA-Z0-9]/g,'_');
-      var ics = icsData(ev);
-      html += '<div class="ev-card' + (isBH ? ' bh' : '') + '">';
-      html += '<div class="ev-inner">';
-      html += '<div class="ev-date' + (isBH ? ' bh' : '') + '"><div class="ev-day">' + day + '</div><div class="ev-mon">' + mon + '</div></div>';
-      html += '<div class="ev-info"><div class="ev-title">' + ev.title + '</div><div class="ev-meta">' + meta + '</div>';
-      html += '<span class="ev-tag" style="background:' + cs.bg + ';color:' + cs.color + ';">' + cs.label + '</span></div></div>';
-      html += '<div class="cal-btns"><a class="cal-btn cal-g" href="' + gcal(ev) + '" target="_blank">Google</a>';
-      html += '<a class="cal-btn cal-a" href="' + ics + '" download="' + fn + '.ics">Apple</a>';
-      html += '<a class="cal-btn cal-i" href="' + ics + '" download="' + fn + '.ics">iCal</a></div></div>';
-    }
-    list.innerHTML = html || '<div class="loading">No events found.</div>';
+    storedEvents = data || [];
+    renderEvents();
   }).catch(function() {
-    list.innerHTML = '<div class="loading">Could not load events.</div>';
+    if (list) list.innerHTML = '<div class="loading">Could not load events.</div>';
   });
 }
 
-// TRUST MESSAGES
+function renderEvents() {
+  var list = document.getElementById('ev-list');
+  if (!list) return;
+  var evs = storedEvents || [];
+  var all = [];
+  for (var i = 0; i < BH.length; i++) all.push(BH[i]);
+  for (var i = 0; i < evs.length; i++) all.push(evs[i]);
+  all.sort(function(a,b){ return a.date < b.date ? -1 : 1; });
+  var searchEl = document.getElementById('ev-search');
+  var q = searchEl ? searchEl.value.toLowerCase() : '';
+  if (q) {
+    var filtered = [];
+    for (var i = 0; i < all.length; i++) {
+      var ev = all[i];
+      var d = new Date(ev.date + 'T12:00:00');
+      var monthName = MONTHS_L[d.getMonth()].toLowerCase();
+      var monthShort = MONTHS[d.getMonth()].toLowerCase();
+      var dayName = DAYS_L[d.getDay()].toLowerCase();
+      var searchStr = (ev.title + ' ' + (ev.loc||'') + ' ' + (ev.details||'') + ' ' + monthName + ' ' + monthShort + ' ' + dayName + ' ' + ev.date).toLowerCase();
+      if (searchStr.indexOf(q) > -1) filtered.push(ev);
+    }
+    all = filtered;
+  }
+  var html = '';
+  for (var i = 0; i < all.length; i++) {
+    var ev = all[i];
+    var d = new Date(ev.date + 'T12:00:00');
+    var day = d.getDate();
+    var mon = MONTHS[d.getMonth()];
+    var isBH = ev.bh ? true : false;
+    var cs = CAT_EV[ev.cat] || {bg:'#f0f0e8',color:'#555',label:'Bank holiday'};
+    if (isBH) cs = {bg:'#f0f0e8',color:'#555',label:'Bank holiday'};
+    var st = ev.start_time || ev.start || '';
+    var en = ev.end_time || ev.end || '';
+    var meta = isBH ? 'England bank holiday - all day' : (fmtTime(st) + (en ? ' - ' + fmtTime(en) : '') + (ev.loc ? '  |  ' + ev.loc : ''));
+    var fn = ev.title.replace(/[^a-zA-Z0-9]/g,'_');
+    var ics = icsData(ev);
+    html += '<div class="ev-card' + (isBH ? ' bh' : '') + '">';
+    html += '<div class="ev-inner">';
+    html += '<div class="ev-date' + (isBH ? ' bh' : '') + '"><div class="ev-day">' + day + '</div><div class="ev-mon">' + mon + '</div></div>';
+    html += '<div class="ev-info"><div class="ev-title">' + ev.title + '</div><div class="ev-meta">' + meta + '</div>';
+    html += '<span class="ev-tag" style="background:' + cs.bg + ';color:' + cs.color + ';">' + cs.label + '</span></div></div>';
+    html += '<div class="cal-btns"><a class="cal-btn cal-g" href="' + gcal(ev) + '" target="_blank">Google</a>';
+    html += '<a class="cal-btn cal-a" href="' + ics + '" download="' + fn + '.ics">Apple</a>';
+    html += '<a class="cal-btn cal-i" href="' + ics + '" download="' + fn + '.ics">iCal</a></div></div>';
+  }
+  if (!all.length) html = '<div class="loading">No events found.</div>';
+  list.innerHTML = html;
+}
+
+
 function loadTrustMsgs() {
   var el = document.getElementById('trust-msgs');
   if (!el) return;
