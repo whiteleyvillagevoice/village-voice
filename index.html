@@ -13,7 +13,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .app{width:100%;max-width:480px;background:#fff;min-height:100vh;display:flex;flex-direction:column;position:relative;box-shadow:0 0 20px rgba(0,0,0,0.08);}
 .screen{display:none;flex-direction:column;flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;}
 .screen.on{display:flex;}
-.login-wrap{padding:36px 22px 40px;}
+.login-wrap{padding:36px 22px 24px;}
 .login-logo{width:52px;height:52px;border-radius:50%;background:#0F6E56;display:flex;align-items:center;justify-content:center;margin-bottom:20px;}
 .login-title{font-size:26px;font-weight:700;color:#1a1a1a;margin-bottom:6px;}
 .login-sub{font-size:14px;color:#666;line-height:1.6;margin-bottom:28px;}
@@ -197,6 +197,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </div>
     <div class="login-title">Village Voice</div>
     <div class="login-sub">Your companion for village life -- news, services, community and your voice, all in one place.</div>
+    <div id="village-banner" style="margin-bottom:20px;border-radius:14px;overflow:hidden;line-height:0;">
+      <img src="village-banner.jpg" alt="Whiteley Village" style="width:100%;max-height:280px;object-fit:cover;object-position:center;border-radius:14px;display:block;" onerror="this.parentElement.style.display='none'"/>
+    </div>
     <div class="login-label">Select your name to continue</div>
     <div id="resident-list">
       <div class="loading">Loading residents...</div>
@@ -208,6 +211,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </button>
     <div class="reg-link">
       <button onclick="openReg()">New resident? Register here</button>
+    </div>
+    <div id="village-footer" style="margin-top:20px;border-radius:14px;overflow:hidden;line-height:0;">
+      <img src="village-footer.jpg" alt="Whiteley Village" style="width:100%;max-height:320px;object-fit:cover;object-position:center;border-radius:14px;display:block;" onerror="this.parentElement.style.display='none'"/>
     </div>
   </div>
 </div>
