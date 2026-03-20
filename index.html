@@ -208,6 +208,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .survey-opt.selected .survey-pct{color:#0F6E56;}
 .survey-meta{font-size:12px;color:#aaa;margin-top:10px;padding-top:10px;border-top:1px solid #f0f0ea;}
 .survey-closed{font-size:12px;background:#f8f8f4;border-radius:8px;padding:8px 12px;color:#888;margin-top:8px;text-align:center;}
+
+.news-filter{padding:7px 14px;border-radius:20px;border:2px solid #e8e8e2;font-size:12px;font-weight:600;cursor:pointer;background:#f8f8f4;color:#888;font-family:inherit;touch-action:manipulation;}
+.news-filter.on{border-width:2px;opacity:1;}
+.news-filter:not(.on){opacity:0.6;}
+
 </style>
 </head>
 <body>
@@ -389,6 +394,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <!-- NEWS -->
   <div class="section" id="sec-news">
     <h2>Village News</h2>
+    <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px;" id="news-filters">
+      <button class="news-filter on" id="nf-all" onclick="filterNews('all',this)">All</button>
+      <button class="news-filter" id="nf-trust" onclick="filterNews('trust',this)" style="background:#E1F5EE;color:#0F6E56;border-color:#9FE1CB;">Trust</button>
+      <button class="news-filter" id="nf-panel" onclick="filterNews('panel',this)" style="background:#EEEDFE;color:#534AB7;border-color:#CECBF6;">Panel</button>
+      <button class="news-filter" id="nf-notice" onclick="filterNews('notice',this)" style="background:#E6F1FB;color:#185FA5;border-color:#B5D4F4;">Notice</button>
+      <button class="news-filter" id="nf-urgent" onclick="filterNews('urgent',this)" style="background:#FAEEDA;color:#854F0B;border-color:#FAC775;">Urgent</button>
+      <button class="news-filter" id="nf-survey" onclick="filterNews('survey',this)" style="background:#FAECE7;color:#993C1D;border-color:#F5C4B3;">Survey results</button>
+    </div>
     <div id="trust-msgs"></div>
     <div id="static-news">
       <div class="card"><span class="tag tag-teal">Trust update</span><h3>Insulation programme -- phase 2 begins 24 March</h3><p>Loft insulation works will begin in Octagon Road properties from 24 March. Individual appointment letters have been posted to all affected residents. Contractors will carry Trust identification.</p><div class="newsdate">Today, 9:00am</div></div>
@@ -1030,28 +1043,113 @@ function renderEvents() {
 }
 
 
+var currentNewsFilter = 'all';
+var storedMessages = [];
+var storedSurveyResults = [];
+
+function filterNews(tag, el) {
+  currentNewsFilter = tag;
+  var btns = document.querySelectorAll('.news-filter');
+  for (var i = 0; i < btns.length; i++) btns[i].classList.remove('on');
+  if (el) el.classList.add('on');
+  renderNewsItems();
+}
+
 function loadTrustMsgs() {
   var el = document.getElementById('trust-msgs');
   if (!el) return;
   sbFetch('messages?order=created_at.desc').then(function(data) {
-    if (!data || !data.length) { el.innerHTML = ''; return; }
-    var TAG = {
-      trust:  {bg:'#E1F5EE',c:'#0F6E56'},
-      panel:  {bg:'#EEEDFE',c:'#534AB7'},
-      notice: {bg:'#E6F1FB',c:'#185FA5'},
-      urgent: {bg:'#FAEEDA',c:'#854F0B'}
-    };
-    var html = '';
-    for (var i = 0; i < data.length; i++) {
-      var m = data[i];
-      var ts = TAG[m.tag] || TAG.trust;
-      html += '<div class="card" style="border-left:3px solid #0F6E56;">';
-      html += '<span class="tag" style="background:' + ts.bg + ';color:' + ts.c + ';">' + m.label + '</span>';
-      html += '<h3>' + m.title + '</h3><p>' + m.body + '</p>';
-      html += '<div class="newsdate">' + (m.date||'') + ' - Village Voice Trust</div></div>';
+    storedMessages = data || [];
+    return sbFetch('surveys?status=eq.closed&order=created_at.desc');
+  }).then(function(surveys) {
+    storedSurveyResults = surveys || [];
+    renderNewsItems();
+  }).catch(function() {
+    renderNewsItems();
+  });
+}
+
+function renderNewsItems() {
+  var el = document.getElementById('trust-msgs');
+  if (!el) return;
+  var TAG = {
+    trust:  {bg:'#E1F5EE',c:'#0F6E56'},
+    panel:  {bg:'#EEEDFE',c:'#534AB7'},
+    notice: {bg:'#E6F1FB',c:'#185FA5'},
+    urgent: {bg:'#FAEEDA',c:'#854F0B'},
+    survey: {bg:'#FAECE7',c:'#993C1D'}
+  };
+  var f = currentNewsFilter;
+  var html = '';
+
+  // Survey results cards
+  if (f === 'all' || f === 'survey') {
+    for (var i = 0; i < storedSurveyResults.length; i++) {
+      var sv = storedSurveyResults[i];
+      html += '<div class="card survey-result-card" data-tag="survey" style="border-left:3px solid #993C1D;">';
+      html += '<span class="tag" style="background:#FAECE7;color:#993C1D;">Survey results</span>';
+      html += '<h3>' + sv.title + '</h3>';
+      html += '<p>' + sv.question + '</p>';
+      html += '<div id="svr-' + sv.id + '" style="margin-top:8px;"><div style="font-size:11px;color:#aaa;">Loading results...</div></div>';
+      html += '<div class="newsdate">Survey closed</div></div>';
     }
-    el.innerHTML = html;
-  }).catch(function() { el.innerHTML = ''; });
+  }
+
+  // Trust messages
+  for (var i = 0; i < storedMessages.length; i++) {
+    var m = storedMessages[i];
+    if (f !== 'all' && m.tag !== f) continue;
+    var ts = TAG[m.tag] || TAG.trust;
+    html += '<div class="card" data-tag="' + m.tag + '" style="border-left:3px solid #0F6E56;">';
+    html += '<span class="tag" style="background:' + ts.bg + ';color:' + ts.c + ';">' + m.label + '</span>';
+    html += '<h3>' + m.title + '</h3><p>' + m.body + '</p>';
+    html += '<div class="newsdate">' + (m.date||'') + ' - Village Voice</div></div>';
+  }
+
+  if (!html) {
+    html = '<div style="text-align:center;padding:20px;color:#aaa;font-size:13px;">No messages in this category.</div>';
+  }
+  el.innerHTML = html;
+
+  // Load survey results inline
+  if (f === 'all' || f === 'survey') {
+    for (var i = 0; i < storedSurveyResults.length; i++) {
+      (function(sv) {
+        sbFetch('survey_options?survey_id=eq.' + sv.id + '&order=display_order.asc').then(function(opts) {
+          sbFetch('survey_responses?survey_id=eq.' + sv.id + '&select=option_id').then(function(responses) {
+            var total = responses ? responses.length : 0;
+            var counts = {};
+            if (responses) {
+              for (var j = 0; j < responses.length; j++) {
+                counts[responses[j].option_id] = (counts[responses[j].option_id] || 0) + 1;
+              }
+            }
+            var rhtml = '';
+            if (total === 0) {
+              rhtml = '<div style="font-size:12px;color:#aaa;">No responses were collected.</div>';
+            } else {
+              for (var k = 0; k < opts.length; k++) {
+                var opt = opts[k];
+                var cnt = counts[opt.id] || 0;
+                var pct = Math.round((cnt / total) * 100);
+                rhtml += '<div style="margin-bottom:6px;">';
+                rhtml += '<div style="display:flex;justify-content:space-between;margin-bottom:2px;">';
+                rhtml += '<span style="font-size:12px;color:#1a1a1a;">' + opt.option_text + '</span>';
+                rhtml += '<span style="font-size:12px;font-weight:700;color:#993C1D;">' + pct + '%</span>';
+                rhtml += '</div>';
+                rhtml += '<div style="height:6px;background:#f0f0ea;border-radius:3px;overflow:hidden;">';
+                rhtml += '<div style="height:100%;background:#993C1D;border-radius:3px;width:' + pct + '%;"></div></div>';
+                rhtml += '</div>';
+              }
+              rhtml += '<div style="font-size:11px;color:#aaa;margin-top:4px;">' + total + ' resident' + (total !== 1 ? 's' : '') + ' responded</div>';
+            }
+            var container = document.getElementById('svr-' + sv.id);
+            if (container) container.innerHTML = rhtml;
+          });
+        });
+      })(storedSurveyResults[i]);
+    }
+  }
 }
 
 // CALL MODAL
@@ -1322,11 +1420,15 @@ var storedSurveys = [];
 var surveyVotes = {};
 
 function loadSurveys() {
-  sbFetch('surveys?status=eq.active&order=created_at.desc').then(function(data) {
+  sbFetch('surveys?order=created_at.desc').then(function(data) {
     storedSurveys = data || [];
-    if (storedSurveys.length > 0) {
+    var active = 0;
+    for (var i = 0; i < storedSurveys.length; i++) {
+      if (storedSurveys[i].status === 'active') active++;
+    }
+    if (active > 0) {
       var el = document.getElementById('survey-count');
-      if (el) el.textContent = storedSurveys.length + ' active';
+      if (el) el.textContent = active + ' active';
     }
     renderSurveys();
   }).catch(function() {
@@ -1338,13 +1440,29 @@ function loadSurveys() {
 function renderSurveys() {
   var el = document.getElementById('surveys-list');
   if (!el) return;
+  var active = [];
+  var closed = [];
+  for (var i = 0; i < storedSurveys.length; i++) {
+    if (storedSurveys[i].status === 'active') active.push(storedSurveys[i]);
+    else closed.push(storedSurveys[i]);
+  }
   if (!storedSurveys.length) {
-    el.innerHTML = '<div style="text-align:center;padding:32px;color:#aaa;font-size:14px;">No active surveys at the moment.</div>';
+    el.innerHTML = '<div style="text-align:center;padding:32px;color:#aaa;font-size:14px;">No surveys at the moment.</div>';
     return;
   }
   var html = '';
-  var loaded = 0;
-  for (var i = 0; i < storedSurveys.length; i++) {
+  if (closed.length > 0) {
+    html += '<div style="font-size:13px;font-weight:700;color:#888;margin-bottom:10px;">Previous surveys -- final results</div>';
+    for (var j = 0; j < closed.length; j++) {
+      html += '<div id="survey-' + closed[j].id + '" class="loading">Loading...</div>';
+    }
+    html += '<div style="font-size:13px;font-weight:700;color:#888;margin:16px 0 10px;padding-top:16px;border-top:1px solid #f0f0ea;">Current surveys</div>';
+  }
+  if (!active.length) {
+    html += '<div style="text-align:center;padding:24px;color:#aaa;font-size:14px;">No active surveys at the moment.</div>';
+  }
+  var allSurveys = closed.concat(active);
+  for (var i = 0; i < allSurveys.length; i++) {
     (function(survey) {
       sbFetch('survey_options?survey_id=eq.' + survey.id + '&order=display_order.asc').then(function(opts) {
         sbFetch('survey_responses?survey_id=eq.' + survey.id + '&select=option_id').then(function(responses) {
@@ -1358,7 +1476,10 @@ function renderSurveys() {
           }
           var myVote = surveyVotes[survey.id] || null;
           var hasVoted = myVote !== null;
-          var shtml = '<div class="survey-card">';
+          var isClosed = survey.status === 'closed';
+          var showResults = hasVoted || isClosed;
+          var shtml = '<div class="survey-card"' + (isClosed ? ' style="background:#fafaf7;border-color:#e8e8d8;"' : '') + '>';
+          if (isClosed) shtml += '<div style="font-size:11px;font-weight:700;color:#888;background:#f0f0e8;padding:4px 10px;border-radius:20px;display:inline-block;margin-bottom:10px;">Closed -- final results</div>';
           shtml += '<div class="survey-q">' + survey.title + '</div>';
           shtml += '<div style="font-size:13px;color:#666;margin-bottom:12px;">' + survey.question + '</div>';
           for (var k = 0; k < opts.length; k++) {
@@ -1366,21 +1487,25 @@ function renderSurveys() {
             var cnt = counts[opt.id] || 0;
             var pct = total > 0 ? Math.round((cnt / total) * 100) : 0;
             var isSelected = (myVote === opt.id);
-            var cls = 'survey-opt' + (hasVoted ? ' voted' : '') + (isSelected ? ' selected' : '');
-            shtml += '<button type="button" class="' + cls + '"';
-            if (!hasVoted) {
-              shtml += ' data-sid="' + survey.id + '" data-oid="' + opt.id + '" onclick="castVoteEl(this)"';
+            if (isClosed || hasVoted) {
+              var barColor = isSelected ? '#0F6E56' : '#9FE1CB';
+              shtml += '<div style="margin-bottom:8px;">';
+              shtml += '<div style="display:flex;justify-content:space-between;margin-bottom:3px;">';
+              shtml += '<span style="font-size:13px;color:#1a1a1a;' + (isSelected ? 'font-weight:600;' : '') + '">' + opt.option_text + (isSelected ? ' (your vote)' : '') + '</span>';
+              shtml += '<span style="font-size:13px;font-weight:700;color:#0F6E56;">' + pct + '%</span>';
+              shtml += '</div>';
+              shtml += '<div style="height:8px;background:#f0f0ea;border-radius:4px;overflow:hidden;">';
+              shtml += '<div style="height:100%;background:' + barColor + ';border-radius:4px;width:' + pct + '%;"></div></div>';
+              shtml += '</div>';
+            } else {
+              var cls = 'survey-opt';
+              shtml += '<button type="button" class="' + cls + '" data-sid="' + survey.id + '" data-oid="' + opt.id + '" onclick="castVoteEl(this)">';
+              shtml += '<span style="flex:1;">' + opt.option_text + '</span>';
+              shtml += '</button>';
             }
-            shtml += '>';
-            shtml += '<span style="flex:1;">' + opt.option_text + '</span>';
-            if (hasVoted) {
-              shtml += '<div class="survey-bar-wrap"><div class="survey-bar" style="width:' + pct + '%"></div></div>';
-              shtml += '<span class="survey-pct">' + pct + '%</span>';
-            }
-            shtml += '</button>';
           }
           shtml += '<div class="survey-meta">' + total + ' response' + (total !== 1 ? 's' : '');
-          if (!hasVoted) shtml += ' -- tap an option to share your view';
+          if (!hasVoted && !isClosed) shtml += ' -- tap an option to share your view';
           shtml += '</div></div>';
           
           var placeholder = document.getElementById('survey-' + survey.id);
