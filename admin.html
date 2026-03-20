@@ -713,9 +713,10 @@ function renderResidentsList(regs,q){
   var residents=allResidents;
   if(q){var filtered=[];for(var i=0;i<residents.length;i++){var r=residents[i];var str=(r.first+' '+r.last+' '+(r.email||'')+' '+(r.address||'')+' '+(r.mobile||'')).toLowerCase();if(str.indexOf(q)>-1)filtered.push(r);}residents=filtered;}
   if(!residents.length&&!regs.length){list.innerHTML='<div style="font-size:13px;color:#aaa;">No residents found.</div>';return;}
+  window._resData=residents;
   for(var i=0;i<residents.length;i++){
     var r=residents[i];var ini=r.first.charAt(0)+r.last.charAt(0);
-    html+='<div class="res-item" data-rid='"+r.id+"' ondblclick="openResEdit(this.dataset.rid)">';
+    html+='<div class="res-item" ondblclick="openResEdit(window._resData[' + i + '].id)">';
     html+='<div class="res-av">'+ini+'</div>';
     html+='<div style="flex:1;min-width:0;"><div class="res-name">'+r.first+' '+r.last+'<span class="res-badge badge-active">active</span></div>';
     html+='<div class="res-detail">'+r.email+'</div>';
@@ -820,7 +821,8 @@ function filterCCList(){
   for(var i=0;i<contacts.length;i++){
     var c=contacts[i];var cs=CC_CATS[c.category]||{label:c.category,bg:'#f0f0e8',color:'#555'};
     if(!q&&c.category!==lastCat){html+='<div style="font-size:11px;font-weight:700;color:#888;margin:'+(lastCat?'11px':'0')+' 0 5px;">'+cs.label+'</div>';lastCat=c.category;}
-    html+='<div class="list-item" data-idx="'+i+'" ondblclick="loadCCIntoForm(window._ccData[this.dataset.idx])">';
+    html+='<div class="list-item" ondblclick="loadCCIntoForm(window._ccData[' + i + '])">';
+
     html+='<div style="display:flex;align-items:center;gap:7px;margin-bottom:2px;">';
     html+='<span style="font-size:10px;padding:2px 7px;border-radius:20px;font-weight:700;background:'+cs.bg+';color:'+cs.color+';">'+cs.label.split(' ')[0]+'</span>';
     html+='<span style="font-size:13px;font-weight:700;color:#1a1a1a;">'+c.name+'</span>';
@@ -889,7 +891,8 @@ function filterDocList(){
   for(var i=0;i<docs.length;i++){
     var d=docs[i];var cs=DOC_CATS[d.category]||{label:d.category,bg:'#f0f0e8',color:'#555'};
     if(!q&&d.category!==lastCat){html+='<div style="font-size:11px;font-weight:700;color:#888;margin:'+(lastCat?'11px':'0')+' 0 5px;">'+cs.label+'</div>';lastCat=d.category;}
-    html+='<div class="list-item" data-idx="'+i+'" ondblclick="loadDocIntoForm(window._docData[this.dataset.idx])">';
+    html+='<div class="list-item" ondblclick="loadDocIntoForm(window._docData[' + i + '])">';
+
     html+='<div style="display:flex;align-items:center;gap:7px;margin-bottom:2px;">';
     html+='<span style="font-size:10px;padding:2px 7px;border-radius:20px;font-weight:700;background:'+cs.bg+';color:'+cs.color+';">'+cs.label+'</span>';
     html+='<span style="font-size:13px;font-weight:700;color:#1a1a1a;">'+d.title+'</span></div>';
@@ -899,6 +902,16 @@ function filterDocList(){
   list.innerHTML=html;
   window._docData=docs;
 }
+function handleResClick(e, id) {
+  if (e.detail >= 2) openResEdit(id);
+}
+function handleCCClick(e, idx) {
+  if (e.detail >= 2) loadCCIntoForm(window._ccData[idx]);
+}
+function handleDocClick(e, idx) {
+  if (e.detail >= 2) loadDocIntoForm(window._docData[idx]);
+}
+
 </script>
 </body>
 </html>

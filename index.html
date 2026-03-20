@@ -577,7 +577,7 @@ var DAYS_L = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Satur
 var storedEvents = [];
 
 var BH = [
-  {id:'bh1',date:'2026-01-01',title:"New Year's Day",bh:true},
+  {id:'bh1',date:'2026-01-01',title:'New Years Day',bh:true},
   {id:'bh2',date:'2026-04-03',title:'Good Friday',bh:true},
   {id:'bh3',date:'2026-04-06',title:'Easter Monday',bh:true},
   {id:'bh4',date:'2026-05-04',title:'Early May bank holiday',bh:true},
@@ -1162,7 +1162,7 @@ function renderCommunity() {
     if (c.role) html += '<div style="font-size:12px;color:#888;margin-bottom:4px;">' + c.role + '</div>';
     if (c.notes) html += '<div style="font-size:12px;color:#aaa;margin-bottom:6px;">' + c.notes + '</div>';
     if (c.phone) {
-      html += '<div style="font-size:13px;font-weight:600;color:#0F6E56;cursor:pointer;touch-action:manipulation;margin-bottom:3px;" onclick="dial('' + c.name + '','' + c.phone + '','' + c.phone.replace(/\s/g,'') + '','#0F6E56','')">';
+        html += '<div style="font-size:13px;font-weight:600;color:#0F6E56;cursor:pointer;touch-action:manipulation;margin-bottom:3px;" ' + 'onclick="dialCC(this)" data-name="' + c.name.replace(/"/g,'') + '" data-phone="' + c.phone + '">';
       html += '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" style="vertical-align:middle;margin-right:4px;"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-.18-8.7A2 2 0 014.11 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" stroke="#0F6E56" stroke-width="1.5" stroke-linecap="round" fill="none"/></svg>';
       html += c.phone + ' -- tap to call</div>';
     }
@@ -1228,7 +1228,7 @@ function renderDocuments() {
       html += '<div style="font-size:13px;font-weight:700;color:#888;margin:' + (lastCat ? '16px' : '0') + ' 0 8px;">' + cs.label + '</div>';
       lastCat = d.category;
     }
-    html += '<div class="card" style="margin-bottom:8px;padding:12px 14px;cursor:pointer;" onclick="openDocModal('' + d.title.replace(/'/g,'') + '','' + (d.description||'').replace(/'/g,'') + '','' + d.url + '')">';
+    html += '<div class="card" style="margin-bottom:8px;padding:12px 14px;cursor:pointer;" ' + 'onclick="openDocModalEl(this)" data-title="' + d.title.replace(/"/g,'') + '" data-desc="' + (d.description||"").replace(/"/g,'') + '" data-url="' + d.url + '">';
     html += '<div style="display:flex;align-items:flex-start;gap:8px;">';
     html += '<div style="flex:1;">';
     html += '<div style="font-size:15px;font-weight:700;color:#1a1a1a;margin-bottom:3px;">' + d.title + '</div>';
@@ -1255,6 +1255,20 @@ function openTrustSite() {
 }
 function closeTrust() { document.getElementById('trust-modal').classList.remove('on'); }
 function goTrust() { window.open('https://www.whiteleyhomestrust.org.uk', '_blank'); closeTrust(); }
+
+function dialCC(el) {
+  var name = el.getAttribute('data-name') || '';
+  var phone = el.getAttribute('data-phone') || '';
+  var raw = phone.replace(/\s/g,'');
+  dial(name, phone, raw, '#0F6E56', '');
+}
+
+function openDocModalEl(el) {
+  var title = el.getAttribute('data-title') || '';
+  var desc = el.getAttribute('data-desc') || '';
+  var url = el.getAttribute('data-url') || '';
+  openDocModal(title, desc, url);
+}
 
 </script>
 </body>
