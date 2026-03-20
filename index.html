@@ -499,19 +499,19 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <h3>Share your view</h3>
     <p>Submissions are read by the Village Voice Panel. They do not go directly to the Trust.</p>
     <div class="form-group"><div class="form-label">Topic</div>
-            <div class="cat-opts">
-        <button type="button" class="cat-opt" id="copt-activities" style="background:#E1F5EE;color:#0F6E56;border-color:#0F6E56;" onclick="pickCatBtn(this,'activities')">Activities</button>
-        <button type="button" class="cat-opt" id="copt-cafe" style="background:#FAEEDA;color:#854F0B;border-color:#854F0B;" onclick="pickCatBtn(this,'cafe')">Cafe</button>
-        <button type="button" class="cat-opt" id="copt-concerns" style="background:#FCEBEB;color:#A32D2D;border-color:#A32D2D;" onclick="pickCatBtn(this,'concerns')">Concerns</button>
-        <button type="button" class="cat-opt" id="copt-decoration" style="background:#EEEDFE;color:#534AB7;border-color:#534AB7;" onclick="pickCatBtn(this,'decoration')">Decoration</button>
-        <button type="button" class="cat-opt" id="copt-events" style="background:#E6F1FB;color:#185FA5;border-color:#185FA5;" onclick="pickCatBtn(this,'events')">Events</button>
-        <button type="button" class="cat-opt" id="copt-floors" style="background:#f0f0e8;color:#555555;border-color:#555555;" onclick="pickCatBtn(this,'floors')">Floor coverings</button>
-        <button type="button" class="cat-opt" id="copt-grounds" style="background:#E1F5EE;color:#0F6E56;border-color:#0F6E56;" onclick="pickCatBtn(this,'grounds')">Grounds</button>
-        <button type="button" class="cat-opt" id="copt-heating" style="background:#FAEEDA;color:#854F0B;border-color:#854F0B;" onclick="pickCatBtn(this,'heating')">Heating</button>
-        <button type="button" class="cat-opt" id="copt-lighting" style="background:#FAEEDA;color:#854F0B;border-color:#854F0B;" onclick="pickCatBtn(this,'lighting')">Lighting</button>
-        <button type="button" class="cat-opt" id="copt-security" style="background:#FCEBEB;color:#A32D2D;border-color:#A32D2D;" onclick="pickCatBtn(this,'security')">Security</button>
-        <button type="button" class="cat-opt" id="copt-transport" style="background:#E6F1FB;color:#185FA5;border-color:#185FA5;" onclick="pickCatBtn(this,'transport')">Transport</button>
-        <button type="button" class="cat-opt" id="copt-windows" style="background:#EEEDFE;color:#534AB7;border-color:#534AB7;" onclick="pickCatBtn(this,'windows')">Windows and doors</button>
+            <div class="cat-opts" id="cat-opts-container">
+        <button type="button" id="copt-activities" class="cat-opt" style="background:#E1F5EE;color:#0F6E56;border-color:#0F6E56;" data-cat="activities" onclick="pickCatBtn(this)">Activities</button>
+        <button type="button" id="copt-cafe" class="cat-opt" style="background:#FAEEDA;color:#854F0B;border-color:#854F0B;" data-cat="cafe" onclick="pickCatBtn(this)">Cafe</button>
+        <button type="button" id="copt-concerns" class="cat-opt" style="background:#FCEBEB;color:#A32D2D;border-color:#A32D2D;" data-cat="concerns" onclick="pickCatBtn(this)">Concerns</button>
+        <button type="button" id="copt-decoration" class="cat-opt" style="background:#EEEDFE;color:#534AB7;border-color:#534AB7;" data-cat="decoration" onclick="pickCatBtn(this)">Decoration</button>
+        <button type="button" id="copt-events" class="cat-opt" style="background:#E6F1FB;color:#185FA5;border-color:#185FA5;" data-cat="events" onclick="pickCatBtn(this)">Events</button>
+        <button type="button" id="copt-floors" class="cat-opt" style="background:#f0f0e8;color:#555555;border-color:#555555;" data-cat="floors" onclick="pickCatBtn(this)">Floor coverings</button>
+        <button type="button" id="copt-grounds" class="cat-opt" style="background:#E1F5EE;color:#0F6E56;border-color:#0F6E56;" data-cat="grounds" onclick="pickCatBtn(this)">Grounds</button>
+        <button type="button" id="copt-heating" class="cat-opt" style="background:#FAEEDA;color:#854F0B;border-color:#854F0B;" data-cat="heating" onclick="pickCatBtn(this)">Heating</button>
+        <button type="button" id="copt-lighting" class="cat-opt" style="background:#FAEEDA;color:#854F0B;border-color:#854F0B;" data-cat="lighting" onclick="pickCatBtn(this)">Lighting</button>
+        <button type="button" id="copt-security" class="cat-opt" style="background:#FCEBEB;color:#A32D2D;border-color:#A32D2D;" data-cat="security" onclick="pickCatBtn(this)">Security</button>
+        <button type="button" id="copt-transport" class="cat-opt" style="background:#E6F1FB;color:#185FA5;border-color:#185FA5;" data-cat="transport" onclick="pickCatBtn(this)">Transport</button>
+        <button type="button" id="copt-windows" class="cat-opt" style="background:#EEEDFE;color:#534AB7;border-color:#534AB7;" data-cat="windows" onclick="pickCatBtn(this)">Windows and doors</button>
       </div>
     </div>
     <div class="form-group"><label class="form-label">Subject</label><input class="form-input" id="pt" maxlength="80" placeholder="Brief description"/></div>
@@ -709,7 +709,7 @@ function loadResidents() {
       var ini = r.first.charAt(0) + r.last.charAt(0);
       var name = r.first + ' ' + r.last;
       var addr = r.address || 'Whiteley Village';
-      html += '<button class="namebtn" onclick="doLogin(\'' + r.id + '\',\'' + name + '\',\'' + addr + '\',\'' + ini + '\',\'' + av + '\',false)">';
+      html += '<button class="namebtn" data-uid="' + r.id + '" data-name="' + name + '" data-cottage="' + addr + '" data-ini="' + ini + '" data-av="' + av + '" onclick="loginFromBtn(this)">';
       html += '<div class="av ' + av + '">' + ini + '</div>';
       html += '<div><span class="nametxt">' + name + '</span><span class="cottxt">' + addr + '</span></div>';
       html += '</button>';
@@ -917,20 +917,7 @@ function pickCat(c, el) {
       btn.style.boxShadow = 'none';
     }
   }
-  var UNUSED_colors = {
-    activities: {bg:'#E1F5EE',c:'#0F6E56',b:'#0F6E56'},
-    cafe:       {bg:'#FAEEDA',c:'#854F0B',b:'#854F0B'},
-    concerns:   {bg:'#FCEBEB',c:'#A32D2D',b:'#A32D2D'},
-    decoration: {bg:'#EEEDFE',c:'#534AB7',b:'#534AB7'},
-    events:     {bg:'#E6F1FB',c:'#185FA5',b:'#185FA5'},
-    floors:     {bg:'#f0f0e8',c:'#555555',b:'#888888'},
-    grounds:    {bg:'#E1F5EE',c:'#0F6E56',b:'#0F6E56'},
-    heating:    {bg:'#FAEEDA',c:'#854F0B',b:'#854F0B'},
-    lighting:   {bg:'#FAEEDA',c:'#854F0B',b:'#854F0B'},
-    security:   {bg:'#FCEBEB',c:'#A32D2D',b:'#A32D2D'},
-    transport:  {bg:'#E6F1FB',c:'#185FA5',b:'#185FA5'},
-    windows:    {bg:'#EEEDFE',c:'#534AB7',b:'#534AB7'}
-  };
+  
   var col = colors[c] || {bg:'#E1F5EE',c:'#0F6E56',b:'#0F6E56'};
   el.style.background = col.bg;
   el.style.color = col.c;
@@ -1373,7 +1360,8 @@ function cancelVote(sid) {
 function confirmVoteEl(el) { confirmVote(el.getAttribute('data-sid')); }
 function cancelVoteEl(el) { cancelVote(el.getAttribute('data-sid')); }
 
-function pickCatBtn(el, c) {
+function pickCatBtn(el) {
+  var c = el.getAttribute('data-cat') || '';
   pickCat(c, el);
 }
 
@@ -1401,6 +1389,15 @@ function loadTrustMsgs() {
     }
     el.innerHTML = html;
   }).catch(function() { el.innerHTML = ''; });
+}
+
+function loginFromBtn(el) {
+  var uid = el.getAttribute('data-uid') || '';
+  var name = el.getAttribute('data-name') || '';
+  var cottage = el.getAttribute('data-cottage') || '';
+  var ini = el.getAttribute('data-ini') || '';
+  var av = el.getAttribute('data-av') || '';
+  doLogin(uid, name, cottage, ini, av, false);
 }
 
 </script>
