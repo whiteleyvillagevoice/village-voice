@@ -54,6 +54,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .tile.red{background:#fef2f2;border-color:#F7C1C1;}
 .tile.blue{background:#eff6ff;border-color:#B5D4F4;}
 .tile.purple{background:#f5f3ff;border-color:#CECBF6;}
+.tile.amber{background:#fffbf0;border-color:#FAC775;}
 .tile-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:6px;}
 .tile-name{font-size:16px;font-weight:700;color:#1a1a1a;}
 .tile-hint{font-size:12px;color:#888;margin-top:3px;}
@@ -178,6 +179,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .pw-btns{display:flex;gap:10px;}
 .pw-cancel{flex:1;padding:13px;border:1px solid #e8e8e2;border-radius:10px;background:#f8f8f4;color:#666;font-size:15px;cursor:pointer;font-family:inherit;touch-action:manipulation;}
 .pw-go{flex:2;padding:13px;border:none;border-radius:10px;background:#534AB7;color:#fff;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation;}
+
+@keyframes vvSpin {
+  0%   { transform: rotate(0deg) scale(0.4); opacity: 0; }
+  10%  { opacity: 1; }
+  80%  { transform: rotate(2520deg) scale(1.04); opacity: 1; }
+  90%  { transform: rotate(2508deg) scale(0.97); }
+  100% { transform: rotate(2520deg) scale(1); opacity: 1; }
+}
 </style>
 </head>
 <body>
@@ -192,8 +201,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <!-- LOGIN -->
 <div class="screen on" id="s-login">
   <div class="login-wrap">
-    <div class="login-logo">
-      <svg width="26" height="26" viewBox="0 0 20 20" fill="none"><path d="M10 2C6 2 3 5 3 9c0 2.5 1.2 4.7 3 6.1V17l2-1.2 2 1.2v-1.9c1.8-1.4 3-3.6 3-6.1 0-4-3-7-5-7z" fill="white" opacity="0.9"/><circle cx="10" cy="9" r="2.5" fill="#0F6E56"/></svg>
+    <div class="login-logo" id="vv-logo" style="width:72px;height:72px;border-radius:50%;background:#0F6E56;display:flex;align-items:center;justify-content:center;margin-bottom:20px;animation:vvSpin 2.4s cubic-bezier(0.4,0,0.2,1) forwards;">
+      <svg width="38" height="38" viewBox="0 0 38 38" fill="none">
+        <path d="M6 8L19 30L32 8" stroke="white" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </svg>
     </div>
     <div class="login-title">Village Voice</div>
     <div class="login-sub">Your companion for village life -- news, services, community and your voice, all in one place.</div>
@@ -213,7 +224,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <button onclick="openReg()">New resident? Register here</button>
     </div>
     <div id="village-footer" style="margin-top:20px;border-radius:14px;overflow:hidden;line-height:0;">
-      <img src="village-footer.jpg" alt="Whiteley Village" style="width:100%;max-height:320px;object-fit:cover;object-position:center;border-radius:14px;display:block;" onerror="this.parentElement.style.display='none'"/>
+      <img src="village-footer.jpg" alt="Whiteley Village" style="width:100%;height:auto;border-radius:14px;display:block;" onerror="this.parentElement.style.display='none'"/>
     </div>
   </div>
 </div>
@@ -250,6 +261,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <div class="tile purple" onclick="showSection('events')">
         <div class="tile-icon" style="background:#EEEDFE;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="18" rx="2" stroke="#534AB7" stroke-width="1.5"/><line x1="16" y1="2" x2="16" y2="6" stroke="#534AB7" stroke-width="1.5" stroke-linecap="round"/><line x1="8" y1="2" x2="8" y2="6" stroke="#534AB7" stroke-width="1.5" stroke-linecap="round"/><line x1="3" y1="10" x2="21" y2="10" stroke="#534AB7" stroke-width="1.5" stroke-linecap="round"/></svg></div>
         <div><div class="tile-name">Events</div><div class="tile-hint">What's on</div></div>
+      </div>
+      <div class="tile amber" onclick="showSection('community')">
+        <div class="tile-icon" style="background:#FAEEDA;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" stroke="#854F0B" stroke-width="1.5" stroke-linecap="round"/><circle cx="9" cy="7" r="4" stroke="#854F0B" stroke-width="1.5"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke="#854F0B" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        <div><div class="tile-name">Community</div><div class="tile-hint">Contacts</div></div>
       </div>
     </div>
     <button class="admin-btn" onclick="openAdminPw()">
@@ -364,6 +379,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div id="ev-list"><div class="loading">Loading events...</div></div>
   </div>
 
+  <!-- COMMUNITY CONTACTS -->
+  <div class="section" id="sec-community">
+    <h2>Community Contacts</h2>
+    <div style="margin-bottom:12px;">
+      <input style="width:100%;padding:10px 14px;border:1px solid #ddd;border-radius:10px;font-size:14px;font-family:inherit;color:#1a1a1a;" id="cc-search" placeholder="Search by name, role or category..." oninput="renderCommunity()"/>
+    </div>
+    <div id="cc-list"><div class="loading">Loading contacts...</div></div>
+  </div>
+
   <!-- BOARD -->
   <div class="section" id="sec-board">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
@@ -392,6 +416,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <button class="nav-btn" id="nav-board" onclick="showSection('board')">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke-linecap="round"/></svg>
     <span class="nav-lbl">Board</span>
+  </button>
+  <button class="nav-btn" id="nav-community" onclick="showSection('community')">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" stroke-linecap="round"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke-linecap="round"/></svg>
+    <span class="nav-lbl">Community</span>
   </button>
   <button class="nav-btn" id="nav-emergency" onclick="showSection('emergency')">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-.18-8.7A2 2 0 014.11 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" stroke-linecap="round"/></svg>
@@ -674,6 +702,7 @@ function showSection(sec) {
   if (sec === 'news') loadTrustMsgs();
   if (sec === 'board') renderBoard();
   if (sec === 'events') loadEventsData();
+  if (sec === 'community') loadCommunityData();
   window.scrollTo(0,0);
 }
 
@@ -1025,6 +1054,79 @@ function dialEcContact() {
   var name = document.getElementById('ec-name').textContent;
   var phone = document.getElementById('ec-phone').textContent;
   dial(name, phone, ecPendingNum, '#534AB7', 'This is your nominated emergency contact.');
+}
+
+// COMMUNITY CONTACTS
+var storedContacts = [];
+
+var CC_CATS = {
+  staff:      {label:'Village staff and wardens', bg:'#E1F5EE', color:'#0F6E56'},
+  panel:      {label:'Panel members',             bg:'#EEEDFE', color:'#534AB7'},
+  facilities: {label:'Village facilities',        bg:'#E6F1FB', color:'#185FA5'},
+  welfare:    {label:'Welfare and support',       bg:'#FCEBEB', color:'#A32D2D'},
+  activities: {label:'Activity leaders',          bg:'#FAEEDA', color:'#854F0B'}
+};
+
+function loadCommunityData() {
+  sbFetch('community_contacts?active=eq.true&order=category.asc,display_order.asc').then(function(data) {
+    storedContacts = data || [];
+    renderCommunity();
+  }).catch(function() {
+    var el = document.getElementById('cc-list');
+    if (el) el.innerHTML = '<div class="loading">Could not load contacts.</div>';
+  });
+}
+
+function renderCommunity() {
+  var el = document.getElementById('cc-list');
+  if (!el) return;
+  var contacts = storedContacts;
+  var searchEl = document.getElementById('cc-search');
+  var q = searchEl ? searchEl.value.toLowerCase() : '';
+  if (q) {
+    var filtered = [];
+    for (var i = 0; i < contacts.length; i++) {
+      var c = contacts[i];
+      var cat = CC_CATS[c.category] || {label:c.category};
+      var str = (c.name + ' ' + c.role + ' ' + c.category + ' ' + cat.label + ' ' + (c.notes||'') + ' ' + (c.phone||'') + ' ' + (c.email||'')).toLowerCase();
+      if (str.indexOf(q) > -1) filtered.push(c);
+    }
+    contacts = filtered;
+  }
+  if (!contacts.length) {
+    el.innerHTML = '<div style="text-align:center;padding:32px;color:#aaa;font-size:14px;">No contacts found.</div>';
+    return;
+  }
+  var html = '';
+  var lastCat = '';
+  for (var i = 0; i < contacts.length; i++) {
+    var c = contacts[i];
+    var cs = CC_CATS[c.category] || {label:c.category, bg:'#f0f0e8', color:'#555'};
+    if (!q && c.category !== lastCat) {
+      html += '<div style="font-size:13px;font-weight:700;color:#888;margin:' + (lastCat ? '16px' : '0') + ' 0 8px;">' + cs.label + '</div>';
+      lastCat = c.category;
+    }
+    html += '<div class="card" style="margin-bottom:8px;padding:12px 14px;">';
+    html += '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;">';
+    html += '<div style="flex:1;">';
+    html += '<div style="font-size:15px;font-weight:700;color:#1a1a1a;margin-bottom:2px;">' + c.name + '</div>';
+    if (c.role) html += '<div style="font-size:12px;color:#888;margin-bottom:4px;">' + c.role + '</div>';
+    if (c.notes) html += '<div style="font-size:12px;color:#aaa;margin-bottom:6px;">' + c.notes + '</div>';
+    if (c.phone) {
+      html += '<div style="font-size:13px;font-weight:600;color:#0F6E56;cursor:pointer;touch-action:manipulation;margin-bottom:3px;" onclick="dial('' + c.name + '','' + c.phone + '','' + c.phone.replace(/\s/g,'') + '','#0F6E56','')">';
+      html += '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" style="vertical-align:middle;margin-right:4px;"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-.18-8.7A2 2 0 014.11 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" stroke="#0F6E56" stroke-width="1.5" stroke-linecap="round" fill="none"/></svg>';
+      html += c.phone + ' -- tap to call</div>';
+    }
+    if (c.email) {
+      html += '<div style="font-size:13px;font-weight:600;color:#185FA5;margin-bottom:3px;">';
+      html += '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" style="vertical-align:middle;margin-right:4px;"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="#185FA5" stroke-width="1.5"/><polyline points="22,6 12,13 2,6" stroke="#185FA5" stroke-width="1.5" stroke-linecap="round" fill="none"/></svg>';
+      html += c.email + '</div>';
+    }
+    html += '</div>';
+    html += '<span style="font-size:11px;padding:3px 9px;border-radius:20px;font-weight:700;background:' + cs.bg + ';color:' + cs.color + ';white-space:nowrap;flex-shrink:0;">' + cs.label.split(' ')[0] + '</span>';
+    html += '</div></div>';
+  }
+  el.innerHTML = html;
 }
 
 </script>

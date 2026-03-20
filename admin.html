@@ -82,10 +82,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div class="login-screen" id="login-screen">
   <div class="login-box">
     <div class="login-logo">
-      <svg width="22" height="22" viewBox="0 0 20 20" fill="none">
-        <path d="M10 2C6 2 3 5 3 9c0 2.5 1.2 4.7 3 6.1V17l2-1.2 2 1.2v-1.9c1.8-1.4 3-3.6 3-6.1 0-4-3-7-5-7z" fill="white" opacity="0.9"/>
-        <circle cx="10" cy="9" r="2.5" fill="#0F6E56"/>
-      </svg>
+      <svg width="22" height="22" viewBox="0 0 38 38" fill="none"><circle cx="19" cy="19" r="19" fill="#0F6E56"/><path d="M9 10L19 28L29 10" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
     </div>
     <div class="login-title">VoiceVillage Admin</div>
     <div class="login-sub">Enter the administrator password to continue</div>
@@ -100,10 +97,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
   <div class="page-header">
     <div class="page-logo">
-      <svg width="22" height="22" viewBox="0 0 20 20" fill="none">
-        <path d="M10 2C6 2 3 5 3 9c0 2.5 1.2 4.7 3 6.1V17l2-1.2 2 1.2v-1.9c1.8-1.4 3-3.6 3-6.1 0-4-3-7-5-7z" fill="white" opacity="0.9"/>
-        <circle cx="10" cy="9" r="2.5" fill="#0F6E56"/>
-      </svg>
+      <svg width="22" height="22" viewBox="0 0 38 38" fill="none"><circle cx="19" cy="19" r="19" fill="#0F6E56"/><path d="M9 10L19 28L29 10" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
     </div>
     <div class="page-title">Village Voice - Events Admin</div>
     <div class="admin-badge">Admin</div>
@@ -194,11 +188,45 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </div>
   </div>
 
-  <!-- RESIDENT MANAGEMENT -->
+  <!-- COMMUNITY CONTACTS -->
+  <div class="panel">
+    <div class="panel-title">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" stroke="#854F0B" stroke-width="2" stroke-linecap="round"/><circle cx="9" cy="7" r="4" stroke="#854F0B" stroke-width="2"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke="#854F0B" stroke-width="2" stroke-linecap="round"/></svg>
+      Community Contacts
+    </div>
+    <p style="font-size:13px;color:#888;margin-bottom:16px;">Add contacts that appear in the Community section of the resident app. All categories and a search function are available to residents.</p>
+    <div class="form-group">
+      <div class="form-label">Category</div>
+      <div class="cat-grid" id="cc-cat-grid">
+        <button class="cat-btn" onclick="pickCCCat('staff',this)">Staff and wardens</button>
+        <button class="cat-btn" onclick="pickCCCat('panel',this)">Panel</button>
+        <button class="cat-btn" onclick="pickCCCat('facilities',this)">Facilities</button>
+        <button class="cat-btn" onclick="pickCCCat('welfare',this)">Welfare</button>
+        <button class="cat-btn" onclick="pickCCCat('activities',this)">Activities</button>
+      </div>
+    </div>
+    <div class="form-group"><label class="form-label">Name</label><input class="form-input" id="cc-name" placeholder="e.g. Village Office" maxlength="80"/></div>
+    <div class="form-group"><label class="form-label">Role / description</label><input class="form-input" id="cc-role" placeholder="e.g. Main office" maxlength="80"/></div>
+    <div class="form-row">
+      <div><label class="form-label">Phone number</label><input class="form-input" id="cc-phone" type="tel" placeholder="01932 861 000" maxlength="30"/></div>
+      <div><label class="form-label">Email address</label><input class="form-input" id="cc-email" type="email" placeholder="optional" maxlength="100"/></div>
+    </div>
+    <div class="form-group"><label class="form-label">Notes <span style="font-weight:400;color:#aaa;">(opening hours, instructions etc)</span></label><input class="form-input" id="cc-notes" placeholder="e.g. Mon-Fri 9am-5pm" maxlength="100"/></div>
+    <button class="btn-save" onclick="saveCCContact()" style="background:#854F0B;">Save contact</button>
+    <button class="btn-delete" id="cc-btn-delete" onclick="deleteCCContact()" style="display:none;">Remove this contact</button>
+    <button class="btn-outline" onclick="clearCCForm()" style="display:block;margin-top:10px;width:100%;text-align:center;color:#854F0B;border-color:#854F0B;">Clear form</button>
+    <div style="margin-top:18px;">
+      <div class="form-label" style="margin-bottom:8px;">All community contacts <span id="cc-count" style="font-weight:400;color:#aaa;"></span></div>
+      <div style="font-size:12px;color:#aaa;margin-bottom:8px;">Double-click any entry to edit</div>
+      <div id="cc-list-admin"><div class="loading">Loading...</div></div>
+    </div>
+  </div>
+
+  <!-- RESIDENT DETAILS -->
   <div class="panel">
     <div class="panel-title">
       <svg viewBox="0 0 24 24" fill="none"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" stroke="#0F6E56" stroke-width="2" stroke-linecap="round"/><circle cx="9" cy="7" r="4" stroke="#0F6E56" stroke-width="2"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke="#0F6E56" stroke-width="2" stroke-linecap="round"/></svg>
-      Resident management
+      Resident Details
     </div>
     <div class="form-row">
       <div><label class="form-label">First name</label><input class="form-input" id="res-first" placeholder="First name" maxlength="50"/></div>
@@ -344,6 +372,7 @@ function checkLogin() {
       loadEvents();
       renderMessages();
       renderResidents();
+      renderCCList();
     } else {
       document.getElementById('pw-error').textContent = 'Incorrect password. Please try again.';
       document.getElementById('pw-input').value = '';
@@ -866,6 +895,154 @@ function saveResEdit() {
     showStatus('Resident details updated.', true);
   }).catch(function() { showStatus('Could not update resident.', false); });
 }
+// -- COMMUNITY CONTACTS ADMIN --
+var CC_CATS_ADMIN = {
+  staff:      {label:'Staff and wardens', bg:'#E1F5EE', color:'#0F6E56'},
+  panel:      {label:'Panel',             bg:'#EEEDFE', color:'#534AB7'},
+  facilities: {label:'Facilities',        bg:'#E6F1FB', color:'#185FA5'},
+  welfare:    {label:'Welfare',           bg:'#FCEBEB', color:'#A32D2D'},
+  activities: {label:'Activities',        bg:'#FAEEDA', color:'#854F0B'}
+};
+var selCCCat = '';
+var editCCId = null;
+
+function pickCCCat(c, el) {
+  selCCCat = c;
+  var btns = document.getElementById('cc-cat-grid').getElementsByTagName('button');
+  for (var i = 0; i < btns.length; i++) {
+    btns[i].style.background = '#fff';
+    btns[i].style.color = '#888';
+    btns[i].style.borderColor = '#e8e8e2';
+  }
+  var cs = CC_CATS_ADMIN[c] || CC_CATS_ADMIN.staff;
+  el.style.background = cs.bg;
+  el.style.color = cs.color;
+  el.style.borderColor = cs.color;
+}
+
+function clearCCForm() {
+  editCCId = null;
+  selCCCat = '';
+  document.getElementById('cc-name').value = '';
+  document.getElementById('cc-role').value = '';
+  document.getElementById('cc-phone').value = '';
+  document.getElementById('cc-email').value = '';
+  document.getElementById('cc-notes').value = '';
+  document.getElementById('cc-btn-delete').style.display = 'none';
+  var btns = document.getElementById('cc-cat-grid').getElementsByTagName('button');
+  for (var i = 0; i < btns.length; i++) {
+    btns[i].style.background = '#fff';
+    btns[i].style.color = '#888';
+    btns[i].style.borderColor = '#e8e8e2';
+  }
+}
+
+function saveCCContact() {
+  var name = document.getElementById('cc-name').value.trim();
+  if (!name) { showStatus('Please enter a contact name.', false); return; }
+  if (!selCCCat) { showStatus('Please select a category.', false); return; }
+  var body = {
+    name: name,
+    role: document.getElementById('cc-role').value.trim(),
+    category: selCCCat,
+    phone: document.getElementById('cc-phone').value.trim(),
+    email: document.getElementById('cc-email').value.trim(),
+    notes: document.getElementById('cc-notes').value.trim(),
+    active: true
+  };
+  if (editCCId) {
+    sbFetch('community_contacts?id=eq.' + editCCId, {method:'PATCH', body:body}).then(function() {
+      showStatus('Contact updated.', true);
+      clearCCForm();
+      renderCCList();
+    }).catch(function() { showStatus('Could not update contact.', false); });
+  } else {
+    body.id = 'cc_' + Date.now();
+    body.display_order = 99;
+    sbFetch('community_contacts', {method:'POST', body:body}).then(function() {
+      showStatus('Contact added.', true);
+      clearCCForm();
+      renderCCList();
+    }).catch(function() { showStatus('Could not add contact.', false); });
+  }
+}
+
+function deleteCCContact() {
+  if (!editCCId) return;
+  if (!confirm('Remove this contact?')) return;
+  sbFetch('community_contacts?id=eq.' + editCCId, {method:'DELETE'}).then(function() {
+    showStatus('Contact removed.', true);
+    clearCCForm();
+    renderCCList();
+  }).catch(function() { showStatus('Could not remove contact.', false); });
+}
+
+function loadCCIntoForm(c) {
+  editCCId = c.id;
+  selCCCat = c.category;
+  document.getElementById('cc-name').value = c.name || '';
+  document.getElementById('cc-role').value = c.role || '';
+  document.getElementById('cc-phone').value = c.phone || '';
+  document.getElementById('cc-email').value = c.email || '';
+  document.getElementById('cc-notes').value = c.notes || '';
+  document.getElementById('cc-btn-delete').style.display = 'block';
+  var catKeys = ['staff','panel','facilities','welfare','activities'];
+  var btns = document.getElementById('cc-cat-grid').getElementsByTagName('button');
+  for (var i = 0; i < btns.length; i++) {
+    var cs = CC_CATS_ADMIN[catKeys[i]] || CC_CATS_ADMIN.staff;
+    if (catKeys[i] === c.category) {
+      btns[i].style.background = cs.bg;
+      btns[i].style.color = cs.color;
+      btns[i].style.borderColor = cs.color;
+    } else {
+      btns[i].style.background = '#fff';
+      btns[i].style.color = '#888';
+      btns[i].style.borderColor = '#e8e8e2';
+    }
+  }
+  window.scrollTo(0, document.getElementById('cc-cat-grid').getBoundingClientRect().top + window.scrollY - 100);
+}
+
+function renderCCList() {
+  var list = document.getElementById('cc-list-admin');
+  var count = document.getElementById('cc-count');
+  sbFetch('community_contacts?active=eq.true&order=category.asc,display_order.asc').then(function(data) {
+    if (count) count.textContent = '(' + (data ? data.length : 0) + ')';
+    if (!data || !data.length) {
+      list.innerHTML = '<div style="font-size:13px;color:#aaa;">No contacts added yet.</div>';
+      return;
+    }
+    var html = '';
+    var lastCat = '';
+    for (var i = 0; i < data.length; i++) {
+      var c = data[i];
+      var cs = CC_CATS_ADMIN[c.category] || {label:c.category, bg:'#f0f0e8', color:'#555'};
+      if (c.category !== lastCat) {
+        html += '<div style="font-size:12px;font-weight:700;color:#888;margin:' + (lastCat ? '12px' : '0') + ' 0 6px;">' + cs.label + '</div>';
+        lastCat = c.category;
+      }
+      html += '<div style="background:#fff;border:1px solid #e8e8e2;border-radius:10px;padding:10px 12px;margin-bottom:6px;cursor:pointer;" ondblclick="loadCCIntoForm(window._ccData[' + i + '])">';
+      html += '<div style="display:flex;align-items:center;gap:8px;">';
+      html += '<span style="font-size:11px;padding:2px 8px;border-radius:20px;font-weight:700;background:' + cs.bg + ';color:' + cs.color + ';">' + cs.label + '</span>';
+      html += '<div style="font-size:13px;font-weight:700;color:#1a1a1a;">' + c.name + '</div>';
+      if (c.role) html += '<div style="font-size:12px;color:#888;">-- ' + c.role + '</div>';
+      html += '</div>';
+      if (c.phone || c.email) {
+        html += '<div style="font-size:12px;color:#aaa;margin-top:3px;">';
+        if (c.phone) html += c.phone;
+        if (c.phone && c.email) html += '  |  ';
+        if (c.email) html += c.email;
+        html += '</div>';
+      }
+      html += '</div>';
+    }
+    list.innerHTML = html;
+    window._ccData = data;
+  }).catch(function() {
+    list.innerHTML = '<div style="font-size:13px;color:#aaa;">Could not load contacts.</div>';
+  });
+}
+
 </script>
 </body>
 </html>
