@@ -1377,6 +1377,32 @@ function pickCatBtn(el, c) {
   pickCat(c, el);
 }
 
+
+function loadTrustMsgs() {
+  var el = document.getElementById('trust-msgs');
+  if (!el) return;
+  el.innerHTML = '';
+  sbFetch('messages?order=created_at.desc').then(function(data) {
+    if (!data || !data.length) { el.innerHTML = ''; return; }
+    var TAGS = {
+      trust:  {bg:'#E1F5EE', c:'#0F6E56',  label:'Trust'},
+      panel:  {bg:'#EEEDFE', c:'#534AB7',  label:'Panel'},
+      notice: {bg:'#E6F1FB', c:'#185FA5',  label:'Notice'},
+      urgent: {bg:'#FAEEDA', c:'#854F0B',  label:'Urgent'}
+    };
+    var html = '';
+    for (var i = 0; i < data.length; i++) {
+      var m = data[i];
+      var ts = TAGS[m.tag] || TAGS.trust;
+      html += '<div class="card" style="border-left:3px solid #0F6E56;">';
+      html += '<span class="tag" style="background:' + ts.bg + ';color:' + ts.c + ';">' + ts.label + '</span>';
+      html += '<h3>' + m.title + '</h3><p>' + m.body + '</p>';
+      html += '<div class="newsdate">' + (m.date||'') + ' - Village Voice</div></div>';
+    }
+    el.innerHTML = html;
+  }).catch(function() { el.innerHTML = ''; });
+}
+
 </script>
 </body>
 </html>
