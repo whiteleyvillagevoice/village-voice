@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
-<meta http-equiv="Pragma" content="no-cache"/>
-<meta http-equiv="Expires" content="0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>VoiceVillage Admin</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f0;color:#1a1a1a;}
+
+/* LOGIN */
 .login-screen{position:fixed;inset:0;background:#f5f5f0;display:flex;align-items:center;justify-content:center;padding:24px;z-index:100;}
 .login-box{background:#fff;border-radius:18px;width:100%;max-width:360px;padding:36px 28px;text-align:center;box-shadow:0 4px 24px rgba(0,0,0,0.08);}
 .login-logo{width:54px;height:54px;border-radius:50%;background:#0F6E56;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;}
@@ -19,61 +19,92 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .login-input:focus{outline:none;border-color:#0F6E56;}
 .login-error{font-size:13px;color:#A32D2D;min-height:18px;margin-bottom:14px;}
 .login-btn{width:100%;padding:14px;background:#0F6E56;color:#fff;border:none;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;font-family:inherit;}
-.page{display:none;max-width:800px;margin:0 auto;padding:24px 20px 60px;}
-.page-header{display:flex;align-items:center;gap:14px;margin-bottom:28px;padding-bottom:20px;border-bottom:2px solid #e8e8e2;}
-.page-logo{width:44px;height:44px;border-radius:50%;background:#0F6E56;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.page-title{font-size:22px;font-weight:700;color:#1a1a1a;}
-.admin-badge{margin-left:auto;background:#E1F5EE;color:#0F6E56;border-radius:20px;padding:5px 14px;font-size:13px;font-weight:700;}
-.panel{background:#fff;border:1px solid #e8e8e2;border-radius:16px;padding:22px;margin-bottom:24px;}
-.panel-title{font-size:16px;font-weight:700;color:#1a1a1a;margin-bottom:16px;display:flex;align-items:center;gap:8px;}
-.panel-title svg{width:18px;height:18px;flex-shrink:0;}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
-.form-group{margin-bottom:12px;}
-.form-label{font-size:13px;font-weight:600;color:#555;display:block;margin-bottom:5px;}
-.form-input{width:100%;padding:11px 12px;border:1px solid #ddd;border-radius:10px;font-size:14px;font-family:inherit;color:#1a1a1a;background:#fff;}
-.form-input:focus{outline:none;border-color:#0F6E56;}
-.cat-grid{display:flex;gap:8px;flex-wrap:wrap;}
-.cat-btn{padding:8px 16px;border-radius:20px;border:2px solid #e8e8e2;font-size:13px;font-weight:600;cursor:pointer;background:#fff;color:#888;font-family:inherit;}
-.tag-row{display:flex;gap:8px;flex-wrap:wrap;}
-.tag-btn{padding:8px 16px;border-radius:20px;border:2px solid #e8e8e2;font-size:13px;font-weight:600;cursor:pointer;background:#fff;color:#888;font-family:inherit;}
-.btn-save{width:100%;padding:13px;background:#0F6E56;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:4px;}
-.btn-delete{width:100%;padding:11px;background:#FCEBEB;color:#A32D2D;border:1px solid #F7C1C1;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:8px;}
-.btn-outline{padding:8px 16px;background:#fff;color:#0F6E56;border:1px solid #0F6E56;border-radius:20px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;}
-.btn-small{padding:5px 12px;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;border:none;}
-.btn-approve{background:#E1F5EE;color:#0F6E56;}
-.btn-remove{background:#FCEBEB;color:#A32D2D;}
-.status-bar{padding:10px 14px;border-radius:10px;font-size:13px;font-weight:600;margin-bottom:14px;display:none;}
+
+/* APP SHELL */
+.admin-app{display:none;max-width:800px;margin:0 auto;min-height:100vh;display:none;flex-direction:column;}
+.admin-header{background:#fff;border-bottom:1px solid #e8e8e2;padding:12px 20px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:30;flex-shrink:0;}
+.admin-logo{width:36px;height:36px;border-radius:50%;background:#0F6E56;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.admin-title{font-size:18px;font-weight:700;color:#1a1a1a;flex:1;}
+.admin-badge{background:#E1F5EE;color:#0F6E56;border-radius:20px;padding:4px 12px;font-size:12px;font-weight:700;}
+.back-btn{font-size:12px;font-weight:600;color:#0F6E56;text-decoration:none;background:#E1F5EE;padding:5px 12px;border-radius:20px;white-space:nowrap;}
+
+/* SECTIONS */
+.admin-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 0 80px;}
+.section{display:none;padding:16px 20px;}
+.section.on{display:block;}
+
+/* STATUS BAR */
+.status-bar{padding:10px 14px;border-radius:10px;font-size:13px;font-weight:600;margin:0 20px 14px;display:none;}
 .status-ok{background:#E1F5EE;color:#0F6E56;}
 .status-err{background:#FCEBEB;color:#A32D2D;}
-.ev-item{background:#fff;border:1px solid #e8e8e2;border-radius:12px;padding:13px 16px;margin-bottom:8px;display:flex;gap:12px;align-items:flex-start;}
-.ev-item.is-bh{background:#fafaf7;border-color:#e8e8d8;}
-.ev-item.selected{border-color:#0F6E56;border-width:2px;}
-.ev-date-box{width:44px;text-align:center;background:#f8f8f4;border-radius:10px;padding:7px 4px;flex-shrink:0;}
-.ev-date-box.bh{background:#f0f0e8;}
-.ev-day{font-size:20px;font-weight:700;line-height:1;}
-.ev-mon{font-size:12px;font-weight:700;color:#555;text-transform:uppercase;margin-top:2px;}
+
+/* FOOTER NAV */
+.admin-nav{display:flex;background:#fff;border-top:1px solid #e8e8e2;position:fixed;bottom:0;left:0;right:0;max-width:800px;margin:0 auto;z-index:30;}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:9px 4px 7px;cursor:pointer;border:none;background:none;font-family:inherit;touch-action:manipulation;border-top:2px solid transparent;}
+.nav-btn.on{border-top-color:#0F6E56;}
+.nav-lbl{font-size:9px;color:#aaa;line-height:1.2;text-align:center;}
+.nav-btn.on .nav-lbl{color:#0F6E56;font-weight:700;}
+.nav-btn.on svg{stroke:#0F6E56 !important;}
+
+/* CARDS AND FORMS */
+.panel{background:#fff;border:1px solid #e8e8e2;border-radius:14px;padding:18px;margin-bottom:16px;}
+.panel-title{font-size:15px;font-weight:700;color:#1a1a1a;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.panel-title svg{width:17px;height:17px;flex-shrink:0;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
+.form-group{margin-bottom:10px;}
+.form-label{font-size:12px;font-weight:600;color:#555;display:block;margin-bottom:4px;}
+.form-input{width:100%;padding:10px 11px;border:1px solid #ddd;border-radius:10px;font-size:14px;font-family:inherit;color:#1a1a1a;background:#fff;}
+.form-input:focus{outline:none;border-color:#0F6E56;}
+.cat-grid{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:2px;}
+.cat-btn{padding:7px 13px;border-radius:20px;border:2px solid #e8e8e2;font-size:12px;font-weight:600;cursor:pointer;background:#fff;color:#888;font-family:inherit;}
+.btn-save{width:100%;padding:12px;background:#0F6E56;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:4px;}
+.btn-delete{width:100%;padding:10px;background:#FCEBEB;color:#A32D2D;border:1px solid #F7C1C1;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:7px;}
+.btn-outline{padding:8px 14px;background:#fff;color:#0F6E56;border:1px solid #0F6E56;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;}
+.btn-small{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;border:none;}
+.btn-approve{background:#E1F5EE;color:#0F6E56;}
+.btn-remove{background:#FCEBEB;color:#A32D2D;}
+.search-input{width:100%;padding:9px 13px;border:1px solid #ddd;border-radius:10px;font-size:14px;font-family:inherit;color:#1a1a1a;margin-bottom:12px;}
+.search-input:focus{outline:none;border-color:#0F6E56;}
+.loading{text-align:center;padding:24px;color:#aaa;font-size:13px;}
+
+/* LIST ITEMS */
+.list-item{background:#fff;border:1px solid #e8e8e2;border-radius:12px;padding:11px 13px;margin-bottom:7px;cursor:pointer;}
+.list-item:hover{border-color:#ccc;}
+.list-item.selected{border-color:#0F6E56;border-width:2px;}
+.ev-item{display:flex;gap:11px;align-items:flex-start;}
+.ev-date-box{width:42px;text-align:center;background:#f8f8f4;border-radius:9px;padding:6px 4px;flex-shrink:0;}
+.ev-day{font-size:19px;font-weight:700;line-height:1;}
+.ev-mon{font-size:11px;font-weight:700;color:#555;text-transform:uppercase;margin-top:2px;}
 .ev-body{flex:1;}
-.ev-name{font-size:14px;font-weight:600;color:#1a1a1a;margin-bottom:2px;}
-.ev-meta{font-size:12px;color:#666;}
-.ev-tag{font-size:11px;padding:2px 8px;border-radius:20px;font-weight:700;display:inline-block;margin-top:5px;}
-.ev-actions{display:flex;flex-direction:column;gap:5px;align-items:flex-end;flex-shrink:0;}
-.export-btns{display:flex;gap:8px;flex-wrap:wrap;}
-.res-item{background:#fff;border:1px solid #e8e8e2;border-radius:12px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:flex-start;gap:10px;cursor:pointer;}
-.res-item:hover{border-color:#ccc;}
-.res-av{width:38px;height:38px;border-radius:50%;background:#E1F5EE;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#0F6E56;flex-shrink:0;}
-.res-name{font-size:14px;font-weight:700;}
-.res-detail{font-size:12px;color:#888;margin-top:1px;}
-.res-badge{font-size:11px;padding:2px 8px;border-radius:20px;font-weight:700;margin-left:6px;vertical-align:middle;}
+.ev-name{font-size:13px;font-weight:600;color:#1a1a1a;margin-bottom:2px;}
+.ev-meta{font-size:11px;color:#666;}
+.ev-tag{font-size:10px;padding:2px 7px;border-radius:20px;font-weight:700;display:inline-block;margin-top:4px;}
+.ev-actions{display:flex;flex-direction:column;gap:4px;align-items:flex-end;flex-shrink:0;}
+
+/* RESIDENT ITEMS */
+.res-item{background:#fff;border:1px solid #e8e8e2;border-radius:12px;padding:11px 13px;margin-bottom:7px;display:flex;align-items:flex-start;gap:9px;cursor:pointer;}
+.res-av{width:36px;height:36px;border-radius:50%;background:#E1F5EE;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#0F6E56;flex-shrink:0;}
+.res-name{font-size:13px;font-weight:700;}
+.res-detail{font-size:11px;color:#888;margin-top:1px;}
+.res-badge{font-size:10px;padding:2px 7px;border-radius:20px;font-weight:700;margin-left:5px;}
 .badge-pending{background:#FAEEDA;color:#854F0B;}
 .badge-active{background:#E1F5EE;color:#0F6E56;}
-.res-btns{display:flex;gap:6px;margin-left:auto;flex-shrink:0;}
-.msg-preview{background:#f8f8f4;border:1px solid #e8e8e2;border-radius:10px;padding:13px;margin-bottom:12px;min-height:60px;}
+.res-btns{display:flex;gap:5px;margin-left:auto;flex-shrink:0;}
+
+/* MESSAGE PREVIEW */
+.msg-preview{background:#f8f8f4;border:1px solid #e8e8e2;border-radius:10px;padding:12px;margin-bottom:11px;min-height:56px;}
+.tag-row{display:flex;gap:7px;flex-wrap:wrap;}
+.tag-btn{padding:7px 13px;border-radius:20px;border:2px solid #e8e8e2;font-size:12px;font-weight:600;cursor:pointer;background:#fff;color:#888;font-family:inherit;}
+
+/* EXPORT */
+.export-btns{display:flex;gap:8px;flex-wrap:wrap;}
+
+/* MODALS */
 .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:50;align-items:center;justify-content:center;padding:20px;}
 .modal-bg.open{display:flex;}
-.modal-box{background:#fff;border-radius:16px;width:100%;max-width:420px;padding:24px 20px;}
-.modal-title{font-size:16px;font-weight:700;margin-bottom:16px;color:#1a1a1a;}
+.modal-box{background:#fff;border-radius:16px;width:100%;max-width:420px;padding:22px 18px;}
+.modal-title{font-size:15px;font-weight:700;margin-bottom:14px;color:#1a1a1a;}
 .modal-close{float:right;background:none;border:none;font-size:20px;cursor:pointer;color:#888;margin-top:-4px;}
-.loading{text-align:center;padding:24px;color:#aaa;font-size:14px;}
 </style>
 </head>
 <body>
@@ -92,165 +123,215 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   </div>
 </div>
 
-<!-- ADMIN PAGE -->
-<div class="page" id="admin-page" style="display:none;">
+<!-- ADMIN APP -->
+<div class="admin-app" id="admin-app">
 
-  <div class="page-header">
-    <div class="page-logo">
-      <svg width="22" height="22" viewBox="0 0 38 38" fill="none"><circle cx="19" cy="19" r="19" fill="#0F6E56"/><path d="M9 10L19 28L29 10" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+  <!-- HEADER -->
+  <div class="admin-header">
+    <div class="admin-logo">
+      <svg width="20" height="20" viewBox="0 0 38 38" fill="none"><path d="M9 10L19 28L29 10" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
     </div>
-    <div class="page-title">Village Voice - Events Admin</div>
+    <div class="admin-title">Village Voice Admin</div>
     <div class="admin-badge">Admin</div>
-    <a href="index.html" style="margin-left:10px;font-size:13px;font-weight:600;color:#0F6E56;text-decoration:none;background:#E1F5EE;padding:6px 14px;border-radius:20px;white-space:nowrap;">&#8592; App</a>
+    <a href="index.html" class="back-btn">&#8592; App</a>
   </div>
 
+  <!-- STATUS BAR -->
   <div class="status-bar" id="status-bar"></div>
 
-  <!-- ADD / EDIT EVENT -->
-  <div class="panel">
-    <div class="panel-title">
-      <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="18" rx="2" stroke="#0F6E56" stroke-width="2"/><line x1="16" y1="2" x2="16" y2="6" stroke="#0F6E56" stroke-width="2" stroke-linecap="round"/><line x1="8" y1="2" x2="8" y2="6" stroke="#0F6E56" stroke-width="2" stroke-linecap="round"/><line x1="3" y1="10" x2="21" y2="10" stroke="#0F6E56" stroke-width="2" stroke-linecap="round"/></svg>
-      <span id="form-title">Add an event</span>
-    </div>
-    <div class="form-group">
-      <div class="form-label">Category</div>
-      <div class="cat-grid" id="cat-grid">
-        <button class="cat-btn" onclick="pickCat('social',this)">Social</button>
-        <button class="cat-btn" onclick="pickCat('outdoors',this)">Outdoors</button>
-        <button class="cat-btn" onclick="pickCat('trust',this)">Trust</button>
-        <button class="cat-btn" onclick="pickCat('panel',this)">Panel</button>
-        <button class="cat-btn" onclick="pickCat('other',this)">Other</button>
+  <!-- BODY -->
+  <div class="admin-body">
+
+    <!-- EVENTS SECTION -->
+    <div class="section on" id="sec-events">
+      <div class="panel">
+        <div class="panel-title">
+          <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="18" rx="2" stroke="#0F6E56" stroke-width="2"/><line x1="16" y1="2" x2="16" y2="6" stroke="#0F6E56" stroke-width="2" stroke-linecap="round"/><line x1="8" y1="2" x2="8" y2="6" stroke="#0F6E56" stroke-width="2" stroke-linecap="round"/><line x1="3" y1="10" x2="21" y2="10" stroke="#0F6E56" stroke-width="2" stroke-linecap="round"/></svg>
+          <span id="ev-form-title">Add an event</span>
+        </div>
+        <div class="form-group"><div class="form-label">Category</div>
+          <div class="cat-grid" id="cat-grid">
+            <button class="cat-btn" onclick="pickCat('social',this)">Social</button>
+            <button class="cat-btn" onclick="pickCat('outdoors',this)">Outdoors</button>
+            <button class="cat-btn" onclick="pickCat('trust',this)">Trust</button>
+            <button class="cat-btn" onclick="pickCat('panel',this)">Panel</button>
+            <button class="cat-btn" onclick="pickCat('other',this)">Other</button>
+          </div>
+        </div>
+        <div class="form-group"><label class="form-label">Event title</label><input class="form-input" id="ev-title" placeholder="e.g. Coffee morning at the pavilion" maxlength="80"/></div>
+        <div class="form-row">
+          <div><label class="form-label">Date</label><input class="form-input" id="ev-date" type="date"/></div>
+          <div></div>
+        </div>
+        <div class="form-row">
+          <div><label class="form-label">Start time</label><input class="form-input" id="ev-start" type="time"/></div>
+          <div><label class="form-label">End time</label><input class="form-input" id="ev-end" type="time"/></div>
+        </div>
+        <div class="form-group"><label class="form-label">Location</label><input class="form-input" id="ev-loc" placeholder="e.g. Pavilion, Village Voice" maxlength="100"/></div>
+        <div class="form-group"><label class="form-label">Details (optional)</label><textarea class="form-input" id="ev-details" rows="2" placeholder="Any extra information..." maxlength="300"></textarea></div>
+        <button class="btn-save" onclick="saveEvent()">Save event</button>
+        <button class="btn-delete" id="btn-delete" onclick="deleteEvent()" style="display:none;">Remove this event</button>
+        <button class="btn-outline" onclick="clearForm()" style="display:block;margin-top:8px;width:100%;text-align:center;">Clear form</button>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Events list</div>
+        <input class="search-input" id="ev-search" placeholder="Search events..." oninput="renderList()"/>
+        <div id="ev-list"><div class="loading">Loading...</div></div>
+        <div style="margin-top:14px;"><div class="form-label" style="margin-bottom:8px;">Export</div>
+          <div class="export-btns">
+            <button class="btn-outline" onclick="exportJSON()">JSON</button>
+            <button class="btn-outline" onclick="exportCSV()">CSV</button>
+            <button class="btn-outline" onclick="exportICS()">iCal</button>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="form-group"><label class="form-label">Event title</label><input class="form-input" id="ev-title" placeholder="e.g. Coffee morning at the pavilion" maxlength="80"/></div>
-    <div class="form-row">
-      <div><label class="form-label">Date</label><input class="form-input" id="ev-date" type="date"/></div>
-      <div></div>
-    </div>
-    <div class="form-row">
-      <div><label class="form-label">Start time</label><input class="form-input" id="ev-start" type="time"/></div>
-      <div><label class="form-label">End time</label><input class="form-input" id="ev-end" type="time"/></div>
-    </div>
-    <div class="form-group"><label class="form-label">Location</label><input class="form-input" id="ev-loc" placeholder="e.g. Pavilion, Village Voice" maxlength="100"/></div>
-    <div class="form-group"><label class="form-label">Details (optional)</label><textarea class="form-input" id="ev-details" rows="2" placeholder="Any extra information..." maxlength="300"></textarea></div>
-    <button class="btn-save" onclick="saveEvent()">Save event</button>
-    <button class="btn-delete" id="btn-delete" onclick="deleteEvent()" style="display:none;">Remove this event</button>
-    <button class="btn-outline" onclick="clearForm()" style="display:block;margin-top:10px;width:100%;text-align:center;">Clear form</button>
-  </div>
 
-  <!-- EVENT LIST -->
-  <div class="panel">
-    <div class="panel-title">
-      <svg viewBox="0 0 24 24" fill="none"><path d="M9 11l3 3L22 4" stroke="#0F6E56" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" stroke="#0F6E56" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      Events list
-    </div>
-    <div class="form-group"><input class="form-input" id="search-input" placeholder="Search events..." oninput="renderList()"/></div>
-    <div id="ev-list"><div class="loading">Loading events...</div></div>
-  </div>
-
-  <!-- EXPORT -->
-  <div class="panel">
-    <div class="panel-title">
-      <svg viewBox="0 0 24 24" fill="none"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" stroke="#0F6E56" stroke-width="2" stroke-linecap="round"/><polyline points="7 10 12 15 17 10" stroke="#0F6E56" stroke-width="2" stroke-linecap="round"/><line x1="12" y1="15" x2="12" y2="3" stroke="#0F6E56" stroke-width="2" stroke-linecap="round"/></svg>
-      Export
-    </div>
-    <div class="export-btns">
-      <button class="btn-outline" onclick="exportJSON()">JSON</button>
-      <button class="btn-outline" onclick="exportCSV()">CSV</button>
-      <button class="btn-outline" onclick="exportICS()">iCal</button>
-    </div>
-  </div>
-
-  <!-- POST A MESSAGE -->
-  <div class="panel">
-    <div class="panel-title">
-      <svg viewBox="0 0 24 24" fill="none"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="#185FA5" stroke-width="2" stroke-linecap="round"/></svg>
-      Post a message
-    </div>
-    <p style="font-size:13px;color:#888;margin-bottom:16px;">Post a message here and it will appear in the Village News feed in the app.</p>
-    <div class="form-group">
-      <div class="form-label">Tag</div>
-      <div class="tag-row">
-        <button class="tag-btn" id="tag-trust" onclick="pickTag('trust')">Trust</button>
-        <button class="tag-btn" id="tag-panel" onclick="pickTag('panel')">Panel</button>
-        <button class="tag-btn" id="tag-notice" onclick="pickTag('notice')">Notice</button>
-        <button class="tag-btn" id="tag-urgent" onclick="pickTag('urgent')">Urgent</button>
+    <!-- NEWS SECTION -->
+    <div class="section" id="sec-news">
+      <div class="panel">
+        <div class="panel-title">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="#185FA5" stroke-width="2" stroke-linecap="round"/></svg>
+          Post a message
+        </div>
+        <p style="font-size:13px;color:#888;margin-bottom:14px;">Post a message to the Village News feed in the resident app.</p>
+        <div class="form-group"><div class="form-label">Tag</div>
+          <div class="tag-row">
+            <button class="tag-btn" id="tag-trust" onclick="pickTag('trust')">Trust</button>
+            <button class="tag-btn" id="tag-panel" onclick="pickTag('panel')">Panel</button>
+            <button class="tag-btn" id="tag-notice" onclick="pickTag('notice')">Notice</button>
+            <button class="tag-btn" id="tag-urgent" onclick="pickTag('urgent')">Urgent</button>
+          </div>
+        </div>
+        <div class="form-group"><label class="form-label">Headline</label><input class="form-input" id="msg-title" placeholder="e.g. Water supply update" maxlength="80" oninput="updatePreview()"/></div>
+        <div class="form-group"><label class="form-label">Message</label><textarea class="form-input" id="msg-body" rows="4" placeholder="Type or paste message here..." maxlength="600" oninput="updatePreview()"></textarea></div>
+        <div class="form-label" style="margin-bottom:7px;">Preview</div>
+        <div class="msg-preview" id="msg-preview">Your message will appear here.</div>
+        <button class="btn-save" style="background:#185FA5;" onclick="postMsg()">Post to News feed</button>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Posted messages</div>
+        <div id="msg-list"><div class="loading">Loading...</div></div>
       </div>
     </div>
-    <div class="form-group"><label class="form-label">Headline</label><input class="form-input" id="msg-title" placeholder="e.g. Water supply update" maxlength="80" oninput="updatePreview()"/></div>
-    <div class="form-group"><label class="form-label">Message</label><textarea class="form-input" id="msg-body" rows="4" placeholder="Type or paste message here..." maxlength="600" oninput="updatePreview()"></textarea></div>
-    <div class="form-label" style="margin-bottom:8px;">Preview</div>
-    <div class="msg-preview" id="msg-preview">Your message will appear here.</div>
-    <button class="btn-save" style="background:#185FA5;" onclick="postMsg()">Post to News feed</button>
-    <div style="margin-top:18px;">
-      <div class="form-label" style="margin-bottom:8px;">Posted messages</div>
-      <div id="msg-list"><div class="loading">Loading...</div></div>
-    </div>
-  </div>
 
-  <!-- COMMUNITY CONTACTS -->
-  <div class="panel">
-    <div class="panel-title">
-      <svg viewBox="0 0 24 24" fill="none"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" stroke="#854F0B" stroke-width="2" stroke-linecap="round"/><circle cx="9" cy="7" r="4" stroke="#854F0B" stroke-width="2"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke="#854F0B" stroke-width="2" stroke-linecap="round"/></svg>
-      Community Contacts
-    </div>
-    <p style="font-size:13px;color:#888;margin-bottom:16px;">Add contacts that appear in the Community section of the resident app. All categories and a search function are available to residents.</p>
-    <div class="form-group">
-      <div class="form-label">Category</div>
-      <div class="cat-grid" id="cc-cat-grid">
-        <button class="cat-btn" onclick="pickCCCat('staff',this)">Staff and wardens</button>
-        <button class="cat-btn" onclick="pickCCCat('panel',this)">Panel</button>
-        <button class="cat-btn" onclick="pickCCCat('facilities',this)">Facilities</button>
-        <button class="cat-btn" onclick="pickCCCat('welfare',this)">Welfare</button>
-        <button class="cat-btn" onclick="pickCCCat('activities',this)">Activities</button>
+    <!-- RESIDENTS SECTION -->
+    <div class="section" id="sec-residents">
+      <div class="panel">
+        <div class="panel-title">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" stroke="#0F6E56" stroke-width="2" stroke-linecap="round"/><circle cx="9" cy="7" r="4" stroke="#0F6E56" stroke-width="2"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke="#0F6E56" stroke-width="2" stroke-linecap="round"/></svg>
+          Add resident
+        </div>
+        <div class="form-row">
+          <div><label class="form-label">First name</label><input class="form-input" id="res-first" placeholder="First name" maxlength="50"/></div>
+          <div><label class="form-label">Surname</label><input class="form-input" id="res-last" placeholder="Surname" maxlength="50"/></div>
+        </div>
+        <div class="form-group"><label class="form-label">Email address</label><input class="form-input" id="res-email" type="email" placeholder="email@example.com" maxlength="100"/></div>
+        <div class="form-row">
+          <div><label class="form-label">Mobile</label><input class="form-input" id="res-mobile" type="tel" placeholder="07700 900123" maxlength="20"/></div>
+          <div><label class="form-label">Cottage / address</label><input class="form-input" id="res-address" placeholder="Cottage 14, Octagon Road" maxlength="100"/></div>
+        </div>
+        <div style="padding-top:10px;border-top:1px solid #f0f0ea;margin-bottom:10px;">
+          <div style="font-size:12px;font-weight:700;color:#888;margin-bottom:9px;">Emergency contact <span style="font-weight:400;">(optional)</span></div>
+          <div class="form-row">
+            <div><label class="form-label">Contact name</label><input class="form-input" id="res-ec-name" placeholder="e.g. Jane Smith" maxlength="100"/></div>
+            <div><label class="form-label">Relationship</label><input class="form-input" id="res-ec-relation" placeholder="e.g. Daughter" maxlength="50"/></div>
+          </div>
+          <div class="form-group"><label class="form-label">Contact phone</label><input class="form-input" id="res-ec-phone" type="tel" placeholder="07700 900456" maxlength="20"/></div>
+        </div>
+        <button class="btn-save" onclick="addResident()">Add resident</button>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Resident Details <span id="res-count" style="font-size:12px;font-weight:400;color:#aaa;"></span></div>
+        <input class="search-input" id="res-search" placeholder="Search residents..." oninput="filterResidents()"/>
+        <div style="font-size:11px;color:#aaa;margin-bottom:10px;margin-top:-6px;">Double-click any entry to edit</div>
+        <div id="res-list"><div class="loading">Loading...</div></div>
       </div>
     </div>
-    <div class="form-group"><label class="form-label">Name</label><input class="form-input" id="cc-name" placeholder="e.g. Village Office" maxlength="80"/></div>
-    <div class="form-group"><label class="form-label">Role / description</label><input class="form-input" id="cc-role" placeholder="e.g. Main office" maxlength="80"/></div>
-    <div class="form-row">
-      <div><label class="form-label">Phone number</label><input class="form-input" id="cc-phone" type="tel" placeholder="01932 861 000" maxlength="30"/></div>
-      <div><label class="form-label">Email address</label><input class="form-input" id="cc-email" type="email" placeholder="optional" maxlength="100"/></div>
+
+    <!-- COMMUNITY SECTION -->
+    <div class="section" id="sec-community">
+      <!-- COMMUNITY CONTACTS -->
+      <div class="panel">
+        <div class="panel-title">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" stroke="#854F0B" stroke-width="2" stroke-linecap="round"/><circle cx="9" cy="7" r="4" stroke="#854F0B" stroke-width="2"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke="#854F0B" stroke-width="2" stroke-linecap="round"/></svg>
+          Add community contact
+        </div>
+        <div class="form-group"><div class="form-label">Category</div>
+          <div class="cat-grid" id="cc-cat-grid">
+            <button class="cat-btn" onclick="pickCCCat('staff',this)">Staff</button>
+            <button class="cat-btn" onclick="pickCCCat('panel',this)">Panel</button>
+            <button class="cat-btn" onclick="pickCCCat('facilities',this)">Facilities</button>
+            <button class="cat-btn" onclick="pickCCCat('welfare',this)">Welfare</button>
+            <button class="cat-btn" onclick="pickCCCat('activities',this)">Activities</button>
+          </div>
+        </div>
+        <div class="form-group"><label class="form-label">Name</label><input class="form-input" id="cc-name" placeholder="e.g. Village Office" maxlength="80"/></div>
+        <div class="form-group"><label class="form-label">Role</label><input class="form-input" id="cc-role" placeholder="e.g. Main office" maxlength="80"/></div>
+        <div class="form-row">
+          <div><label class="form-label">Phone</label><input class="form-input" id="cc-phone" type="tel" placeholder="01932 861 000" maxlength="30"/></div>
+          <div><label class="form-label">Email</label><input class="form-input" id="cc-email" type="email" placeholder="optional" maxlength="100"/></div>
+        </div>
+        <div class="form-group"><label class="form-label">Notes</label><input class="form-input" id="cc-notes" placeholder="e.g. Mon-Fri 9am-5pm" maxlength="100"/></div>
+        <button class="btn-save" onclick="saveCCContact()" style="background:#854F0B;">Save contact</button>
+        <button class="btn-delete" id="cc-btn-delete" onclick="deleteCCContact()" style="display:none;">Remove this contact</button>
+        <button class="btn-outline" onclick="clearCCForm()" style="display:block;margin-top:8px;width:100%;text-align:center;color:#854F0B;border-color:#854F0B;">Clear form</button>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Community contacts <span id="cc-count" style="font-size:12px;font-weight:400;color:#aaa;"></span></div>
+        <input class="search-input" id="cc-search" placeholder="Search contacts..." oninput="filterCCList()"/>
+        <div style="font-size:11px;color:#aaa;margin-bottom:10px;margin-top:-6px;">Double-click any entry to edit</div>
+        <div id="cc-list-admin"><div class="loading">Loading...</div></div>
+      </div>
+      <!-- DOCUMENTS -->
+      <div class="panel">
+        <div class="panel-title">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" stroke="#0F6E56" stroke-width="2" stroke-linecap="round"/><polyline points="14 2 14 8 20 8" stroke="#0F6E56" stroke-width="2" stroke-linecap="round"/><line x1="16" y1="13" x2="8" y2="13" stroke="#0F6E56" stroke-width="2" stroke-linecap="round"/><line x1="16" y1="17" x2="8" y2="17" stroke="#0F6E56" stroke-width="2" stroke-linecap="round"/></svg>
+          Add document
+        </div>
+        <div class="form-group"><div class="form-label">Category</div>
+          <div class="cat-grid" id="doc-cat-grid">
+            <button class="cat-btn" onclick="pickDocCat('trust',this)">Trust</button>
+            <button class="cat-btn" onclick="pickDocCat('wvrc',this)">WVRC</button>
+            <button class="cat-btn" onclick="pickDocCat('rules',this)">Rules</button>
+            <button class="cat-btn" onclick="pickDocCat('newsletter',this)">Newsletter</button>
+          </div>
+        </div>
+        <div class="form-group"><label class="form-label">Title</label><input class="form-input" id="doc-title" placeholder="e.g. Resident Handbook 2026" maxlength="80"/></div>
+        <div class="form-group"><label class="form-label">Description</label><input class="form-input" id="doc-desc" placeholder="Brief description" maxlength="100"/></div>
+        <div class="form-group"><label class="form-label">URL</label><input class="form-input" id="doc-url" type="url" placeholder="https://..." maxlength="500"/></div>
+        <button class="btn-save" onclick="saveDocument()">Save document</button>
+        <button class="btn-delete" id="doc-btn-delete" onclick="deleteDocument()" style="display:none;">Remove this document</button>
+        <button class="btn-outline" onclick="clearDocForm()" style="display:block;margin-top:8px;width:100%;text-align:center;">Clear form</button>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Documents <span id="doc-count" style="font-size:12px;font-weight:400;color:#aaa;"></span></div>
+        <input class="search-input" id="doc-search" placeholder="Search documents..." oninput="filterDocList()"/>
+        <div style="font-size:11px;color:#aaa;margin-bottom:10px;margin-top:-6px;">Double-click any entry to edit</div>
+        <div id="doc-list-admin"><div class="loading">Loading...</div></div>
+      </div>
     </div>
-    <div class="form-group"><label class="form-label">Notes <span style="font-weight:400;color:#aaa;">(opening hours, instructions etc)</span></label><input class="form-input" id="cc-notes" placeholder="e.g. Mon-Fri 9am-5pm" maxlength="100"/></div>
-    <button class="btn-save" onclick="saveCCContact()" style="background:#854F0B;">Save contact</button>
-    <button class="btn-delete" id="cc-btn-delete" onclick="deleteCCContact()" style="display:none;">Remove this contact</button>
-    <button class="btn-outline" onclick="clearCCForm()" style="display:block;margin-top:10px;width:100%;text-align:center;color:#854F0B;border-color:#854F0B;">Clear form</button>
-    <div style="margin-top:18px;">
-      <div class="form-label" style="margin-bottom:8px;">All community contacts <span id="cc-count" style="font-weight:400;color:#aaa;"></span></div>
-      <div style="font-size:12px;color:#aaa;margin-bottom:8px;">Double-click any entry to edit</div>
-      <div id="cc-list-admin"><div class="loading">Loading...</div></div>
-    </div>
+
   </div>
 
-  <!-- RESIDENT DETAILS -->
-  <div class="panel">
-    <div class="panel-title">
-      <svg viewBox="0 0 24 24" fill="none"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" stroke="#0F6E56" stroke-width="2" stroke-linecap="round"/><circle cx="9" cy="7" r="4" stroke="#0F6E56" stroke-width="2"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke="#0F6E56" stroke-width="2" stroke-linecap="round"/></svg>
-      Resident Details
-    </div>
-    <div class="form-row">
-      <div><label class="form-label">First name</label><input class="form-input" id="res-first" placeholder="First name" maxlength="50"/></div>
-      <div><label class="form-label">Surname</label><input class="form-input" id="res-last" placeholder="Surname" maxlength="50"/></div>
-    </div>
-    <div class="form-group"><label class="form-label">Email address</label><input class="form-input" id="res-email" type="email" placeholder="email@example.com" maxlength="100"/></div>
-    <div class="form-row">
-      <div><label class="form-label">Mobile <span style="font-weight:400;color:#aaa;">(optional)</span></label><input class="form-input" id="res-mobile" type="tel" placeholder="07700 900123" maxlength="20"/></div>
-      <div><label class="form-label">Cottage / address</label><input class="form-input" id="res-address" placeholder="Cottage 14, Octagon Road" maxlength="100"/></div>
-    </div>
-    <div style="margin:4px 0 12px;padding-top:12px;border-top:1px solid #f0f0ea;">
-      <div style="font-size:13px;font-weight:700;color:#888;margin-bottom:10px;">Nominated emergency contact <span style="font-weight:400;">(optional)</span></div>
-      <div class="form-row">
-        <div><label class="form-label">Contact name</label><input class="form-input" id="res-ec-name" placeholder="e.g. Jane Smith" maxlength="100"/></div>
-        <div><label class="form-label">Relationship</label><input class="form-input" id="res-ec-relation" placeholder="e.g. Daughter" maxlength="50"/></div>
-      </div>
-      <div class="form-group"><label class="form-label">Contact phone number</label><input class="form-input" id="res-ec-phone" type="tel" placeholder="e.g. 07700 900456" maxlength="20"/></div>
-    </div>
-    <button class="btn-save" onclick="addResident()">Add resident</button>
-    <div style="margin-top:18px;">
-      <div class="form-label" style="margin-bottom:4px;">Registered residents <span id="res-count" style="font-weight:400;color:#aaa;"></span></div>
-      <div style="font-size:12px;color:#aaa;margin-bottom:8px;">Double-click any entry to edit details</div>
-      <div id="res-list"><div class="loading">Loading...</div></div>
-    </div>
+  <!-- FOOTER NAV -->
+  <div class="admin-nav">
+    <button class="nav-btn on" id="nav-events" onclick="showAdminSection('events')">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6" stroke-linecap="round"/><line x1="8" y1="2" x2="8" y2="6" stroke-linecap="round"/><line x1="3" y1="10" x2="21" y2="10" stroke-linecap="round"/></svg>
+      <span class="nav-lbl">Events</span>
+    </button>
+    <button class="nav-btn" id="nav-news" onclick="showAdminSection('news')">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke-linecap="round"/></svg>
+      <span class="nav-lbl">News</span>
+    </button>
+    <button class="nav-btn" id="nav-residents" onclick="showAdminSection('residents')">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" stroke-linecap="round"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke-linecap="round"/></svg>
+      <span class="nav-lbl">Residents</span>
+    </button>
+    <button class="nav-btn" id="nav-community" onclick="showAdminSection('community')">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" stroke-linecap="round"/><polyline points="9 22 9 12 15 12 15 22" stroke-linecap="round"/></svg>
+      <span class="nav-lbl">Community</span>
+    </button>
   </div>
 
 </div>
@@ -261,7 +342,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <button class="modal-close" onclick="closeSms()">&times;</button>
     <div class="modal-title">SMS Reminder</div>
     <div class="form-group"><label class="form-label">Message</label><textarea class="form-input" id="sms-text" rows="6"></textarea></div>
-    <div style="font-size:12px;color:#aaa;margin-bottom:12px;" id="sms-count"></div>
+    <div style="font-size:11px;color:#aaa;margin-bottom:11px;" id="sms-count"></div>
     <button class="btn-save" onclick="sendSms()">Open Messages app</button>
   </div>
 </div>
@@ -272,30 +353,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <button class="modal-close" onclick="closeResEdit()">&times;</button>
     <div class="modal-title">Edit resident details</div>
     <input type="hidden" id="edit-res-id"/>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
-      <div><label class="form-label" style="font-size:12px;">First name</label><input class="form-input" id="edit-res-first" maxlength="50"/></div>
-      <div><label class="form-label" style="font-size:12px;">Surname</label><input class="form-input" id="edit-res-last" maxlength="50"/></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:9px;">
+      <div><label class="form-label">First name</label><input class="form-input" id="edit-res-first" maxlength="50"/></div>
+      <div><label class="form-label">Surname</label><input class="form-input" id="edit-res-last" maxlength="50"/></div>
     </div>
-    <div style="margin-bottom:10px;"><label class="form-label" style="font-size:12px;">Email address</label><input class="form-input" id="edit-res-email" type="email" maxlength="100"/></div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
-      <div><label class="form-label" style="font-size:12px;">Mobile</label><input class="form-input" id="edit-res-mobile" type="tel" maxlength="20"/></div>
-      <div><label class="form-label" style="font-size:12px;">Cottage / address</label><input class="form-input" id="edit-res-address" maxlength="100"/></div>
+    <div style="margin-bottom:9px;"><label class="form-label">Email</label><input class="form-input" id="edit-res-email" type="email" maxlength="100"/></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:9px;">
+      <div><label class="form-label">Mobile</label><input class="form-input" id="edit-res-mobile" type="tel" maxlength="20"/></div>
+      <div><label class="form-label">Address</label><input class="form-input" id="edit-res-address" maxlength="100"/></div>
     </div>
-    <div style="margin:4px 0 12px;padding-top:12px;border-top:1px solid #f0f0ea;">
-      <div style="font-size:12px;font-weight:700;color:#888;margin-bottom:10px;">Emergency contact</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
-        <div><label class="form-label" style="font-size:12px;">Contact name</label><input class="form-input" id="edit-ec-name" maxlength="100"/></div>
-        <div><label class="form-label" style="font-size:12px;">Relationship</label><input class="form-input" id="edit-ec-relation" maxlength="50"/></div>
-      </div>
-      <div style="margin-bottom:10px;"><label class="form-label" style="font-size:12px;">Phone number</label><input class="form-input" id="edit-ec-phone" type="tel" maxlength="20"/></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:9px;">
+      <div><label class="form-label">EC name</label><input class="form-input" id="edit-ec-name" maxlength="100"/></div>
+      <div><label class="form-label">EC relation</label><input class="form-input" id="edit-ec-relation" maxlength="50"/></div>
     </div>
-    <div style="margin-bottom:16px;"><label class="form-label" style="font-size:12px;">Status</label>
-      <select class="form-input" id="edit-res-status">
-        <option value="active">Active</option>
-        <option value="pending">Pending</option>
-      </select>
+    <div style="margin-bottom:9px;"><label class="form-label">EC phone</label><input class="form-input" id="edit-ec-phone" type="tel" maxlength="20"/></div>
+    <div style="margin-bottom:14px;"><label class="form-label">Status</label>
+      <select class="form-input" id="edit-res-status"><option value="active">Active</option><option value="pending">Pending</option></select>
     </div>
-    <div style="display:flex;gap:10px;">
+    <div style="display:flex;gap:9px;">
       <button type="button" class="btn-save" onclick="saveResEdit()" style="flex:2;">Save changes</button>
       <button type="button" class="btn-outline" onclick="closeResEdit()" style="flex:1;text-align:center;">Cancel</button>
     </div>
@@ -305,31 +380,28 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <script>
 var SUPA_URL = 'https://wkjkmmmhftmjjkkmczbz.supabase.co';
 var SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndramttbW1oZnRtampra21jemJ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5MjU5NzQsImV4cCI6MjA4OTUwMTk3NH0.VFceyx0IwbmWK8WJJzgeenGHE8kBbmBdoLrPp7IrM5M';
-
 var ADMIN_HASH = 'e10ca518d53808191a832621e76d8c6495ce26f049622ed7912fdfd8936e2e47';
+
 var selCatVal = '';
 var selTagVal = '';
+var selCCCat = '';
+var selDocCat = '';
 var editId = null;
+var editCCId = null;
+var editDocId = null;
 var events = [];
+var allResidents = [];
+var allCC = [];
+var allDocs = [];
 
 var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 var MONTHS_LONG = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 var DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 
-var CAT = {
-  social:   {label:'Social',   bg:'#EEEDFE', color:'#534AB7'},
-  outdoors: {label:'Outdoors', bg:'#E1F5EE', color:'#0F6E56'},
-  trust:    {label:'Trust',    bg:'#FAEEDA', color:'#854F0B'},
-  panel:    {label:'Panel',    bg:'#EEEDFE', color:'#534AB7'},
-  other:    {label:'Other',    bg:'#f0f0e8', color:'#555'}
-};
-
-var TAG = {
-  trust:  {label:'Trust',  bg:'#E1F5EE', color:'#0F6E56'},
-  panel:  {label:'Panel',  bg:'#EEEDFE', color:'#534AB7'},
-  notice: {label:'Notice', bg:'#E6F1FB', color:'#185FA5'},
-  urgent: {label:'Urgent', bg:'#FAEEDA', color:'#854F0B'}
-};
+var CAT = {social:{label:'Social',bg:'#EEEDFE',color:'#534AB7'},outdoors:{label:'Outdoors',bg:'#E1F5EE',color:'#0F6E56'},trust:{label:'Trust',bg:'#FAEEDA',color:'#854F0B'},panel:{label:'Panel',bg:'#EEEDFE',color:'#534AB7'},other:{label:'Other',bg:'#f0f0e8',color:'#555'}};
+var TAG = {trust:{label:'Trust',bg:'#E1F5EE',color:'#0F6E56'},panel:{label:'Panel',bg:'#EEEDFE',color:'#534AB7'},notice:{label:'Notice',bg:'#E6F1FB',color:'#185FA5'},urgent:{label:'Urgent',bg:'#FAEEDA',color:'#854F0B'}};
+var CC_CATS = {staff:{label:'Staff and wardens',bg:'#E1F5EE',color:'#0F6E56'},panel:{label:'Panel',bg:'#EEEDFE',color:'#534AB7'},facilities:{label:'Facilities',bg:'#E6F1FB',color:'#185FA5'},welfare:{label:'Welfare',bg:'#FCEBEB',color:'#A32D2D'},activities:{label:'Activities',bg:'#FAEEDA',color:'#854F0B'}};
+var DOC_CATS = {trust:{label:'Trust publications',bg:'#E1F5EE',color:'#0F6E56'},wvrc:{label:'WVRC',bg:'#EEEDFE',color:'#534AB7'},rules:{label:'Rules and policies',bg:'#E6F1FB',color:'#185FA5'},newsletter:{label:'Newsletters',bg:'#FAEEDA',color:'#854F0B'}};
 
 var BANK_HOLIDAYS = [
   {id:'bh1',date:'2026-01-01',title:"New Year's Day",bh:true},
@@ -344,705 +416,481 @@ var BANK_HOLIDAYS = [
 
 function sbFetch(path, opts) {
   var url = SUPA_URL + '/rest/v1/' + path;
-  var headers = {
-    'apikey': SUPA_KEY,
-    'Authorization': 'Bearer ' + SUPA_KEY,
-    'Content-Type': 'application/json',
-    'Prefer': 'return=representation'
-  };
-  if (opts && opts.headers) {
-    for (var k in opts.headers) headers[k] = opts.headers[k];
-  }
-  return fetch(url, {
-    method: opts && opts.method ? opts.method : 'GET',
-    headers: headers,
-    body: opts && opts.body ? JSON.stringify(opts.body) : undefined
-  }).then(function(r) { return r.json(); });
+  var headers = {'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Content-Type':'application/json','Prefer':'return=representation'};
+  if (opts && opts.headers) for (var k in opts.headers) headers[k] = opts.headers[k];
+  return fetch(url,{method:opts&&opts.method?opts.method:'GET',headers:headers,body:opts&&opts.body?JSON.stringify(opts.body):undefined}).then(function(r){return r.json();});
 }
 
+// LOGIN
 function checkLogin() {
   var val = document.getElementById('pw-input').value;
   crypto.subtle.digest('SHA-256', new TextEncoder().encode(val)).then(function(buf) {
-    var hash = Array.from(new Uint8Array(buf)).map(function(b){ return b.toString(16).padStart(2,'0'); }).join('');
+    var hash = Array.from(new Uint8Array(buf)).map(function(b){return b.toString(16).padStart(2,'0');}).join('');
     if (hash === ADMIN_HASH) {
       document.getElementById('login-screen').style.display = 'none';
-      document.getElementById('admin-page').style.display = 'block';
+      var app = document.getElementById('admin-app');
+      app.style.display = 'flex';
+      app.style.flexDirection = 'column';
       var d = new Date();
       document.getElementById('ev-date').value = d.toISOString().slice(0,10);
       loadEvents();
       renderMessages();
       renderResidents();
       renderCCList();
+      renderDocList();
     } else {
       document.getElementById('pw-error').textContent = 'Incorrect password. Please try again.';
       document.getElementById('pw-input').value = '';
     }
   });
 }
-document.getElementById('pw-input').addEventListener('keydown', function(e) {
-  if (e.key === 'Enter') checkLogin();
-});
+document.getElementById('pw-input').addEventListener('keydown', function(e){if(e.key==='Enter')checkLogin();});
+
+// NAV
+function showAdminSection(sec) {
+  var secs = document.querySelectorAll('.admin-body .section');
+  for (var i = 0; i < secs.length; i++) secs[i].classList.remove('on');
+  document.getElementById('sec-' + sec).classList.add('on');
+  var btns = document.querySelectorAll('.admin-nav .nav-btn');
+  for (var i = 0; i < btns.length; i++) btns[i].classList.remove('on');
+  document.getElementById('nav-' + sec).classList.add('on');
+  document.getElementById('admin-app').scrollTop = 0;
+  document.getElementById('status-bar').style.display = 'none';
+}
 
 function showStatus(msg, ok) {
   var el = document.getElementById('status-bar');
   el.textContent = msg;
   el.className = 'status-bar ' + (ok ? 'status-ok' : 'status-err');
   el.style.display = 'block';
-  setTimeout(function() { el.style.display = 'none'; }, 3000);
+  setTimeout(function(){el.style.display='none';},3000);
 }
 
+// EVENTS
 function pickCat(c, el) {
   selCatVal = c;
   var btns = document.getElementById('cat-grid').getElementsByTagName('button');
-  for (var i = 0; i < btns.length; i++) {
-    btns[i].style.background = '#fff';
-    btns[i].style.color = '#888';
-    btns[i].style.borderColor = '#e8e8e2';
-  }
-  var cs = CAT[c] || CAT.other;
-  el.style.background = cs.bg;
-  el.style.color = cs.color;
-  el.style.borderColor = cs.color;
-}
-
-function pickTag(t) {
-  selTagVal = t;
-  var ids = ['tag-trust','tag-panel','tag-notice','tag-urgent'];
-  for (var i = 0; i < ids.length; i++) {
-    var btn = document.getElementById(ids[i]);
-    btn.style.background = '#fff';
-    btn.style.color = '#888';
-    btn.style.borderColor = '#e8e8e2';
-  }
-  var ts = TAG[t] || TAG.trust;
-  var activeBtn = document.getElementById('tag-' + t);
-  if (activeBtn) {
-    activeBtn.style.background = ts.bg;
-    activeBtn.style.color = ts.color;
-    activeBtn.style.borderColor = ts.color;
-  }
-  updatePreview();
+  for (var i = 0; i < btns.length; i++){btns[i].style.background='#fff';btns[i].style.color='#888';btns[i].style.borderColor='#e8e8e2';}
+  var cs = CAT[c]||CAT.other;
+  el.style.background=cs.bg; el.style.color=cs.color; el.style.borderColor=cs.color;
 }
 
 function clearForm() {
-  editId = null;
-  selCatVal = '';
-  document.getElementById('form-title').textContent = 'Add an event';
-  document.getElementById('btn-delete').style.display = 'none';
-  document.getElementById('ev-title').value = '';
-  document.getElementById('ev-start').value = '';
-  document.getElementById('ev-end').value = '';
-  document.getElementById('ev-loc').value = '';
-  document.getElementById('ev-details').value = '';
-  var btns = document.getElementById('cat-grid').getElementsByTagName('button');
-  for (var i = 0; i < btns.length; i++) {
-    btns[i].style.background = '#fff';
-    btns[i].style.color = '#888';
-    btns[i].style.borderColor = '#e8e8e2';
-  }
-  var d = new Date();
-  document.getElementById('ev-date').value = d.toISOString().slice(0,10);
+  editId=null; selCatVal='';
+  document.getElementById('ev-form-title').textContent='Add an event';
+  document.getElementById('btn-delete').style.display='none';
+  document.getElementById('ev-title').value='';
+  document.getElementById('ev-start').value='';
+  document.getElementById('ev-end').value='';
+  document.getElementById('ev-loc').value='';
+  document.getElementById('ev-details').value='';
+  var btns=document.getElementById('cat-grid').getElementsByTagName('button');
+  for(var i=0;i<btns.length;i++){btns[i].style.background='#fff';btns[i].style.color='#888';btns[i].style.borderColor='#e8e8e2';}
+  var d=new Date(); document.getElementById('ev-date').value=d.toISOString().slice(0,10);
 }
 
 function loadIntoForm(ev) {
-  editId = ev.id;
-  selCatVal = ev.cat;
-  document.getElementById('form-title').textContent = 'Edit event';
-  document.getElementById('btn-delete').style.display = 'block';
-  document.getElementById('ev-title').value = ev.title || '';
-  document.getElementById('ev-date').value = ev.date || '';
-  document.getElementById('ev-start').value = ev.start_time || '';
-  document.getElementById('ev-end').value = ev.end_time || '';
-  document.getElementById('ev-loc').value = ev.loc || '';
-  document.getElementById('ev-details').value = ev.details || '';
-  var btns = document.getElementById('cat-grid').getElementsByTagName('button');
-  var catKeys = ['social','outdoors','trust','panel','other'];
-  for (var i = 0; i < btns.length; i++) {
-    var cs = CAT[catKeys[i]] || CAT.other;
-    if (catKeys[i] === ev.cat) {
-      btns[i].style.background = cs.bg;
-      btns[i].style.color = cs.color;
-      btns[i].style.borderColor = cs.color;
-    } else {
-      btns[i].style.background = '#fff';
-      btns[i].style.color = '#888';
-      btns[i].style.borderColor = '#e8e8e2';
-    }
-  }
-  window.scrollTo(0, 0);
+  editId=ev.id; selCatVal=ev.cat;
+  document.getElementById('ev-form-title').textContent='Edit event';
+  document.getElementById('btn-delete').style.display='block';
+  document.getElementById('ev-title').value=ev.title||'';
+  document.getElementById('ev-date').value=ev.date||'';
+  document.getElementById('ev-start').value=ev.start_time||'';
+  document.getElementById('ev-end').value=ev.end_time||'';
+  document.getElementById('ev-loc').value=ev.loc||'';
+  document.getElementById('ev-details').value=ev.details||'';
+  var btns=document.getElementById('cat-grid').getElementsByTagName('button');
+  var catKeys=['social','outdoors','trust','panel','other'];
+  for(var i=0;i<btns.length;i++){var cs=CAT[catKeys[i]]||CAT.other;if(catKeys[i]===ev.cat){btns[i].style.background=cs.bg;btns[i].style.color=cs.color;btns[i].style.borderColor=cs.color;}else{btns[i].style.background='#fff';btns[i].style.color='#888';btns[i].style.borderColor='#e8e8e2';}}
+  document.getElementById('sec-events').scrollTop=0;
 }
 
 function loadEvents() {
-  sbFetch('events?order=date.asc').then(function(data) {
-    events = data || [];
-    renderList();
-  }).catch(function() {
-    showStatus('Could not load events.', false);
-  });
+  sbFetch('events?order=date.asc').then(function(data){events=data||[];renderList();}).catch(function(){showStatus('Could not load events.',false);});
 }
 
 function saveEvent() {
-  var title = document.getElementById('ev-title').value.trim();
-  var date = document.getElementById('ev-date').value;
-  var start = document.getElementById('ev-start').value;
-  var end = document.getElementById('ev-end').value;
-  var loc = document.getElementById('ev-loc').value.trim();
-  var details = document.getElementById('ev-details').value.trim();
-  if (!title) { showStatus('Please enter a title.', false); return; }
-  if (!date) { showStatus('Please select a date.', false); return; }
-  if (!selCatVal) { showStatus('Please select a category.', false); return; }
-  var body = {title:title, date:date, cat:selCatVal, start_time:start, end_time:end, loc:loc, details:details};
-  if (editId) {
-    sbFetch('events?id=eq.' + editId, {method:'PATCH', body:body}).then(function() {
-      showStatus('Event updated.', true);
-      clearForm();
-      loadEvents();
-    }).catch(function() { showStatus('Could not update event.', false); });
+  var title=document.getElementById('ev-title').value.trim();
+  var date=document.getElementById('ev-date').value;
+  if(!title){showStatus('Please enter a title.',false);return;}
+  if(!date){showStatus('Please select a date.',false);return;}
+  if(!selCatVal){showStatus('Please select a category.',false);return;}
+  var body={title:title,date:date,cat:selCatVal,start_time:document.getElementById('ev-start').value,end_time:document.getElementById('ev-end').value,loc:document.getElementById('ev-loc').value.trim(),details:document.getElementById('ev-details').value.trim()};
+  if(editId){
+    sbFetch('events?id=eq.'+editId,{method:'PATCH',body:body}).then(function(){showStatus('Event updated.',true);clearForm();loadEvents();}).catch(function(){showStatus('Could not update event.',false);});
   } else {
-    body.id = 'ev_' + Date.now();
-    sbFetch('events', {method:'POST', body:body}).then(function() {
-      showStatus('Event added.', true);
-      clearForm();
-      loadEvents();
-    }).catch(function() { showStatus('Could not add event.', false); });
+    body.id='ev_'+Date.now();
+    sbFetch('events',{method:'POST',body:body}).then(function(){showStatus('Event added.',true);clearForm();loadEvents();}).catch(function(){showStatus('Could not add event.',false);});
   }
 }
 
 function deleteEvent() {
-  if (!editId) return;
-  if (!confirm('Remove this event?')) return;
-  sbFetch('events?id=eq.' + editId, {method:'DELETE'}).then(function() {
-    showStatus('Event removed.', true);
-    clearForm();
-    loadEvents();
-  }).catch(function() { showStatus('Could not delete event.', false); });
+  if(!editId)return;
+  if(!confirm('Remove this event?'))return;
+  sbFetch('events?id=eq.'+editId,{method:'DELETE'}).then(function(){showStatus('Event removed.',true);clearForm();loadEvents();}).catch(function(){showStatus('Could not delete event.',false);});
 }
 
-function fmtTime(t) {
-  if (!t) return '';
-  var p = t.split(':');
-  var h = parseInt(p[0]);
-  var m = p[1];
-  return (h % 12 || 12) + ':' + m + (h >= 12 ? 'pm' : 'am');
-}
-
-function fmtDateLong(dateStr) {
-  var d = new Date(dateStr + 'T12:00:00');
-  return DAYS[d.getDay()] + ' ' + d.getDate() + ' ' + MONTHS_LONG[d.getMonth()];
-}
+function fmtTime(t){if(!t)return'';var p=t.split(':');var h=parseInt(p[0]);var m=p[1];return(h%12||12)+':'+m+(h>=12?'pm':'am');}
+function fmtDateLong(ds){var d=new Date(ds+'T12:00:00');return DAYS[d.getDay()]+' '+d.getDate()+' '+MONTHS_LONG[d.getMonth()];}
 
 function renderList() {
-  var q = (document.getElementById('search-input').value || '').toLowerCase();
-  var all = [];
-  for (var i = 0; i < BANK_HOLIDAYS.length; i++) all.push(BANK_HOLIDAYS[i]);
-  for (var i = 0; i < events.length; i++) all.push(events[i]);
-  all.sort(function(a,b) { return a.date < b.date ? -1 : 1; });
-  if (q) {
-    var filtered = [];
-    for (var i = 0; i < all.length; i++) {
-      var ev = all[i];
-      var d = new Date(ev.date + 'T12:00:00');
-      var monthName = MONTHS_LONG[d.getMonth()].toLowerCase();
-      var monthShort = MONTHS[d.getMonth()].toLowerCase();
-      var dayName = DAYS[d.getDay()].toLowerCase();
-      var catLabel = ev.bh ? 'bank holiday' : (CAT[ev.cat] ? CAT[ev.cat].label.toLowerCase() : (ev.cat||''));
-      var searchStr = (ev.title + ' ' + (ev.loc||'') + ' ' + (ev.details||'') + ' ' + monthName + ' ' + monthShort + ' ' + dayName + ' ' + ev.date + ' ' + catLabel + ' ' + (ev.cat||'')).toLowerCase();
-      if (searchStr.indexOf(q) > -1) filtered.push(ev);
+  var q=(document.getElementById('ev-search').value||'').toLowerCase();
+  var all=[];
+  for(var i=0;i<BANK_HOLIDAYS.length;i++)all.push(BANK_HOLIDAYS[i]);
+  for(var i=0;i<events.length;i++)all.push(events[i]);
+  all.sort(function(a,b){return a.date<b.date?-1:1;});
+  if(q){
+    var filtered=[];
+    for(var i=0;i<all.length;i++){
+      var ev=all[i];
+      var d=new Date(ev.date+'T12:00:00');
+      var catLabel=ev.bh?'bank holiday':(CAT[ev.cat]?CAT[ev.cat].label.toLowerCase():(ev.cat||''));
+      var str=(ev.title+' '+(ev.loc||'')+' '+(ev.details||'')+' '+MONTHS_LONG[d.getMonth()].toLowerCase()+' '+MONTHS[d.getMonth()].toLowerCase()+' '+DAYS[d.getDay()].toLowerCase()+' '+ev.date+' '+catLabel+' '+(ev.cat||'')).toLowerCase();
+      if(str.indexOf(q)>-1)filtered.push(ev);
     }
-    all = filtered;
+    all=filtered;
   }
-  var list = document.getElementById('ev-list');
-  if (!all.length) {
-    list.innerHTML = '<div style="font-size:13px;color:#aaa;padding:8px 0;">No events found.</div>';
-    return;
-  }
-  var html = '';
-  for (var i = 0; i < all.length; i++) {
-    var ev = all[i];
-    var d = new Date(ev.date + 'T12:00:00');
-    var day = d.getDate();
-    var mon = MONTHS[d.getMonth()];
-    var cs = CAT[ev.cat] || CAT.other;
-    var isBH = ev.bh ? true : false;
-    if (isBH) cs = {label:'Bank holiday', bg:'#f0f0e8', color:'#555'};
-    var st = ev.start_time || '';
-    var en = ev.end_time || '';
-    var meta = isBH ? 'England bank holiday - all day' : '';
-    if (!isBH) {
-      var parts = [];
-      if (st) parts.push(fmtTime(st) + (en ? ' - ' + fmtTime(en) : ''));
-      if (ev.loc) parts.push(ev.loc);
-      meta = parts.join(' | ');
+  var list=document.getElementById('ev-list');
+  if(!all.length){list.innerHTML='<div style="font-size:13px;color:#aaa;padding:8px 0;">No events found.</div>';return;}
+  var html='';
+  for(var i=0;i<all.length;i++){
+    var ev=all[i];
+    var d=new Date(ev.date+'T12:00:00');
+    var cs=CAT[ev.cat]||CAT.other;
+    var isBH=ev.bh?true:false;
+    if(isBH)cs={label:'Bank holiday',bg:'#f0f0e8',color:'#555'};
+    var st=ev.start_time||'';var en=ev.end_time||'';
+    var meta=isBH?'Bank holiday -- all day':'';
+    if(!isBH){var parts=[];if(st)parts.push(fmtTime(st)+(en?' - '+fmtTime(en):''));if(ev.loc)parts.push(ev.loc);meta=parts.join(' | ');}
+    var isSelected=(ev.id===editId);
+    html+='<div class="list-item'+(isSelected?' selected':'')+(isBH?' is-bh':'')+'">';
+    html+='<div class="ev-item">';
+    html+='<div class="ev-date-box"><div class="ev-day">'+d.getDate()+'</div><div class="ev-mon">'+MONTHS[d.getMonth()]+'</div></div>';
+    html+='<div class="ev-body"><div class="ev-name">'+ev.title+'</div><div class="ev-meta">'+meta+'</div>';
+    html+='<span class="ev-tag" style="background:'+cs.bg+';color:'+cs.color+';">'+cs.label+'</span></div>';
+    if(!isBH){
+      html+='<div class="ev-actions">';
+      html+='<button type="button" class="btn-small btn-approve" onclick="loadIntoForm(window._allEv['+i+'])">Edit</button>';
+      html+='<button type="button" class="btn-small" style="background:#FAEEDA;color:#854F0B;" onclick="openSms(window._allEv['+i+'])">Remind</button>';
+      html+='</div>';
     }
-    var isSelected = (ev.id === editId);
-    var idx = i;
-    html += '<div class="ev-item' + (isBH ? ' is-bh' : '') + (isSelected ? ' selected' : '') + '">';
-    html += '<div class="ev-date-box' + (isBH ? ' bh' : '') + '"><div class="ev-day">' + day + '</div><div class="ev-mon">' + mon + '</div></div>';
-    html += '<div class="ev-body"><div class="ev-name">' + ev.title + '</div><div class="ev-meta">' + meta + '</div>';
-    html += '<span class="ev-tag" style="background:' + cs.bg + ';color:' + cs.color + ';">' + cs.label + '</span></div>';
-    if (!isBH) {
-      html += '<div class="ev-actions">';
-      html += '<button type="button" class="btn-small btn-approve" onclick="loadIntoForm(window._allEv[' + idx + '])">Edit</button>';
-      html += '<button type="button" class="btn-small" style="background:#FAEEDA;color:#854F0B;" onclick="openSms(window._allEv[' + idx + '])">Remind</button>';
-      html += '</div>';
-    }
-    html += '</div>';
+    html+='</div></div>';
   }
-  list.innerHTML = html;
-  window._allEv = all;
+  list.innerHTML=html;
+  window._allEv=all;
 }
 
-function openSms(ev) {
-  var txt = 'Village Voice reminder:\n\n' + ev.title + '\n' + fmtDateLong(ev.date);
-  var st = ev.start_time || '';
-  var en = ev.end_time || '';
-  if (st) txt += '\n' + fmtTime(st) + (en ? ' - ' + fmtTime(en) : '');
-  if (ev.loc) txt += '\n' + ev.loc;
-  txt += '\n\nSee the Village Voice app for details.';
-  document.getElementById('sms-text').value = txt;
-  var len = txt.length;
-  document.getElementById('sms-count').textContent = len + ' characters (' + Math.ceil(len/160) + ' SMS)';
+function openSms(ev){
+  var txt='Village Voice reminder:\n\n'+ev.title+'\n'+fmtDateLong(ev.date);
+  var st=ev.start_time||'';var en=ev.end_time||'';
+  if(st)txt+='\n'+fmtTime(st)+(en?' - '+fmtTime(en):'');
+  if(ev.loc)txt+='\n'+ev.loc;
+  txt+='\n\nSee the Village Voice app for details.';
+  document.getElementById('sms-text').value=txt;
+  var len=txt.length;
+  document.getElementById('sms-count').textContent=len+' characters ('+Math.ceil(len/160)+' SMS)';
   document.getElementById('sms-modal').classList.add('open');
 }
-function sendSms() {
-  var txt = document.getElementById('sms-text').value;
-  window.location.href = 'sms:?body=' + encodeURIComponent(txt);
-  closeSms();
-}
-function closeSms() { document.getElementById('sms-modal').classList.remove('open'); }
+function sendSms(){window.location.href='sms:?body='+encodeURIComponent(document.getElementById('sms-text').value);closeSms();}
+function closeSms(){document.getElementById('sms-modal').classList.remove('open');}
 
-function dl(content, filename, type) {
-  var a = document.createElement('a');
-  a.href = URL.createObjectURL(new Blob([content], {type:type}));
-  a.download = filename;
-  a.click();
-}
+function dl(content,filename,type){var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([content],{type:type}));a.download=filename;a.click();}
+function exportJSON(){var out=[];for(var i=0;i<events.length;i++){var e=events[i];out.push({title:e.title,date:e.date,cat:e.cat,start:e.start_time,end:e.end_time,loc:e.loc,details:e.details});}dl(JSON.stringify(out,null,2),'VillageVoice_Events.json','application/json');}
+function exportCSV(){var rows=[['Title','Date','Category','Start','End','Location','Details']];for(var i=0;i<events.length;i++){var e=events[i];rows.push([e.title||'',e.date||'',e.cat||'',e.start_time||'',e.end_time||'',e.loc||'',e.details||'']);}var csv='';for(var i=0;i<rows.length;i++){var row='';for(var j=0;j<rows[i].length;j++){if(j>0)row+=',';row+='"'+String(rows[i][j]).replace(/"/g,'""')+'"';}csv+=row+'\n';}dl(csv,'VillageVoice_Events.csv','text/csv');}
+function exportICS(){var ics=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//VoiceVillage//Admin//EN','CALSCALE:GREGORIAN'];for(var i=0;i<events.length;i++){var e=events[i];var ds=e.date.replace(/-/g,'');var st=(e.start_time||'09:00').replace(':','')+'00';var en=(e.end_time||'10:00').replace(':','')+'00';ics.push('BEGIN:VEVENT');ics.push('DTSTART:'+ds+'T'+st);ics.push('DTEND:'+ds+'T'+en);ics.push('SUMMARY:'+e.title);ics.push('DESCRIPTION:'+(e.details||''));ics.push('LOCATION:'+(e.loc||''));ics.push('END:VEVENT');}ics.push('END:VCALENDAR');dl(ics.join('\r\n'),'VillageVoice_Events.ics','text/calendar');}
 
-function exportJSON() {
-  var out = [];
-  for (var i = 0; i < events.length; i++) {
-    var e = events[i];
-    out.push({title:e.title,date:e.date,cat:e.cat,start:e.start_time,end:e.end_time,loc:e.loc,details:e.details});
-  }
-  dl(JSON.stringify(out, null, 2), 'VillageVoice_Events.json', 'application/json');
+// NEWS
+function updatePreview(){
+  var title=document.getElementById('msg-title').value||'Your headline here';
+  var body=document.getElementById('msg-body').value||'Your message will appear here.';
+  var ts=TAG[selTagVal]||TAG.trust;
+  document.getElementById('msg-preview').innerHTML='<span style="font-size:11px;padding:3px 9px;border-radius:20px;font-weight:700;display:inline-block;margin-bottom:7px;background:'+ts.bg+';color:'+ts.color+';">'+ts.label+'</span><div style="font-size:14px;font-weight:700;color:#1a1a1a;margin-bottom:4px;">'+title+'</div><div style="font-size:13px;color:#666;line-height:1.6;">'+body+'</div>';
 }
-
-function exportCSV() {
-  var rows = [['Title','Date','Category','Start','End','Location','Details']];
-  for (var i = 0; i < events.length; i++) {
-    var e = events[i];
-    rows.push([e.title||'',e.date||'',e.cat||'',e.start_time||'',e.end_time||'',e.loc||'',e.details||'']);
-  }
-  var csv = '';
-  for (var i = 0; i < rows.length; i++) {
-    var row = '';
-    for (var j = 0; j < rows[i].length; j++) {
-      if (j > 0) row += ',';
-      row += '"' + String(rows[i][j]).replace(/"/g,'""') + '"';
-    }
-    csv += row + '\n';
-  }
-  dl(csv, 'VillageVoice_Events.csv', 'text/csv');
+function pickTag(t){
+  selTagVal=t;
+  var ids=['tag-trust','tag-panel','tag-notice','tag-urgent'];
+  for(var i=0;i<ids.length;i++){var btn=document.getElementById(ids[i]);btn.style.background='#fff';btn.style.color='#888';btn.style.borderColor='#e8e8e2';}
+  var ts=TAG[t]||TAG.trust;
+  var ab=document.getElementById('tag-'+t);
+  if(ab){ab.style.background=ts.bg;ab.style.color=ts.color;ab.style.borderColor=ts.color;}
+  updatePreview();
 }
-
-function exportICS() {
-  var ics = ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//VoiceVillage//Admin//EN','CALSCALE:GREGORIAN'];
-  for (var i = 0; i < events.length; i++) {
-    var e = events[i];
-    var ds = e.date.replace(/-/g,'');
-    var st = (e.start_time||'09:00').replace(':','') + '00';
-    var en = (e.end_time||'10:00').replace(':','') + '00';
-    ics.push('BEGIN:VEVENT');
-    ics.push('DTSTART:' + ds + 'T' + st);
-    ics.push('DTEND:' + ds + 'T' + en);
-    ics.push('SUMMARY:' + e.title);
-    ics.push('DESCRIPTION:' + (e.details||''));
-    ics.push('LOCATION:' + (e.loc||''));
-    ics.push('END:VEVENT');
-  }
-  ics.push('END:VCALENDAR');
-  dl(ics.join('\r\n'), 'VillageVoice_Events.ics', 'text/calendar');
-}
-
-function updatePreview() {
-  var title = document.getElementById('msg-title').value || 'Your headline here';
-  var body = document.getElementById('msg-body').value || 'Your message will appear here.';
-  var ts = TAG[selTagVal] || TAG.trust;
-  document.getElementById('msg-preview').innerHTML =
-    '<span style="font-size:11px;padding:3px 9px;border-radius:20px;font-weight:700;display:inline-block;margin-bottom:8px;background:' + ts.bg + ';color:' + ts.color + ';">' + ts.label + '</span>' +
-    '<div style="font-size:14px;font-weight:700;color:#1a1a1a;margin-bottom:5px;">' + title + '</div>' +
-    '<div style="font-size:13px;color:#666;line-height:1.6;">' + body + '</div>';
-}
-
-function postMsg() {
-  var title = document.getElementById('msg-title').value.trim();
-  var body = document.getElementById('msg-body').value.trim();
-  if (!title || !body) { showStatus('Please enter a headline and message.', false); return; }
-  if (!selTagVal) { showStatus('Please select a tag.', false); return; }
-  var ts = TAG[selTagVal] || TAG.trust;
-  var d = new Date();
-  sbFetch('messages', {
-    method: 'POST',
-    body: {
-      id: 'msg_' + Date.now(),
-      tag: selTagVal, label: ts.label, title: title, body: body,
-      date: d.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})
-    }
-  }).then(function() {
-    document.getElementById('msg-title').value = '';
-    document.getElementById('msg-body').value = '';
-    selTagVal = '';
-    var ids = ['tag-trust','tag-panel','tag-notice','tag-urgent'];
-    for (var i = 0; i < ids.length; i++) {
-      var btn = document.getElementById(ids[i]);
-      btn.style.background = '#fff'; btn.style.color = '#888'; btn.style.borderColor = '#e8e8e2';
-    }
+function postMsg(){
+  var title=document.getElementById('msg-title').value.trim();
+  var body=document.getElementById('msg-body').value.trim();
+  if(!title||!body){showStatus('Please enter a headline and message.',false);return;}
+  if(!selTagVal){showStatus('Please select a tag.',false);return;}
+  var ts=TAG[selTagVal]||TAG.trust;
+  var d=new Date();
+  sbFetch('messages',{method:'POST',body:{id:'msg_'+Date.now(),tag:selTagVal,label:ts.label,title:title,body:body,date:d.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})}}).then(function(){
+    document.getElementById('msg-title').value='';
+    document.getElementById('msg-body').value='';
+    selTagVal='';
+    var ids=['tag-trust','tag-panel','tag-notice','tag-urgent'];
+    for(var i=0;i<ids.length;i++){var btn=document.getElementById(ids[i]);btn.style.background='#fff';btn.style.color='#888';btn.style.borderColor='#e8e8e2';}
     updatePreview();
     renderMessages();
-    showStatus('Message posted to News feed.', true);
-  }).catch(function() { showStatus('Could not post message.', false); });
+    showStatus('Message posted to News feed.',true);
+  }).catch(function(){showStatus('Could not post message.',false);});
 }
-
-function renderMessages() {
-  var list = document.getElementById('msg-list');
-  sbFetch('messages?order=created_at.desc').then(function(data) {
-    if (!data || !data.length) {
-      list.innerHTML = '<div style="font-size:13px;color:#aaa;">No messages posted yet.</div>';
-      return;
+function renderMessages(){
+  var list=document.getElementById('msg-list');
+  sbFetch('messages?order=created_at.desc').then(function(data){
+    if(!data||!data.length){list.innerHTML='<div style="font-size:13px;color:#aaa;">No messages posted yet.</div>';return;}
+    var html='';
+    for(var i=0;i<data.length;i++){
+      var m=data[i];var ts=TAG[m.tag]||TAG.trust;
+      html+='<div style="background:#fff;border:1px solid #e8e8e2;border-radius:10px;padding:11px 13px;margin-bottom:7px;">';
+      html+='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;">';
+      html+='<span style="font-size:11px;padding:2px 8px;border-radius:20px;font-weight:700;background:'+ts.bg+';color:'+ts.color+';">'+ts.label+'</span>';
+      html+='<button type="button" class="btn-small btn-remove" onclick="deleteMsg(\''+m.id+'\')">Remove</button></div>';
+      html+='<div style="font-size:13px;font-weight:700;color:#1a1a1a;margin-bottom:2px;">'+m.title+'</div>';
+      html+='<div style="font-size:12px;color:#666;">'+m.body.slice(0,100)+(m.body.length>100?'...':'')+'</div>';
+      html+='<div style="font-size:11px;color:#aaa;margin-top:4px;">'+m.date+'</div></div>';
     }
-    var html = '';
-    for (var i = 0; i < data.length; i++) {
-      var m = data[i];
-      var ts = TAG[m.tag] || TAG.trust;
-      html += '<div style="background:#fff;border:1px solid #e8e8e2;border-radius:10px;padding:12px 14px;margin-bottom:8px;">';
-      html += '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">';
-      html += '<span style="font-size:11px;padding:2px 8px;border-radius:20px;font-weight:700;background:' + ts.bg + ';color:' + ts.color + ';">' + ts.label + '</span>';
-      html += '<button type="button" class="btn-small btn-remove" onclick="deleteMsg(\'' + m.id + '\')">Remove</button></div>';
-      html += '<div style="font-size:13px;font-weight:700;color:#1a1a1a;margin-bottom:3px;">' + m.title + '</div>';
-      html += '<div style="font-size:12px;color:#666;">' + m.body.slice(0,100) + (m.body.length > 100 ? '...' : '') + '</div>';
-      html += '<div style="font-size:11px;color:#aaa;margin-top:5px;">' + m.date + '</div></div>';
+    list.innerHTML=html;
+  }).catch(function(){list.innerHTML='<div style="font-size:13px;color:#aaa;">Could not load messages.</div>';});
+}
+function deleteMsg(id){sbFetch('messages?id=eq.'+id,{method:'DELETE'}).then(function(){renderMessages();showStatus('Message removed.',true);}).catch(function(){showStatus('Could not remove message.',false);});}
+
+// RESIDENTS
+function addResident(){
+  var first=document.getElementById('res-first').value.trim();
+  var last=document.getElementById('res-last').value.trim();
+  var email=document.getElementById('res-email').value.trim();
+  if(!first||!last||!email){showStatus('Please enter first name, surname and email.',false);return;}
+  sbFetch('residents',{method:'POST',body:{id:'r_'+Date.now(),first:first,last:last,email:email,mobile:document.getElementById('res-mobile').value.trim(),address:document.getElementById('res-address').value.trim(),status:'active',emergency_name:document.getElementById('res-ec-name').value.trim(),emergency_phone:document.getElementById('res-ec-phone').value.trim(),emergency_relation:document.getElementById('res-ec-relation').value.trim(),date:new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})}}).then(function(){
+    var flds=['res-first','res-last','res-email','res-mobile','res-address','res-ec-name','res-ec-phone','res-ec-relation'];
+    for(var i=0;i<flds.length;i++)document.getElementById(flds[i]).value='';
+    renderResidents();showStatus('Resident added.',true);
+  }).catch(function(){showStatus('Could not add resident.',false);});
+}
+
+function renderResidents(){
+  sbFetch('residents?order=last.asc').then(function(data){
+    allResidents=data||[];
+    var count=document.getElementById('res-count');
+    sbFetch('registrations?status=eq.pending&order=created_at.asc').then(function(regData){
+      var regs=regData||[];
+      if(count)count.textContent='('+allResidents.length+' residents'+(regs.length>0?', '+regs.length+' pending':'')+ ')';
+      renderResidentsList(regs);
+    }).catch(function(){renderResidentsList([]);});
+  }).catch(function(){document.getElementById('res-list').innerHTML='<div class="loading">Could not load residents.</div>';});
+}
+
+function filterResidents(){
+  var q=(document.getElementById('res-search').value||'').toLowerCase();
+  var regs=[];
+  renderResidentsList(regs,q);
+}
+
+function renderResidentsList(regs,q){
+  var list=document.getElementById('res-list');
+  var html='';
+  if(regs&&regs.length){
+    html+='<div style="font-size:12px;font-weight:700;color:#854F0B;margin-bottom:7px;background:#FAEEDA;padding:7px 11px;border-radius:8px;">'+regs.length+' registration'+(regs.length>1?'s':'')+' awaiting approval</div>';
+    for(var i=0;i<regs.length;i++){
+      var r=regs[i];var ini=r.first.charAt(0)+r.last.charAt(0);
+      html+='<div class="res-item" style="border-color:#FAC775;">';
+      html+='<div class="res-av" style="background:#FAEEDA;color:#854F0B;">'+ini+'</div>';
+      html+='<div style="flex:1;min-width:0;"><div class="res-name">'+r.first+' '+r.last+'<span class="res-badge badge-pending">pending</span></div>';
+      html+='<div class="res-detail">'+r.email+'</div>';
+      if(r.address)html+='<div class="res-detail">'+r.address+'</div>';
+      if(r.emergency_name)html+='<div class="res-detail" style="color:#534AB7;">EC: '+r.emergency_name+'</div>';
+      html+='</div>';
+      html+='<div class="res-btns"><button type="button" class="btn-small btn-approve" onclick="approveReg(\''+r.id+'\',\''+r.first+'\',\''+r.last+'\',\''+r.email+'\',\''+(r.mobile||'')+'\',\''+(r.address||'')+'\')">Approve</button>';
+      html+='<button type="button" class="btn-small btn-remove" onclick="declineReg(\''+r.id+'\')">Decline</button></div></div>';
     }
-    list.innerHTML = html;
-  }).catch(function() {
-    list.innerHTML = '<div style="font-size:13px;color:#aaa;">Could not load messages.</div>';
-  });
+  }
+  var residents=allResidents;
+  if(q){var filtered=[];for(var i=0;i<residents.length;i++){var r=residents[i];var str=(r.first+' '+r.last+' '+(r.email||'')+' '+(r.address||'')+' '+(r.mobile||'')).toLowerCase();if(str.indexOf(q)>-1)filtered.push(r);}residents=filtered;}
+  if(!residents.length&&!regs.length){list.innerHTML='<div style="font-size:13px;color:#aaa;">No residents found.</div>';return;}
+  for(var i=0;i<residents.length;i++){
+    var r=residents[i];var ini=r.first.charAt(0)+r.last.charAt(0);
+    html+='<div class="res-item" data-rid='"+r.id+"' ondblclick="openResEdit(this.dataset.rid)">';
+    html+='<div class="res-av">'+ini+'</div>';
+    html+='<div style="flex:1;min-width:0;"><div class="res-name">'+r.first+' '+r.last+'<span class="res-badge badge-active">active</span></div>';
+    html+='<div class="res-detail">'+r.email+'</div>';
+    if(r.mobile)html+='<div class="res-detail">'+r.mobile+'</div>';
+    if(r.address)html+='<div class="res-detail">'+r.address+'</div>';
+    if(r.emergency_name)html+='<div class="res-detail" style="color:#534AB7;">EC: '+r.emergency_name+(r.emergency_relation?' ('+r.emergency_relation+')':'')+(r.emergency_phone?' - '+r.emergency_phone:'')+'</div>';
+    html+='</div>';
+    html+='<div class="res-btns"><button type="button" class="btn-small btn-remove" onclick="removeResident(\''+r.id+'\')">Remove</button></div></div>';
+  }
+  list.innerHTML=html;
 }
 
-function deleteMsg(id) {
-  sbFetch('messages?id=eq.' + id, {method:'DELETE'}).then(function() {
-    renderMessages();
-    showStatus('Message removed.', true);
-  }).catch(function() { showStatus('Could not remove message.', false); });
+function approveReg(id,first,last,email,mobile,address){
+  sbFetch('registrations?id=eq.'+id).then(function(regData){
+    var reg=(regData&&regData.length)?regData[0]:{};
+    return sbFetch('residents',{method:'POST',body:{id:'r_'+Date.now(),first:first,last:last,email:email,mobile:mobile,address:address,status:'active',emergency_name:reg.emergency_name||'',emergency_phone:reg.emergency_phone||'',emergency_relation:reg.emergency_relation||'',date:new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})}});
+  }).then(function(){return sbFetch('registrations?id=eq.'+id,{method:'DELETE'});}).then(function(){renderResidents();showStatus(first+' '+last+' approved.',true);}).catch(function(){showStatus('Could not approve registration.',false);});
 }
+function declineReg(id){if(!confirm('Decline this registration?'))return;sbFetch('registrations?id=eq.'+id,{method:'DELETE'}).then(function(){renderResidents();showStatus('Registration declined.',true);}).catch(function(){showStatus('Could not decline.',false);});}
+function removeResident(id){if(!confirm('Remove this resident?'))return;sbFetch('residents?id=eq.'+id,{method:'DELETE'}).then(function(){renderResidents();showStatus('Resident removed.',true);}).catch(function(){showStatus('Could not remove.',false);});}
 
-function addResident() {
-  var first = document.getElementById('res-first').value.trim();
-  var last = document.getElementById('res-last').value.trim();
-  var email = document.getElementById('res-email').value.trim();
-  var mobile = document.getElementById('res-mobile').value.trim();
-  var address = document.getElementById('res-address').value.trim();
-  if (!first || !last || !email) { showStatus('Please enter first name, surname and email.', false); return; }
-  sbFetch('residents', {
-    method: 'POST',
-    body: {
-      id: 'r_' + Date.now(), first:first, last:last, email:email,
-      mobile:mobile, address:address, status:'active',
-      emergency_name: document.getElementById('res-ec-name').value.trim(),
-      emergency_phone: document.getElementById('res-ec-phone').value.trim(),
-      emergency_relation: document.getElementById('res-ec-relation').value.trim(),
-      date: new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})
-    }
-  }).then(function() {
-    document.getElementById('res-first').value = '';
-    document.getElementById('res-last').value = '';
-    document.getElementById('res-email').value = '';
-    document.getElementById('res-mobile').value = '';
-    document.getElementById('res-address').value = '';
-    document.getElementById('res-ec-name').value = '';
-    document.getElementById('res-ec-phone').value = '';
-    document.getElementById('res-ec-relation').value = '';
-    renderResidents();
-    showStatus('Resident added.', true);
-  }).catch(function() { showStatus('Could not add resident.', false); });
-}
-
-function renderResidents() {
-  var list = document.getElementById('res-list');
-  var count = document.getElementById('res-count');
-  sbFetch('residents?order=last.asc').then(function(data) {
-    var regs = [];
-    sbFetch('registrations?status=eq.pending&order=created_at.asc').then(function(regData) {
-      regs = regData || [];
-      var pending = regs.length;
-      if (count) count.textContent = '(' + (data ? data.length : 0) + ' residents' + (pending > 0 ? ', ' + pending + ' pending registration' + (pending > 1 ? 's' : '') : '') + ')';
-      var html = '';
-      if (regs.length > 0) {
-        html += '<div style="font-size:13px;font-weight:700;color:#854F0B;margin-bottom:8px;background:#FAEEDA;padding:8px 12px;border-radius:8px;">' + regs.length + ' new registration' + (regs.length > 1 ? 's' : '') + ' awaiting approval</div>';
-        for (var i = 0; i < regs.length; i++) {
-          var r = regs[i];
-          var ini = r.first.charAt(0) + r.last.charAt(0);
-          html += '<div class="res-item" style="border-color:#FAC775;">';
-          html += '<div class="res-av" style="background:#FAEEDA;color:#854F0B;">' + ini + '</div>';
-          html += '<div style="flex:1;min-width:0;"><div class="res-name">' + r.first + ' ' + r.last + '<span class="res-badge badge-pending">pending</span></div>';
-          html += '<div class="res-detail">' + r.email + '</div>';
-          if (r.mobile) html += '<div class="res-detail">' + r.mobile + '</div>';
-          if (r.address) html += '<div class="res-detail">' + r.address + '</div></div>';
-          html += '<div class="res-btns"><button type="button" class="btn-small btn-approve" onclick="approveReg(\'' + r.id + '\',\'' + r.first + '\',\'' + r.last + '\',\'' + r.email + '\',\'' + (r.mobile||'') + '\',\'' + (r.address||'') + '\')">Approve</button>';
-          html += '<button type="button" class="btn-small btn-remove" onclick="declineReg(\'' + r.id + '\')">Decline</button></div></div>';
-        }
-      }
-      if (!data || !data.length) {
-        html += '<div style="font-size:13px;color:#aaa;margin-top:8px;">No active residents yet.</div>';
-      } else {
-        for (var i = 0; i < data.length; i++) {
-          var r = data[i];
-          var ini = r.first.charAt(0) + r.last.charAt(0);
-          html += '<div class="res-item" ondblclick="openResEdit(\'' + r.id + '\')">';
-          html += '<div class="res-av">' + ini + '</div>';
-          html += '<div style="flex:1;min-width:0;"><div class="res-name">' + r.first + ' ' + r.last + '<span class="res-badge badge-active">active</span></div>';
-          html += '<div class="res-detail">' + r.email + '</div>';
-          if (r.mobile) html += '<div class="res-detail">' + r.mobile + '</div>';
-          if (r.address) html += '<div class="res-detail">' + r.address + '</div>';
-          if (r.emergency_name) html += '<div class="res-detail" style="color:#534AB7;">EC: ' + r.emergency_name + (r.emergency_relation ? ' (' + r.emergency_relation + ')' : '') + (r.emergency_phone ? ' - ' + r.emergency_phone : '') + '</div>';
-          html += '<div class="res-detail">' + (r.date||'') + '</div>';
-          if (r.emergency_name) html += '<div class="res-detail" style="color:#534AB7;">EC: ' + r.emergency_name + (r.emergency_relation ? ' (' + r.emergency_relation + ')' : '') + (r.emergency_phone ? ' - ' + r.emergency_phone : '') + '</div>';
-          html += '</div>';
-          html += '<div class="res-btns"><button type="button" class="btn-small btn-remove" onclick="removeResident(\'' + r.id + '\')">Remove</button></div></div>';
-        }
-      }
-      list.innerHTML = html;
-    }).catch(function() {});
-  }).catch(function() {
-    list.innerHTML = '<div style="font-size:13px;color:#aaa;">Could not load residents.</div>';
-  });
-}
-
-function approveReg(id, first, last, email, mobile, address) {
-  sbFetch('registrations?id=eq.' + id).then(function(regData) {
-    var reg = (regData && regData.length) ? regData[0] : {};
-    return sbFetch('residents', {
-      method: 'POST',
-      body: {id:'r_'+Date.now(), first:first, last:last, email:email, mobile:mobile, address:address, status:'active',
-        emergency_name: reg.emergency_name || '',
-        emergency_phone: reg.emergency_phone || '',
-        emergency_relation: reg.emergency_relation || '',
-        date: new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})}
-    });
-  }).then(function() {
-    return sbFetch('registrations?id=eq.' + id, {method:'DELETE'});
-  }).then(function() {
-    renderResidents();
-    showStatus(first + ' ' + last + ' approved and added as resident.', true);
-  }).catch(function() { showStatus('Could not approve registration.', false); });
-}
-
-function declineReg(id) {
-  if (!confirm('Decline and remove this registration?')) return;
-  sbFetch('registrations?id=eq.' + id, {method:'DELETE'}).then(function() {
-    renderResidents();
-    showStatus('Registration declined.', true);
-  }).catch(function() { showStatus('Could not decline registration.', false); });
-}
-
-function removeResident(id) {
-  if (!confirm('Remove this resident?')) return;
-  sbFetch('residents?id=eq.' + id, {method:'DELETE'}).then(function() {
-    renderResidents();
-    showStatus('Resident removed.', true);
-  }).catch(function() { showStatus('Could not remove resident.', false); });
-}
-
-function openResEdit(id) {
-  sbFetch('residents?id=eq.' + id).then(function(data) {
-    if (!data || !data.length) return;
-    var r = data[0];
-    document.getElementById('edit-res-id').value = r.id;
-    document.getElementById('edit-res-first').value = r.first || '';
-    document.getElementById('edit-res-last').value = r.last || '';
-    document.getElementById('edit-res-email').value = r.email || '';
-    document.getElementById('edit-res-mobile').value = r.mobile || '';
-    document.getElementById('edit-res-address').value = r.address || '';
-    document.getElementById('edit-res-status').value = r.status || 'active';
-    document.getElementById('edit-ec-name').value = r.emergency_name || '';
-    document.getElementById('edit-ec-phone').value = r.emergency_phone || '';
-    document.getElementById('edit-ec-relation').value = r.emergency_relation || '';
+function openResEdit(id){
+  sbFetch('residents?id=eq.'+id).then(function(data){
+    if(!data||!data.length)return;
+    var r=data[0];
+    document.getElementById('edit-res-id').value=r.id;
+    document.getElementById('edit-res-first').value=r.first||'';
+    document.getElementById('edit-res-last').value=r.last||'';
+    document.getElementById('edit-res-email').value=r.email||'';
+    document.getElementById('edit-res-mobile').value=r.mobile||'';
+    document.getElementById('edit-res-address').value=r.address||'';
+    document.getElementById('edit-res-status').value=r.status||'active';
+    document.getElementById('edit-ec-name').value=r.emergency_name||'';
+    document.getElementById('edit-ec-phone').value=r.emergency_phone||'';
+    document.getElementById('edit-ec-relation').value=r.emergency_relation||'';
     document.getElementById('res-edit-modal').classList.add('open');
   });
 }
-
-function closeResEdit() { document.getElementById('res-edit-modal').classList.remove('open'); }
-
-function saveResEdit() {
-  var id = document.getElementById('edit-res-id').value;
-  var first = document.getElementById('edit-res-first').value.trim();
-  var last = document.getElementById('edit-res-last').value.trim();
-  var email = document.getElementById('edit-res-email').value.trim();
-  if (!first || !last || !email) { alert('Please enter first name, surname and email.'); return; }
-  sbFetch('residents?id=eq.' + id, {
-    method: 'PATCH',
-    body: {
-      first:first, last:last, email:email,
-      mobile: document.getElementById('edit-res-mobile').value.trim(),
-      address: document.getElementById('edit-res-address').value.trim(),
-      status: document.getElementById('edit-res-status').value,
-      emergency_name: document.getElementById('edit-ec-name').value.trim(),
-      emergency_phone: document.getElementById('edit-ec-phone').value.trim(),
-      emergency_relation: document.getElementById('edit-ec-relation').value.trim()
-    }
-  }).then(function() {
-    closeResEdit();
-    renderResidents();
-    showStatus('Resident details updated.', true);
-  }).catch(function() { showStatus('Could not update resident.', false); });
+function closeResEdit(){document.getElementById('res-edit-modal').classList.remove('open');}
+function saveResEdit(){
+  var id=document.getElementById('edit-res-id').value;
+  var first=document.getElementById('edit-res-first').value.trim();
+  var last=document.getElementById('edit-res-last').value.trim();
+  var email=document.getElementById('edit-res-email').value.trim();
+  if(!first||!last||!email){alert('Please enter first name, surname and email.');return;}
+  sbFetch('residents?id=eq.'+id,{method:'PATCH',body:{first:first,last:last,email:email,mobile:document.getElementById('edit-res-mobile').value.trim(),address:document.getElementById('edit-res-address').value.trim(),status:document.getElementById('edit-res-status').value,emergency_name:document.getElementById('edit-ec-name').value.trim(),emergency_phone:document.getElementById('edit-ec-phone').value.trim(),emergency_relation:document.getElementById('edit-ec-relation').value.trim()}}).then(function(){closeResEdit();renderResidents();showStatus('Resident details updated.',true);}).catch(function(){showStatus('Could not update resident.',false);});
 }
-// -- COMMUNITY CONTACTS ADMIN --
-var CC_CATS_ADMIN = {
-  staff:      {label:'Staff and wardens', bg:'#E1F5EE', color:'#0F6E56'},
-  panel:      {label:'Panel',             bg:'#EEEDFE', color:'#534AB7'},
-  facilities: {label:'Facilities',        bg:'#E6F1FB', color:'#185FA5'},
-  welfare:    {label:'Welfare',           bg:'#FCEBEB', color:'#A32D2D'},
-  activities: {label:'Activities',        bg:'#FAEEDA', color:'#854F0B'}
-};
-var selCCCat = '';
-var editCCId = null;
 
-function pickCCCat(c, el) {
-  selCCCat = c;
-  var btns = document.getElementById('cc-cat-grid').getElementsByTagName('button');
-  for (var i = 0; i < btns.length; i++) {
-    btns[i].style.background = '#fff';
-    btns[i].style.color = '#888';
-    btns[i].style.borderColor = '#e8e8e2';
+// COMMUNITY CONTACTS
+function pickCCCat(c,el){
+  selCCCat=c;
+  var btns=document.getElementById('cc-cat-grid').getElementsByTagName('button');
+  for(var i=0;i<btns.length;i++){btns[i].style.background='#fff';btns[i].style.color='#888';btns[i].style.borderColor='#e8e8e2';}
+  var cs=CC_CATS[c]||CC_CATS.staff;
+  el.style.background=cs.bg;el.style.color=cs.color;el.style.borderColor=cs.color;
+}
+function clearCCForm(){
+  editCCId=null;selCCCat='';
+  var flds=['cc-name','cc-role','cc-phone','cc-email','cc-notes'];
+  for(var i=0;i<flds.length;i++)document.getElementById(flds[i]).value='';
+  document.getElementById('cc-btn-delete').style.display='none';
+  var btns=document.getElementById('cc-cat-grid').getElementsByTagName('button');
+  for(var i=0;i<btns.length;i++){btns[i].style.background='#fff';btns[i].style.color='#888';btns[i].style.borderColor='#e8e8e2';}
+}
+function saveCCContact(){
+  var name=document.getElementById('cc-name').value.trim();
+  if(!name){showStatus('Please enter a contact name.',false);return;}
+  if(!selCCCat){showStatus('Please select a category.',false);return;}
+  var body={name:name,role:document.getElementById('cc-role').value.trim(),category:selCCCat,phone:document.getElementById('cc-phone').value.trim(),email:document.getElementById('cc-email').value.trim(),notes:document.getElementById('cc-notes').value.trim(),active:true};
+  if(editCCId){sbFetch('community_contacts?id=eq.'+editCCId,{method:'PATCH',body:body}).then(function(){showStatus('Contact updated.',true);clearCCForm();renderCCList();}).catch(function(){showStatus('Could not update.',false);});}
+  else{body.id='cc_'+Date.now();body.display_order=99;sbFetch('community_contacts',{method:'POST',body:body}).then(function(){showStatus('Contact added.',true);clearCCForm();renderCCList();}).catch(function(){showStatus('Could not add contact.',false);});}
+}
+function deleteCCContact(){if(!editCCId)return;if(!confirm('Remove this contact?'))return;sbFetch('community_contacts?id=eq.'+editCCId,{method:'DELETE'}).then(function(){showStatus('Contact removed.',true);clearCCForm();renderCCList();}).catch(function(){showStatus('Could not remove.',false);});}
+function loadCCIntoForm(c){
+  editCCId=c.id;selCCCat=c.category;
+  document.getElementById('cc-name').value=c.name||'';
+  document.getElementById('cc-role').value=c.role||'';
+  document.getElementById('cc-phone').value=c.phone||'';
+  document.getElementById('cc-email').value=c.email||'';
+  document.getElementById('cc-notes').value=c.notes||'';
+  document.getElementById('cc-btn-delete').style.display='block';
+  var catKeys=['staff','panel','facilities','welfare','activities'];
+  var btns=document.getElementById('cc-cat-grid').getElementsByTagName('button');
+  for(var i=0;i<btns.length;i++){var cs=CC_CATS[catKeys[i]]||CC_CATS.staff;if(catKeys[i]===c.category){btns[i].style.background=cs.bg;btns[i].style.color=cs.color;btns[i].style.borderColor=cs.color;}else{btns[i].style.background='#fff';btns[i].style.color='#888';btns[i].style.borderColor='#e8e8e2';}}
+  document.getElementById('sec-community').scrollTop=0;
+}
+function renderCCList(){
+  sbFetch('community_contacts?active=eq.true&order=category.asc,display_order.asc').then(function(data){
+    allCC=data||[];
+    var count=document.getElementById('cc-count');
+    if(count)count.textContent='('+allCC.length+')';
+    filterCCList();
+  }).catch(function(){document.getElementById('cc-list-admin').innerHTML='<div class="loading">Could not load.</div>';});
+}
+function filterCCList(){
+  var q=(document.getElementById('cc-search').value||'').toLowerCase();
+  var list=document.getElementById('cc-list-admin');
+  var contacts=allCC;
+  if(q){var filtered=[];for(var i=0;i<contacts.length;i++){var c=contacts[i];var cs=CC_CATS[c.category]||{label:c.category};var str=(c.name+' '+c.role+' '+c.category+' '+cs.label+' '+(c.notes||'')+' '+(c.phone||'')+' '+(c.email||'')).toLowerCase();if(str.indexOf(q)>-1)filtered.push(c);}contacts=filtered;}
+  if(!contacts.length){list.innerHTML='<div style="font-size:13px;color:#aaa;">No contacts found.</div>';return;}
+  var html='';var lastCat='';
+  for(var i=0;i<contacts.length;i++){
+    var c=contacts[i];var cs=CC_CATS[c.category]||{label:c.category,bg:'#f0f0e8',color:'#555'};
+    if(!q&&c.category!==lastCat){html+='<div style="font-size:11px;font-weight:700;color:#888;margin:'+(lastCat?'11px':'0')+' 0 5px;">'+cs.label+'</div>';lastCat=c.category;}
+    html+='<div class="list-item" data-idx="'+i+'" ondblclick="loadCCIntoForm(window._ccData[this.dataset.idx])">';
+    html+='<div style="display:flex;align-items:center;gap:7px;margin-bottom:2px;">';
+    html+='<span style="font-size:10px;padding:2px 7px;border-radius:20px;font-weight:700;background:'+cs.bg+';color:'+cs.color+';">'+cs.label.split(' ')[0]+'</span>';
+    html+='<span style="font-size:13px;font-weight:700;color:#1a1a1a;">'+c.name+'</span>';
+    if(c.role)html+='<span style="font-size:11px;color:#888;">-- '+c.role+'</span>';
+    html+='</div>';
+    if(c.phone||c.email){html+='<div style="font-size:11px;color:#aaa;">';if(c.phone)html+=c.phone;if(c.phone&&c.email)html+='  |  ';if(c.email)html+=c.email;html+='</div>';}
+    html+='</div>';
   }
-  var cs = CC_CATS_ADMIN[c] || CC_CATS_ADMIN.staff;
-  el.style.background = cs.bg;
-  el.style.color = cs.color;
-  el.style.borderColor = cs.color;
+  list.innerHTML=html;
+  window._ccData=contacts;
 }
 
-function clearCCForm() {
-  editCCId = null;
-  selCCCat = '';
-  document.getElementById('cc-name').value = '';
-  document.getElementById('cc-role').value = '';
-  document.getElementById('cc-phone').value = '';
-  document.getElementById('cc-email').value = '';
-  document.getElementById('cc-notes').value = '';
-  document.getElementById('cc-btn-delete').style.display = 'none';
-  var btns = document.getElementById('cc-cat-grid').getElementsByTagName('button');
-  for (var i = 0; i < btns.length; i++) {
-    btns[i].style.background = '#fff';
-    btns[i].style.color = '#888';
-    btns[i].style.borderColor = '#e8e8e2';
+// DOCUMENTS
+function pickDocCat(c,el){
+  selDocCat=c;
+  var btns=document.getElementById('doc-cat-grid').getElementsByTagName('button');
+  for(var i=0;i<btns.length;i++){btns[i].style.background='#fff';btns[i].style.color='#888';btns[i].style.borderColor='#e8e8e2';}
+  var cs=DOC_CATS[c]||DOC_CATS.trust;
+  el.style.background=cs.bg;el.style.color=cs.color;el.style.borderColor=cs.color;
+}
+function clearDocForm(){
+  editDocId=null;selDocCat='';
+  var flds=['doc-title','doc-desc','doc-url'];
+  for(var i=0;i<flds.length;i++)document.getElementById(flds[i]).value='';
+  document.getElementById('doc-btn-delete').style.display='none';
+  var btns=document.getElementById('doc-cat-grid').getElementsByTagName('button');
+  for(var i=0;i<btns.length;i++){btns[i].style.background='#fff';btns[i].style.color='#888';btns[i].style.borderColor='#e8e8e2';}
+}
+function saveDocument(){
+  var title=document.getElementById('doc-title').value.trim();
+  var url=document.getElementById('doc-url').value.trim();
+  if(!title){showStatus('Please enter a document title.',false);return;}
+  if(!url){showStatus('Please enter a URL.',false);return;}
+  if(!selDocCat){showStatus('Please select a category.',false);return;}
+  var body={title:title,description:document.getElementById('doc-desc').value.trim(),category:selDocCat,url:url,active:true,display_order:99};
+  if(editDocId){sbFetch('documents?id=eq.'+editDocId,{method:'PATCH',body:body}).then(function(){showStatus('Document updated.',true);clearDocForm();renderDocList();}).catch(function(){showStatus('Could not update.',false);});}
+  else{body.id='doc_'+Date.now();sbFetch('documents',{method:'POST',body:body}).then(function(){showStatus('Document added.',true);clearDocForm();renderDocList();}).catch(function(){showStatus('Could not add document.',false);});}
+}
+function deleteDocument(){if(!editDocId)return;if(!confirm('Remove this document?'))return;sbFetch('documents?id=eq.'+editDocId,{method:'DELETE'}).then(function(){showStatus('Document removed.',true);clearDocForm();renderDocList();}).catch(function(){showStatus('Could not remove.',false);});}
+function loadDocIntoForm(d){
+  editDocId=d.id;selDocCat=d.category;
+  document.getElementById('doc-title').value=d.title||'';
+  document.getElementById('doc-desc').value=d.description||'';
+  document.getElementById('doc-url').value=d.url||'';
+  document.getElementById('doc-btn-delete').style.display='block';
+  var catKeys=['trust','wvrc','rules','newsletter'];
+  var btns=document.getElementById('doc-cat-grid').getElementsByTagName('button');
+  for(var i=0;i<btns.length;i++){var cs=DOC_CATS[catKeys[i]]||DOC_CATS.trust;if(catKeys[i]===d.category){btns[i].style.background=cs.bg;btns[i].style.color=cs.color;btns[i].style.borderColor=cs.color;}else{btns[i].style.background='#fff';btns[i].style.color='#888';btns[i].style.borderColor='#e8e8e2';}}
+  document.getElementById('sec-community').scrollTop=0;
+}
+function renderDocList(){
+  sbFetch('documents?active=eq.true&order=category.asc,display_order.asc').then(function(data){
+    allDocs=data||[];
+    var count=document.getElementById('doc-count');
+    if(count)count.textContent='('+allDocs.length+')';
+    filterDocList();
+  }).catch(function(){document.getElementById('doc-list-admin').innerHTML='<div class="loading">Could not load.</div>';});
+}
+function filterDocList(){
+  var q=(document.getElementById('doc-search').value||'').toLowerCase();
+  var list=document.getElementById('doc-list-admin');
+  var docs=allDocs;
+  if(q){var filtered=[];for(var i=0;i<docs.length;i++){var d=docs[i];var cs=DOC_CATS[d.category]||{label:d.category};var str=(d.title+' '+(d.description||'')+' '+d.category+' '+cs.label).toLowerCase();if(str.indexOf(q)>-1)filtered.push(d);}docs=filtered;}
+  if(!docs.length){list.innerHTML='<div style="font-size:13px;color:#aaa;">No documents found.</div>';return;}
+  var html='';var lastCat='';
+  for(var i=0;i<docs.length;i++){
+    var d=docs[i];var cs=DOC_CATS[d.category]||{label:d.category,bg:'#f0f0e8',color:'#555'};
+    if(!q&&d.category!==lastCat){html+='<div style="font-size:11px;font-weight:700;color:#888;margin:'+(lastCat?'11px':'0')+' 0 5px;">'+cs.label+'</div>';lastCat=d.category;}
+    html+='<div class="list-item" data-idx="'+i+'" ondblclick="loadDocIntoForm(window._docData[this.dataset.idx])">';
+    html+='<div style="display:flex;align-items:center;gap:7px;margin-bottom:2px;">';
+    html+='<span style="font-size:10px;padding:2px 7px;border-radius:20px;font-weight:700;background:'+cs.bg+';color:'+cs.color+';">'+cs.label+'</span>';
+    html+='<span style="font-size:13px;font-weight:700;color:#1a1a1a;">'+d.title+'</span></div>';
+    if(d.description)html+='<div style="font-size:11px;color:#888;margin-bottom:2px;">'+d.description+'</div>';
+    html+='<div style="font-size:10px;color:#aaa;word-break:break-all;">'+d.url+'</div></div>';
   }
+  list.innerHTML=html;
+  window._docData=docs;
 }
-
-function saveCCContact() {
-  var name = document.getElementById('cc-name').value.trim();
-  if (!name) { showStatus('Please enter a contact name.', false); return; }
-  if (!selCCCat) { showStatus('Please select a category.', false); return; }
-  var body = {
-    name: name,
-    role: document.getElementById('cc-role').value.trim(),
-    category: selCCCat,
-    phone: document.getElementById('cc-phone').value.trim(),
-    email: document.getElementById('cc-email').value.trim(),
-    notes: document.getElementById('cc-notes').value.trim(),
-    active: true
-  };
-  if (editCCId) {
-    sbFetch('community_contacts?id=eq.' + editCCId, {method:'PATCH', body:body}).then(function() {
-      showStatus('Contact updated.', true);
-      clearCCForm();
-      renderCCList();
-    }).catch(function() { showStatus('Could not update contact.', false); });
-  } else {
-    body.id = 'cc_' + Date.now();
-    body.display_order = 99;
-    sbFetch('community_contacts', {method:'POST', body:body}).then(function() {
-      showStatus('Contact added.', true);
-      clearCCForm();
-      renderCCList();
-    }).catch(function() { showStatus('Could not add contact.', false); });
-  }
-}
-
-function deleteCCContact() {
-  if (!editCCId) return;
-  if (!confirm('Remove this contact?')) return;
-  sbFetch('community_contacts?id=eq.' + editCCId, {method:'DELETE'}).then(function() {
-    showStatus('Contact removed.', true);
-    clearCCForm();
-    renderCCList();
-  }).catch(function() { showStatus('Could not remove contact.', false); });
-}
-
-function loadCCIntoForm(c) {
-  editCCId = c.id;
-  selCCCat = c.category;
-  document.getElementById('cc-name').value = c.name || '';
-  document.getElementById('cc-role').value = c.role || '';
-  document.getElementById('cc-phone').value = c.phone || '';
-  document.getElementById('cc-email').value = c.email || '';
-  document.getElementById('cc-notes').value = c.notes || '';
-  document.getElementById('cc-btn-delete').style.display = 'block';
-  var catKeys = ['staff','panel','facilities','welfare','activities'];
-  var btns = document.getElementById('cc-cat-grid').getElementsByTagName('button');
-  for (var i = 0; i < btns.length; i++) {
-    var cs = CC_CATS_ADMIN[catKeys[i]] || CC_CATS_ADMIN.staff;
-    if (catKeys[i] === c.category) {
-      btns[i].style.background = cs.bg;
-      btns[i].style.color = cs.color;
-      btns[i].style.borderColor = cs.color;
-    } else {
-      btns[i].style.background = '#fff';
-      btns[i].style.color = '#888';
-      btns[i].style.borderColor = '#e8e8e2';
-    }
-  }
-  window.scrollTo(0, document.getElementById('cc-cat-grid').getBoundingClientRect().top + window.scrollY - 100);
-}
-
-function renderCCList() {
-  var list = document.getElementById('cc-list-admin');
-  var count = document.getElementById('cc-count');
-  sbFetch('community_contacts?active=eq.true&order=category.asc,display_order.asc').then(function(data) {
-    if (count) count.textContent = '(' + (data ? data.length : 0) + ')';
-    if (!data || !data.length) {
-      list.innerHTML = '<div style="font-size:13px;color:#aaa;">No contacts added yet.</div>';
-      return;
-    }
-    var html = '';
-    var lastCat = '';
-    for (var i = 0; i < data.length; i++) {
-      var c = data[i];
-      var cs = CC_CATS_ADMIN[c.category] || {label:c.category, bg:'#f0f0e8', color:'#555'};
-      if (c.category !== lastCat) {
-        html += '<div style="font-size:12px;font-weight:700;color:#888;margin:' + (lastCat ? '12px' : '0') + ' 0 6px;">' + cs.label + '</div>';
-        lastCat = c.category;
-      }
-      html += '<div style="background:#fff;border:1px solid #e8e8e2;border-radius:10px;padding:10px 12px;margin-bottom:6px;cursor:pointer;" ondblclick="loadCCIntoForm(window._ccData[' + i + '])">';
-      html += '<div style="display:flex;align-items:center;gap:8px;">';
-      html += '<span style="font-size:11px;padding:2px 8px;border-radius:20px;font-weight:700;background:' + cs.bg + ';color:' + cs.color + ';">' + cs.label + '</span>';
-      html += '<div style="font-size:13px;font-weight:700;color:#1a1a1a;">' + c.name + '</div>';
-      if (c.role) html += '<div style="font-size:12px;color:#888;">-- ' + c.role + '</div>';
-      html += '</div>';
-      if (c.phone || c.email) {
-        html += '<div style="font-size:12px;color:#aaa;margin-top:3px;">';
-        if (c.phone) html += c.phone;
-        if (c.phone && c.email) html += '  |  ';
-        if (c.email) html += c.email;
-        html += '</div>';
-      }
-      html += '</div>';
-    }
-    list.innerHTML = html;
-    window._ccData = data;
-  }).catch(function() {
-    list.innerHTML = '<div style="font-size:13px;color:#aaa;">Could not load contacts.</div>';
-  });
-}
-
 </script>
 </body>
 </html>
