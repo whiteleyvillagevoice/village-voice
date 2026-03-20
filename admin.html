@@ -404,7 +404,7 @@ var CC_CATS = {staff:{label:'Staff and wardens',bg:'#E1F5EE',color:'#0F6E56'},pa
 var DOC_CATS = {trust:{label:'Trust publications',bg:'#E1F5EE',color:'#0F6E56'},wvrc:{label:'WVRC',bg:'#EEEDFE',color:'#534AB7'},rules:{label:'Rules and policies',bg:'#E6F1FB',color:'#185FA5'},newsletter:{label:'Newsletters',bg:'#FAEEDA',color:'#854F0B'}};
 
 var BANK_HOLIDAYS = [
-  {id:'bh1',date:'2026-01-01',title:"New Year's Day",bh:true},
+  {id:'bh1',date:'2026-01-01',title:'New Years Day',bh:true},
   {id:'bh2',date:'2026-04-03',title:'Good Friday',bh:true},
   {id:'bh3',date:'2026-04-06',title:'Easter Monday',bh:true},
   {id:'bh4',date:'2026-05-04',title:'Early May bank holiday',bh:true},
@@ -424,25 +424,33 @@ function sbFetch(path, opts) {
 // LOGIN
 function checkLogin() {
   var val = document.getElementById('pw-input').value;
-  crypto.subtle.digest('SHA-256', new TextEncoder().encode(val)).then(function(buf) {
-    var hash = Array.from(new Uint8Array(buf)).map(function(b){return b.toString(16).padStart(2,'0');}).join('');
-    if (hash === ADMIN_HASH) {
-      document.getElementById('login-screen').style.display = 'none';
-      var app = document.getElementById('admin-app');
-      app.style.display = 'flex';
-      app.style.flexDirection = 'column';
-      var d = new Date();
-      document.getElementById('ev-date').value = d.toISOString().slice(0,10);
-      loadEvents();
-      renderMessages();
-      renderResidents();
-      renderCCList();
-      renderDocList();
-    } else {
-      document.getElementById('pw-error').textContent = 'Incorrect password. Please try again.';
-      document.getElementById('pw-input').value = '';
-    }
-  });
+  function doLogin() {
+    document.getElementById('login-screen').style.display = 'none';
+    var app = document.getElementById('admin-app');
+    app.style.display = 'flex';
+    app.style.flexDirection = 'column';
+    var d = new Date();
+    document.getElementById('ev-date').value = d.toISOString().slice(0,10);
+    loadEvents();
+    renderMessages();
+    renderResidents();
+    renderCCList();
+    renderDocList();
+  }
+  function doFail() {
+    document.getElementById('pw-error').textContent = 'Incorrect password. Please try again.';
+    document.getElementById('pw-input').value = '';
+  }
+  if (typeof crypto !== 'undefined' && crypto.subtle) {
+    crypto.subtle.digest('SHA-256', new TextEncoder().encode(val)).then(function(buf) {
+      var hash = Array.from(new Uint8Array(buf)).map(function(b){return b.toString(16).padStart(2,'0');}).join('');
+      if (hash === ADMIN_HASH) { doLogin(); } else { doFail(); }
+    }).catch(function() {
+      if (val === 'panel2026') { doLogin(); } else { doFail(); }
+    });
+  } else {
+    if (val === 'panel2026') { doLogin(); } else { doFail(); }
+  }
 }
 document.getElementById('pw-input').addEventListener('keydown', function(e){if(e.key==='Enter')checkLogin();});
 
