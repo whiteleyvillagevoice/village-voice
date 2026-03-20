@@ -5,22 +5,26 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
 <meta http-equiv="Pragma" content="no-cache"/>
 <meta http-equiv="Expires" content="0"/>
-<meta name="app-version" content="2.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Village Voice</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f0;display:flex;justify-content:center;min-height:100vh;}
 .app{width:100%;max-width:480px;background:#fff;min-height:100vh;display:flex;flex-direction:column;position:relative;box-shadow:0 0 20px rgba(0,0,0,0.08);}
-.screen{display:none;flex-direction:column;flex:1;overflow:hidden;}
-.screen.on{display:flex;}
-.login-wrap{padding:36px 22px 24px;}
-.login-logo{width:52px;height:52px;border-radius:50%;background:#0F6E56;display:flex;align-items:center;justify-content:center;margin-bottom:20px;}
+
+/* SCREENS */
+.screen{display:none;}
+.screen.on{display:flex;flex-direction:column;flex:1;min-height:0;}
+
+/* LOGIN */
+.login-scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+.login-wrap{padding:36px 22px 40px;}
 .login-title{font-size:26px;font-weight:700;color:#0F6E56;margin-bottom:6px;}
-.login-sub{font-size:14px;color:#666;line-height:1.6;margin-bottom:28px;}
+.login-sub{font-size:14px;color:#666;line-height:1.6;margin-bottom:24px;}
+.login-logo{width:72px;height:72px;border-radius:50%;background:#0F6E56;display:flex;align-items:center;justify-content:center;margin-bottom:20px;}
 .login-label{font-size:13px;font-weight:700;color:#888;margin-bottom:12px;}
 .namebtn{display:flex;align-items:center;gap:12px;padding:16px 14px;border:1px solid #e8e8e2;border-radius:14px;background:#fff;width:100%;text-align:left;margin-bottom:8px;cursor:pointer;font-family:inherit;min-height:60px;touch-action:manipulation;}
-.namebtn:active{background:#f0faf5;border-color:#9FE1CB;}
+.namebtn:active{background:#f0faf5;}
 .namebtn.panel-row{border-color:#9FE1CB;}
 .av{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0;}
 .av-teal{background:#E1F5EE;color:#0F6E56;}
@@ -33,6 +37,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .panelbadge{margin-left:auto;font-size:11px;background:#E1F5EE;color:#0F6E56;padding:4px 10px;border-radius:20px;font-weight:700;flex-shrink:0;}
 .reg-link{text-align:center;margin-top:16px;padding-top:16px;border-top:1px solid #f0f0ea;}
 .reg-link button{background:none;border:none;font-size:13px;color:#534AB7;cursor:pointer;font-family:inherit;font-weight:600;touch-action:manipulation;}
+.login-footer-img{width:100%;border-radius:14px;display:block;margin-top:20px;}
+
+/* TOP BAR */
 .topbar{padding:12px 16px 10px;background:#fff;border-bottom:1px solid #f0f0ea;flex-shrink:0;}
 .topbar-row1{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:4px;}
 .app-title{font-size:22px;font-weight:700;color:#0F6E56;}
@@ -41,11 +48,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .topbar-row2{display:flex;align-items:center;justify-content:flex-end;gap:8px;}
 .signout-btn{font-size:12px;color:#aaa;background:none;border:none;cursor:pointer;font-family:inherit;touch-action:manipulation;padding:4px 6px;}
 .start-btn{font-size:12px;color:#534AB7;background:none;border:none;cursor:pointer;font-family:inherit;touch-action:manipulation;padding:4px 6px;display:none;}
+
+/* SOS */
 .sos-btn{position:fixed;top:14px;right:14px;z-index:95;background:#A32D2D;color:#fff;border:none;border-radius:20px;padding:8px 14px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation;display:none;align-items:center;gap:6px;box-shadow:0 2px 8px rgba(163,45,45,0.35);}
 .sos-btn.on{display:flex;}
-.fab{width:36px;height:36px;border-radius:50%;background:#0F6E56;border:none;cursor:pointer;box-shadow:0 2px 6px rgba(15,110,86,0.3);touch-action:manipulation;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 
-.home-body{padding:0 0 80px;flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+/* HOME */
+.home-scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 0 80px;}
 .greeting{padding:16px 18px 0;font-size:20px;font-weight:700;color:#1a1a1a;line-height:1.3;}
 .sec-label{font-size:13px;font-weight:700;color:#888;padding:14px 18px 10px;}
 .tile-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 18px 4px;}
@@ -62,11 +71,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .tile-name{font-size:16px;font-weight:700;color:#1a1a1a;}
 .tile-hint{font-size:12px;color:#888;margin-top:3px;}
 .admin-btn{display:flex;align-items:center;gap:12px;padding:14px 16px;background:#f8f8f4;border:1px solid #e8e8e2;border-radius:12px;cursor:pointer;margin:14px 18px 4px;font-family:inherit;text-align:left;touch-action:manipulation;width:calc(100% - 36px);}
-.admin-btn:active{background:#f0f0e8;}
 .admin-icon{width:34px;height:34px;border-radius:50%;background:#EEEDFE;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.section{display:none;flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 18px 100px;}
+
+/* SECTIONS */
+.sections-scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+.section{display:none;padding:14px 18px 100px;}
 .section.on{display:block;}
 .section h2{font-size:24px;font-weight:700;color:#1a1a1a;margin-bottom:16px;}
+
+/* CARDS */
 .card{background:#fff;border:1px solid #e8e8e2;border-radius:12px;padding:14px;margin-bottom:10px;}
 .card h3{font-size:15px;font-weight:600;color:#1a1a1a;margin-bottom:6px;}
 .card p{font-size:13px;color:#666;line-height:1.6;}
@@ -76,6 +89,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .tag-amber{background:#FAEEDA;color:#854F0B;}
 .tag-purple{background:#EEEDFE;color:#534AB7;}
 .newsdate{font-size:11px;color:#aaa;margin-top:8px;}
+
+/* EMERGENCY */
 .red-banner{background:#FCEBEB;border:1px solid #F7C1C1;border-radius:12px;padding:14px;margin-bottom:10px;}
 .red-banner h3{font-size:15px;font-weight:700;color:#A32D2D;margin-bottom:4px;}
 .red-banner p{font-size:13px;color:#791F1F;line-height:1.5;}
@@ -88,6 +103,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .contact-hrs{font-size:11px;color:#aaa;}
 .call-chip{margin-left:auto;background:#E1F5EE;color:#0F6E56;border:none;border-radius:20px;padding:7px 13px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;flex-shrink:0;touch-action:manipulation;white-space:nowrap;}
 .call-chip-blue{background:#E6F1FB;color:#185FA5;}
+
+/* SERVICES */
 .svc-label{font-size:13px;font-weight:700;color:#888;margin-bottom:8px;}
 .svc-card{background:#fff;border:1px solid #e8e8e2;border-radius:12px;padding:13px;margin-bottom:8px;}
 .svc-name{font-size:14px;font-weight:600;color:#1a1a1a;margin-bottom:2px;}
@@ -98,6 +115,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .badge-open{background:#E1F5EE;color:#0F6E56;}
 .badge-check{background:#E6F1FB;color:#185FA5;}
 .svc-group{margin-bottom:16px;}
+
+/* EVENTS */
 .ev-card{background:#fff;border:1px solid #e8e8e2;border-radius:12px;padding:13px;margin-bottom:10px;}
 .ev-card.bh{background:#fafaf7;}
 .ev-inner{display:flex;gap:13px;}
@@ -110,11 +129,16 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .ev-meta{font-size:12px;color:#666;}
 .ev-tag{font-size:11px;padding:3px 8px;border-radius:20px;font-weight:700;display:inline-block;margin-top:6px;}
 .cal-btns{display:flex;gap:7px;margin-top:10px;}
-.cal-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:4px;padding:7px 4px;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;border:1px solid;text-decoration:none;font-family:inherit;touch-action:manipulation;}
+.cal-btn{flex:1;display:flex;align-items:center;justify-content:center;padding:7px 4px;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;border:1px solid;text-decoration:none;font-family:inherit;touch-action:manipulation;}
 .cal-g{background:#E6F1FB;color:#185FA5;border-color:#B5D4F4;}
 .cal-a{background:#f8f8f4;color:#444;border-color:#ddd;}
 .cal-i{background:#EEEDFE;color:#534AB7;border-color:#CECBF6;}
+
+/* BOARD */
 .board-notice{background:#E6F1FB;border-radius:10px;padding:10px 13px;font-size:12px;color:#185FA5;line-height:1.6;margin-bottom:12px;}
+.board-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.board-header h2{margin-bottom:0;}
+.fab{width:38px;height:38px;border-radius:50%;background:#0F6E56;border:none;cursor:pointer;box-shadow:0 2px 6px rgba(15,110,86,0.3);touch-action:manipulation;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .post-card{background:#fff;border:1px solid #e8e8e2;border-radius:12px;padding:13px;margin-bottom:10px;}
 .post-meta{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
 .post-av{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
@@ -125,8 +149,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .post-ft{display:flex;align-items:center;justify-content:space-between;margin-top:9px;padding-top:9px;border-top:1px solid #f0f0ea;}
 .like-btn{display:flex;align-items:center;gap:5px;font-size:12px;color:#888;background:none;border:none;cursor:pointer;font-family:inherit;touch-action:manipulation;}
 .cat-tag{font-size:11px;padding:3px 8px;border-radius:20px;font-weight:700;}
-.cat-heating{background:#FAEEDA;color:#854F0B;}
-.cat-maintenance{background:#E6F1FB;color:#185FA5;}
 .cat-activities{background:#E1F5EE;color:#0F6E56;}
 .cat-cafe{background:#FAEEDA;color:#854F0B;}
 .cat-concerns{background:#FCEBEB;color:#A32D2D;}
@@ -134,35 +156,64 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .cat-events{background:#E6F1FB;color:#185FA5;}
 .cat-floors{background:#f0f0e8;color:#555555;}
 .cat-grounds{background:#E1F5EE;color:#0F6E56;}
+.cat-heating{background:#FAEEDA;color:#854F0B;}
 .cat-lighting{background:#FAEEDA;color:#854F0B;}
 .cat-security{background:#FCEBEB;color:#A32D2D;}
 .cat-transport{background:#E6F1FB;color:#185FA5;}
 .cat-windows{background:#EEEDFE;color:#534AB7;}
+.cat-maintenance{background:#E6F1FB;color:#185FA5;}
 .rep-count{font-size:11px;color:#aaa;}
 .loading{text-align:center;padding:32px;color:#aaa;font-size:14px;}
-.nav{display:flex;background:#fff;border-top:1px solid #e8e8e2;flex-shrink:0;position:sticky;bottom:0;z-index:20;display:none;}
+
+/* COMMUNITY */
+.cc-section-label{font-size:13px;font-weight:700;color:#888;margin-bottom:8px;}
+
+/* SURVEYS */
+.survey-card{background:#fff;border:1px solid #e8e8e2;border-radius:14px;padding:16px;margin-bottom:14px;}
+.survey-q{font-size:15px;font-weight:700;color:#1a1a1a;margin-bottom:6px;line-height:1.4;}
+.survey-sub{font-size:13px;color:#666;margin-bottom:12px;}
+.survey-opt{width:100%;padding:13px 16px;margin-bottom:10px;border:2px solid #e8e8e2;border-radius:12px;background:#fff;font-size:14px;font-family:inherit;color:#1a1a1a;cursor:pointer;text-align:left;touch-action:manipulation;display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:48px;}
+.survey-opt:active{opacity:0.8;}
+.survey-opt.selected{border-color:#0F6E56;background:#f0faf5;font-weight:600;}
+.survey-bar-wrap{flex:1;height:8px;background:#f0f0ea;border-radius:4px;overflow:hidden;margin:0 8px;}
+.survey-bar{height:100%;background:#0F6E56;border-radius:4px;}
+.survey-pct{font-size:12px;font-weight:700;color:#0F6E56;min-width:36px;text-align:right;}
+.survey-meta{font-size:12px;color:#aaa;margin-top:10px;padding-top:10px;border-top:1px solid #f0f0ea;}
+.confirm-box{background:#E1F5EE;border-radius:12px;padding:14px;margin-top:10px;}
+.confirm-box p{font-size:13px;color:#0F6E56;font-weight:600;margin-bottom:6px;}
+.confirm-box small{font-size:12px;color:#666;display:block;margin-bottom:12px;}
+.confirm-btns{display:flex;gap:8px;}
+.btn-confirm{flex:2;padding:12px;background:#0F6E56;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation;}
+.btn-again{flex:1;padding:12px;background:#fff;color:#888;border:1px solid #e8e8e2;border-radius:10px;font-size:14px;cursor:pointer;font-family:inherit;touch-action:manipulation;}
+
+/* NAV */
+.nav{background:#fff;border-top:1px solid #e8e8e2;flex-shrink:0;display:none;}
 .nav.on{display:flex;}
 .nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 4px 7px;cursor:pointer;border:none;background:none;font-family:inherit;touch-action:manipulation;}
 .nav-btn:active{opacity:0.7;}
-.nav-icon{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:background 0.15s;}
+.nav-icon{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;}
 .nav-btn.on .nav-icon{background:#0F6E56;}
 .nav-lbl{font-size:9px;color:#aaa;line-height:1.2;text-align:center;}
 .nav-btn.on .nav-lbl{color:#0F6E56;font-weight:700;}
 .nav-btn svg{stroke:#aaa !important;}
 .nav-btn.on svg{stroke:#fff !important;}
+
+/* MODALS */
 .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:40;align-items:flex-end;justify-content:center;}
 .modal-bg.on{display:flex;}
-.modal-sheet{background:#fff;border-radius:22px 22px 0 0;width:100%;max-width:480px;padding:22px 18px 36px;max-height:85vh;overflow-y:auto;margin-bottom:0;}
+.modal-sheet{background:#fff;border-radius:22px 22px 0 0;width:100%;max-width:480px;padding:22px 18px 36px;max-height:90vh;overflow-y:auto;-webkit-overflow-scrolling:touch;}
 .modal-sheet h3{font-size:17px;font-weight:700;margin-bottom:5px;color:#1a1a1a;}
 .modal-sheet p{font-size:12px;color:#888;margin-bottom:16px;line-height:1.6;}
 .form-label{font-size:13px;font-weight:600;color:#555;display:block;margin-bottom:5px;}
 .form-group{margin-bottom:13px;}
 .form-input{width:100%;padding:11px 12px;border:1px solid #ddd;border-radius:10px;font-size:14px;font-family:inherit;color:#1a1a1a;}
 .form-input:focus{outline:none;border-color:#0F6E56;}
-.cat-opts{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:4px;}
-.cat-opt{padding:11px 16px;border-radius:20px;border:2px solid #e8e8e2;font-size:14px;cursor:pointer;background:#fff;color:#888;font-family:inherit;font-weight:600;touch-action:manipulation;min-height:44px;}
-.submit-btn{width:100%;padding:14px;background:#0F6E56;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation;}
+.cat-opts{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:4px;}
+.cat-opt{padding:11px 16px;border-radius:20px;border:2px solid;font-size:14px;cursor:pointer;font-family:inherit;font-weight:600;touch-action:manipulation;min-height:44px;}
+.submit-btn{width:100%;padding:14px;background:#0F6E56;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation;margin-top:4px;}
 .cancel-btn{width:100%;padding:10px;background:none;border:none;font-size:13px;color:#888;cursor:pointer;font-family:inherit;margin-top:6px;touch-action:manipulation;}
+
+/* CALL MODAL */
 .call-modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:50;align-items:center;justify-content:center;padding:24px;}
 .call-modal-bg.on{display:flex;}
 .call-modal-box{background:#fff;border-radius:18px;width:100%;max-width:320px;padding:26px 22px 20px;text-align:center;}
@@ -174,6 +225,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .cm-btns{display:flex;gap:10px;}
 .cm-cancel{flex:1;padding:13px;border:1px solid #e8e8e2;border-radius:10px;background:#f8f8f4;color:#666;font-size:15px;cursor:pointer;font-family:inherit;touch-action:manipulation;}
 .cm-confirm{flex:2;padding:13px;border:none;border-radius:10px;color:#fff;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation;}
+
+/* PW MODAL */
 .pw-modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:50;align-items:center;justify-content:center;padding:24px;}
 .pw-modal-bg.on{display:flex;}
 .pw-modal-box{background:#fff;border-radius:18px;width:100%;max-width:320px;padding:28px 22px 22px;text-align:center;}
@@ -187,29 +240,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .pw-cancel{flex:1;padding:13px;border:1px solid #e8e8e2;border-radius:10px;background:#f8f8f4;color:#666;font-size:15px;cursor:pointer;font-family:inherit;touch-action:manipulation;}
 .pw-go{flex:2;padding:13px;border:none;border-radius:10px;background:#534AB7;color:#fff;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation;}
 
-@keyframes vvSpin {
-  0%   { transform: rotate(0deg) scale(0.4); opacity: 0; }
-  10%  { opacity: 1; }
-  80%  { transform: rotate(2520deg) scale(1.04); opacity: 1; }
-  90%  { transform: rotate(2508deg) scale(0.97); }
-  100% { transform: rotate(2520deg) scale(1); opacity: 1; }
-}
-
-/* SURVEYS */
-.survey-card{background:#fff;border:1px solid #e8e8e2;border-radius:14px;padding:16px;margin-bottom:14px;}
-.survey-q{font-size:16px;font-weight:700;color:#1a1a1a;margin-bottom:14px;line-height:1.4;}
-.survey-opt{width:100%;padding:12px 14px;margin-bottom:8px;border:2px solid #e8e8e2;border-radius:10px;background:#fff;font-size:14px;font-family:inherit;color:#1a1a1a;cursor:pointer;text-align:left;touch-action:manipulation;display:flex;align-items:center;justify-content:space-between;gap:8px;}
-.survey-opt:active{background:#f5f5f0;}
-.survey-opt.selected{border-color:#0F6E56;background:#f0faf5;color:#0F6E56;font-weight:600;}
-.survey-opt.voted{cursor:default;}
-.survey-bar-wrap{flex:1;height:6px;background:#f0f0ea;border-radius:3px;overflow:hidden;margin:0 8px;}
-.survey-bar{height:100%;background:#0F6E56;border-radius:3px;transition:width 0.4s ease;}
-.survey-pct{font-size:12px;font-weight:700;color:#888;min-width:32px;text-align:right;}
-.survey-opt.selected .survey-pct{color:#0F6E56;}
-.survey-meta{font-size:12px;color:#aaa;margin-top:10px;padding-top:10px;border-top:1px solid #f0f0ea;}
-.survey-closed{font-size:12px;background:#f8f8f4;border-radius:8px;padding:8px 12px;color:#888;margin-top:8px;text-align:center;}
-
-
+/* EC CARD */
+.ec-card{background:#f5f3ff;border:1px solid #CECBF6;border-radius:12px;padding:14px;margin-bottom:12px;display:none;}
+.ec-card.on{display:block;}
 </style>
 </head>
 <body>
@@ -220,85 +253,55 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   Emergency
 </button>
 
-
-<!-- LOGIN -->
+<!-- LOGIN SCREEN -->
 <div class="screen on" id="s-login">
-  <div class="login-wrap">
-    <div class="login-logo" id="vv-logo" style="width:72px;height:72px;border-radius:50%;background:#0F6E56;display:flex;align-items:center;justify-content:center;margin-bottom:20px;animation:vvSpin 2.4s cubic-bezier(0.4,0,0.2,1) forwards;">
-      <svg width="38" height="38" viewBox="0 0 38 38" fill="none">
-        <path d="M6 8L19 30L32 8" stroke="white" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-      </svg>
-    </div>
-    <div class="login-title">Village Voice</div>
-    <div class="login-sub">Your companion for village life -- news, services, community and your voice, all in one place.</div>
-    <div id="village-banner" style="margin-bottom:20px;border-radius:14px;overflow:hidden;line-height:0;">
-      <img src="village-banner.jpg" alt="Whiteley Village" style="width:100%;max-height:280px;object-fit:cover;object-position:center;border-radius:14px;display:block;" onerror="this.parentElement.style.display='none'"/>
-    </div>
-    <div class="login-label">Select your name to continue</div>
-    <div id="resident-list">
-      <div class="loading">Loading residents...</div>
-    </div>
-    <button class="namebtn panel-row" onclick="doLogin('panel1','Panel Member','Village Voice Panel','VP','av-teal',true)">
-      <div class="av av-teal">VP</div>
-      <div><span class="nametxt">Panel Member</span><span class="cottxt">Village Voice Panel</span></div>
-      <span class="panelbadge">Panel</span>
-    </button>
-    <div class="reg-link">
-      <button onclick="openReg()">New resident? Register here</button>
-    </div>
-    <div id="village-footer" style="margin-top:20px;border-radius:14px;overflow:hidden;line-height:0;">
-      <img src="village-footer.jpg" alt="Whiteley Village" style="width:100%;height:auto;border-radius:14px;display:block;" onerror="this.parentElement.style.display='none'"/>
+  <div class="login-scroll">
+    <div class="login-wrap">
+      <div class="login-logo" id="vv-logo" style="animation:vvSpin 2.4s cubic-bezier(0.4,0,0.2,1) forwards;">
+        <svg width="38" height="38" viewBox="0 0 38 38" fill="none"><path d="M6 8L19 30L32 8" stroke="white" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <style>
+        @keyframes vvSpin{0%{transform:rotate(0deg) scale(0.4);opacity:0;}10%{opacity:1;}80%{transform:rotate(2520deg) scale(1.04);opacity:1;}90%{transform:rotate(2508deg) scale(0.97);}100%{transform:rotate(2520deg) scale(1);opacity:1;}}
+      </style>
+      <div class="login-title">Village Voice</div>
+      <div class="login-sub">Your companion for village life -- news, services, community and your voice.</div>
+      <div class="login-label">Select your name to continue</div>
+      <div id="resident-list"><div class="loading">Loading...</div></div>
+      <button class="namebtn panel-row" id="panel-btn">
+        <div class="av av-teal">VP</div>
+        <div><span class="nametxt">Panel Member</span><span class="cottxt">Village Voice Panel</span></div>
+        <span class="panelbadge">Panel</span>
+      </button>
+      <div class="reg-link"><button id="reg-link-btn">New resident? Register here</button></div>
+      <img src="village-footer.jpg" class="login-footer-img" onerror="this.style.display='none'"/>
     </div>
   </div>
 </div>
 
-<!-- HOME -->
+<!-- HOME SCREEN -->
 <div class="screen" id="s-home">
   <div class="topbar">
-    <div class="topbar-row1">
-      <span class="app-title">Village Voice</span>
-      <span class="clock-time" id="clock-time"></span>
-    </div>
+    <div class="topbar-row1"><span class="app-title">Village Voice</span><span class="clock-time" id="clock-time"></span></div>
     <div class="clock-date" id="clock-date"></div>
     <div class="topbar-row2">
-      <button class="signout-btn" onclick="doSignOut()">Sign out</button>
-      <button class="start-btn" id="start-btn" onclick="doSignOut()">Start</button>
+      <button class="signout-btn" id="signout-btn">Sign out</button>
+      <button class="start-btn" id="start-btn">Start</button>
     </div>
   </div>
-  <div class="home-body">
+  <div class="home-scroll">
     <div class="greeting" id="greeting"></div>
     <div class="sec-label">What do you need today?</div>
     <div class="tile-grid">
-      <div class="tile green" onclick="showSection('board')">
-        <div class="tile-icon" style="background:#E1F5EE;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="#0F6E56" stroke-width="1.5" stroke-linecap="round"/></svg></div>
-        <div><div class="tile-name">Message Board</div><div class="tile-hint" id="board-count">Loading...</div></div>
-      </div>
-      <div class="tile red" onclick="showSection('emergency')">
-        <div class="tile-icon" style="background:#FCEBEB;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-.18-8.7A2 2 0 014.11 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" stroke="#A32D2D" stroke-width="1.5" stroke-linecap="round"/></svg></div>
-        <div><div class="tile-name">Emergency</div><div class="tile-hint">Contacts</div></div>
-      </div>
-      <div class="tile blue" onclick="showSection('services')">
-        <div class="tile-icon" style="background:#E6F1FB;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" stroke="#185FA5" stroke-width="1.5" stroke-linecap="round"/></svg></div>
-        <div><div class="tile-name">Local Services</div><div class="tile-hint">GP, pharmacy</div></div>
-      </div>
-      <div class="tile purple" onclick="showSection('events')">
-        <div class="tile-icon" style="background:#EEEDFE;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="18" rx="2" stroke="#534AB7" stroke-width="1.5"/><line x1="16" y1="2" x2="16" y2="6" stroke="#534AB7" stroke-width="1.5" stroke-linecap="round"/><line x1="8" y1="2" x2="8" y2="6" stroke="#534AB7" stroke-width="1.5" stroke-linecap="round"/><line x1="3" y1="10" x2="21" y2="10" stroke="#534AB7" stroke-width="1.5" stroke-linecap="round"/></svg></div>
-        <div><div class="tile-name">Events</div><div class="tile-hint">What's on</div></div>
-      </div>
-      <div class="tile amber" onclick="showSection('community')">
-        <div class="tile-icon" style="background:#FAEEDA;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" stroke="#854F0B" stroke-width="1.5" stroke-linecap="round"/><circle cx="9" cy="7" r="4" stroke="#854F0B" stroke-width="1.5"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke="#854F0B" stroke-width="1.5" stroke-linecap="round"/></svg></div>
-        <div><div class="tile-name">Community</div><div class="tile-hint">Contacts</div></div>
-      </div>
-      <div class="tile teal2" onclick="showSection('documents')">
-        <div class="tile-icon" style="background:#E1F5EE;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" stroke="#0F6E56" stroke-width="1.5" stroke-linecap="round"/><polyline points="14 2 14 8 20 8" stroke="#0F6E56" stroke-width="1.5" stroke-linecap="round"/><line x1="16" y1="13" x2="8" y2="13" stroke="#0F6E56" stroke-width="1.5" stroke-linecap="round"/><line x1="16" y1="17" x2="8" y2="17" stroke="#0F6E56" stroke-width="1.5" stroke-linecap="round"/></svg></div>
-        <div><div class="tile-name">Documents</div><div class="tile-hint">Village resources</div></div>
-      </div>
-      <div class="tile coral" onclick="showSection('surveys')">
-        <div class="tile-icon" style="background:#FAECE7;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 11l3 3L22 4" stroke="#993C1D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" stroke="#993C1D" stroke-width="1.5" stroke-linecap="round"/></svg></div>
-        <div><div class="tile-name">Surveys</div><div class="tile-hint" id="survey-count">Have your say</div></div>
-      </div>
+      <div class="tile green" id="tile-board"><div class="tile-icon" style="background:#E1F5EE;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="#0F6E56" stroke-width="1.5" stroke-linecap="round"/></svg></div><div><div class="tile-name">Message Board</div><div class="tile-hint" id="board-count">submissions</div></div></div>
+      <div class="tile red" id="tile-emergency"><div class="tile-icon" style="background:#FCEBEB;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-.18-8.7A2 2 0 014.11 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" stroke="#A32D2D" stroke-width="1.5" stroke-linecap="round"/></svg></div><div><div class="tile-name">Emergency</div><div class="tile-hint">Contacts</div></div></div>
+      <div class="tile blue" id="tile-services"><div class="tile-icon" style="background:#E6F1FB;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" stroke="#185FA5" stroke-width="1.5" stroke-linecap="round"/></svg></div><div><div class="tile-name">Local Services</div><div class="tile-hint">GP, pharmacy</div></div></div>
+      <div class="tile purple" id="tile-events"><div class="tile-icon" style="background:#EEEDFE;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="18" rx="2" stroke="#534AB7" stroke-width="1.5"/><line x1="16" y1="2" x2="16" y2="6" stroke="#534AB7" stroke-width="1.5" stroke-linecap="round"/><line x1="8" y1="2" x2="8" y2="6" stroke="#534AB7" stroke-width="1.5" stroke-linecap="round"/><line x1="3" y1="10" x2="21" y2="10" stroke="#534AB7" stroke-width="1.5" stroke-linecap="round"/></svg></div><div><div class="tile-name">Events</div><div class="tile-hint">What's on</div></div></div>
+      <div class="tile amber" id="tile-community"><div class="tile-icon" style="background:#FAEEDA;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" stroke="#854F0B" stroke-width="1.5" stroke-linecap="round"/><circle cx="9" cy="7" r="4" stroke="#854F0B" stroke-width="1.5"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke="#854F0B" stroke-width="1.5" stroke-linecap="round"/></svg></div><div><div class="tile-name">Community</div><div class="tile-hint">Contacts</div></div></div>
+      <div class="tile teal2" id="tile-documents"><div class="tile-icon" style="background:#E1F5EE;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" stroke="#0F6E56" stroke-width="1.5" stroke-linecap="round"/><polyline points="14 2 14 8 20 8" stroke="#0F6E56" stroke-width="1.5" stroke-linecap="round"/><line x1="16" y1="13" x2="8" y2="13" stroke="#0F6E56" stroke-width="1.5" stroke-linecap="round"/><line x1="16" y1="17" x2="8" y2="17" stroke="#0F6E56" stroke-width="1.5" stroke-linecap="round"/></svg></div><div><div class="tile-name">Documents</div><div class="tile-hint">Village resources</div></div></div>
+      <div class="tile coral" id="tile-surveys"><div class="tile-icon" style="background:#FAECE7;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 11l3 3L22 4" stroke="#993C1D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" stroke="#993C1D" stroke-width="1.5" stroke-linecap="round"/></svg></div><div><div class="tile-name">Surveys</div><div class="tile-hint" id="survey-count">Have your say</div></div></div>
+      <div class="tile" id="tile-news" style="background:#f8f8f4;"><div class="tile-icon" style="background:#f0f0e8;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 22h16a2 2 0 002-2V4a2 2 0 00-2-2H8a2 2 0 00-2 2v16" stroke="#888" stroke-width="1.5"/><path d="M2 20a2 2 0 004 0V4" stroke="#888" stroke-width="1.5"/><line x1="10" y1="8" x2="18" y2="8" stroke="#888" stroke-width="1.5" stroke-linecap="round"/><line x1="10" y1="12" x2="18" y2="12" stroke="#888" stroke-width="1.5" stroke-linecap="round"/></svg></div><div><div class="tile-name">News</div><div class="tile-hint">Village updates</div></div></div>
     </div>
-    <button class="admin-btn" onclick="openAdminPw()">
+    <button class="admin-btn" id="admin-btn">
       <div class="admin-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5z" stroke="#534AB7" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5" stroke="#534AB7" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
       <div style="flex:1;text-align:left;"><div style="font-size:14px;font-weight:600;color:#1a1a1a;">Events Admin</div><div style="font-size:11px;color:#888;">Administrator</div></div>
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="#888" stroke-width="1.5" stroke-linecap="round"/></svg>
@@ -306,253 +309,166 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   </div>
 </div>
 
-<!-- SECTIONS -->
+<!-- SECTIONS SCREEN -->
 <div class="screen" id="s-sections">
   <div class="topbar">
-    <div class="topbar-row1">
-      <span class="app-title">Village Voice</span>
-      <span class="clock-time" id="clock-time2"></span>
-    </div>
+    <div class="topbar-row1"><span class="app-title">Village Voice</span><span class="clock-time" id="clock-time2"></span></div>
     <div class="clock-date" id="clock-date2"></div>
     <div class="topbar-row2">
-      <button class="signout-btn" onclick="doSignOut()">Sign out</button>
-      <button class="start-btn" id="start-btn2" onclick="doSignOut()">Start</button>
+      <button class="signout-btn" id="signout-btn2">Sign out</button>
+      <button class="start-btn" id="start-btn2" style="display:none;">Start</button>
     </div>
   </div>
+  <div class="sections-scroll">
 
-  <!-- EMERGENCY -->
-  <div class="section" id="sec-emergency">
-    <h2>Emergency &amp; Contacts</h2>
-    <div id="ec-card" style="display:none;background:#f5f3ff;border:1px solid #CECBF6;border-radius:12px;padding:14px;margin-bottom:12px;">
-      <div style="font-size:13px;font-weight:700;color:#534AB7;margin-bottom:8px;">Your nominated emergency contact</div>
-      <div id="ec-name" style="font-size:15px;font-weight:600;color:#1a1a1a;"></div>
-      <div id="ec-relation" style="font-size:12px;color:#888;margin-top:2px;"></div>
-      <div id="ec-phone-row" style="margin-top:8px;display:flex;align-items:center;justify-content:space-between;">
-        <div id="ec-phone" style="font-size:14px;font-weight:600;color:#534AB7;"></div>
-        <button id="ec-call-btn" class="call-chip" style="background:#EEEDFE;color:#534AB7;" onclick="dialEcContact()">Call</button>
+    <!-- EMERGENCY -->
+    <div class="section" id="sec-emergency">
+      <h2>Emergency &amp; Contacts</h2>
+      <div class="ec-card" id="ec-card">
+        <div style="font-size:13px;font-weight:700;color:#534AB7;margin-bottom:8px;">Your nominated emergency contact</div>
+        <div id="ec-name" style="font-size:15px;font-weight:600;color:#1a1a1a;"></div>
+        <div id="ec-relation" style="font-size:12px;color:#888;margin-top:2px;"></div>
+        <div style="margin-top:8px;display:flex;align-items:center;justify-content:space-between;">
+          <div id="ec-phone" style="font-size:14px;font-weight:600;color:#534AB7;"></div>
+          <button id="ec-call-btn" class="call-chip" style="background:#EEEDFE;color:#534AB7;">Call</button>
+        </div>
+      </div>
+      <div class="red-banner"><h3>Emergency services</h3><p>For life-threatening emergencies, fire, or crime in progress</p><button class="big-call-btn btn-red" id="btn-999">Call 999</button></div>
+      <div style="background:#FAEEDA;border:1px solid #FAC775;border-radius:12px;padding:14px;margin-bottom:10px;"><h3 style="font-size:15px;font-weight:700;color:#854F0B;margin-bottom:4px;">Non-emergency police</h3><p style="font-size:13px;color:#633806;">For non-urgent matters or to report a crime</p><button class="big-call-btn btn-amber" id="btn-101">Call 101</button></div>
+      <div class="contact-label">Village Voice Trust</div>
+      <div class="contact-row"><div><div class="contact-name">Main office</div><div class="contact-hrs">Mon-Fri 9am-5pm</div></div><button class="call-chip" id="btn-trust-main">01932 861 000</button></div>
+      <div class="contact-row"><div><div class="contact-name">Out of hours</div><div class="contact-hrs">Evenings and weekends</div></div><button class="call-chip" id="btn-trust-ooh">01932 861 001</button></div>
+      <div class="contact-label">NHS and health</div>
+      <div class="contact-row"><div><div class="contact-name">NHS non-emergency</div><div class="contact-hrs">24 hours, 7 days</div></div><button class="call-chip call-chip-blue" id="btn-111">111</button></div>
+      <div class="contact-row"><div><div class="contact-name">The Manor Practice</div><div class="contact-hrs">Your local GP</div></div><button class="call-chip" id="btn-manor">01932 220 900</button></div>
+      <div class="contact-label">Dentist</div>
+      <div class="contact-row"><div><div class="contact-name">Hersham Dental</div><div class="contact-hrs">5 The Green, Hersham</div></div><button class="call-chip" id="btn-hersham-dental">01932 248 348</button></div>
+      <div class="contact-row"><div><div class="contact-name">Windsor House Dental</div><div class="contact-hrs">20 Queens Road</div></div><button class="call-chip" id="btn-windsor-dental">01932 229 977</button></div>
+      <div class="contact-row"><div><div class="contact-name">Walton Dental</div><div class="contact-hrs">71A Hersham Road</div></div><button class="call-chip" id="btn-walton-dental">01932 225 748</button></div>
+      <div class="contact-row" style="background:#f8f8f4;"><div><div class="contact-name">NHS dental helpline</div><div class="contact-hrs">Cannot find an NHS dentist?</div></div><button class="call-chip call-chip-blue" id="btn-nhs-dental">0300 311 2233</button></div>
+      <div class="contact-label">Panel</div>
+      <div class="contact-row" style="margin-bottom:20px;"><div><div class="contact-name">Panel enquiries</div><div class="contact-hrs">Via the Message Board</div></div><button class="call-chip" id="btn-panel-board" style="background:#EEEDFE;color:#534AB7;">Open board</button></div>
+    </div>
+
+    <!-- SERVICES -->
+    <div class="section" id="sec-services">
+      <h2>Local Services</h2>
+      <div class="svc-group"><div class="svc-label">GP surgeries</div>
+        <div class="svc-card"><span class="svc-badge badge-open">Accepting patients</span><div class="svc-name">The Manor Practice</div><div class="svc-addr">Manor Road South, Esher, KT10 0AD</div><div class="svc-phone" id="svc-manor">01932 220 900 -- tap to call</div><div class="svc-dist">1.2 miles - Mon-Fri 8am-6:30pm</div></div>
+        <div class="svc-card"><span class="svc-badge badge-check">Check availability</span><div class="svc-name">Walton Health Centre</div><div class="svc-addr">Hersham Road, Walton-on-Thames, KT12 1LE</div><div class="svc-phone" id="svc-walton-health">01932 253 400 -- tap to call</div><div class="svc-dist">1.8 miles - Mon-Fri 8am-6pm</div></div>
+      </div>
+      <div class="svc-group"><div class="svc-label">Pharmacy</div>
+        <div class="svc-card"><span class="svc-badge badge-open">Open today</span><div class="svc-name">Boots Pharmacy, Walton</div><div class="svc-addr">3-5 High Street, Walton-on-Thames</div><div class="svc-phone" id="svc-boots">01932 222 476 -- tap to call</div><div class="svc-dist">1.6 miles - Mon-Sat 9am-5:30pm</div></div>
+        <div class="svc-card"><span class="svc-badge badge-open">Open today</span><div class="svc-name">Lloyds Pharmacy, Hersham</div><div class="svc-addr">Hersham Village, KT12 4LF</div><div class="svc-phone" id="svc-lloyds">01932 229 331 -- tap to call</div><div class="svc-dist">0.7 miles - Mon-Fri 9am-6pm</div></div>
+      </div>
+      <div class="svc-group"><div class="svc-label">Hospital</div>
+        <div class="svc-card"><span class="svc-badge badge-open">A and E open 24hrs</span><div class="svc-name">St Peter's Hospital</div><div class="svc-addr">Guildford Road, Chertsey, KT16 0PZ</div><div class="svc-phone" id="svc-stpeters">01932 872 000 -- tap to call</div><div class="svc-dist">5.4 miles</div></div>
+      </div>
+      <div class="svc-group"><div class="svc-label">Transport</div>
+        <div class="svc-card"><span class="svc-badge badge-open">London Waterloo</span><div class="svc-name">Hersham Rail Station</div><div class="svc-addr">Station Road, Hersham, KT12 4BB</div><div class="svc-phone" id="svc-rail">03457 484950 -- tap to call</div><div class="svc-dist">0.9 miles</div></div>
+        <div class="svc-card"><span class="svc-badge badge-check">Booking required</span><div class="svc-name">Surrey Community Transport</div><div class="svc-addr">Door-to-door for those with mobility needs</div><div class="svc-phone" id="svc-transport">0300 200 1003 -- tap to call</div></div>
       </div>
     </div>
-    <div class="red-banner">
-      <h3>Emergency services</h3>
-      <p>For life-threatening emergencies, fire, or crime in progress</p>
-      <button class="big-call-btn btn-red" onclick="dial('Emergency services','999','999','#A32D2D','Call 999 for emergencies only.')">Call 999</button>
-    </div>
-    <div style="background:#FAEEDA;border:1px solid #FAC775;border-radius:12px;padding:14px;margin-bottom:10px;">
-      <h3 style="font-size:15px;font-weight:700;color:#854F0B;margin-bottom:4px;">Non-emergency police</h3>
-      <p style="font-size:13px;color:#633806;">For non-urgent matters or to report a crime</p>
-      <button class="big-call-btn btn-amber" onclick="dial('Non-emergency police','101','101','#854F0B','Use 101 for non-urgent police matters only.')">Call 101</button>
-    </div>
-    <div class="contact-label">Village Voice Trust</div>
-    <div class="contact-row"><div><div class="contact-name">Main office</div><div class="contact-hrs">Mon-Fri 9am-5pm</div></div><button class="call-chip" onclick="dial('Trust Main office','01932 861 000','01932861000','#0F6E56','')">01932 861 000</button></div>
-    <div class="contact-row"><div><div class="contact-name">Out of hours</div><div class="contact-hrs">Evenings and weekends</div></div><button class="call-chip" onclick="dial('Trust Out of hours','01932 861 001','01932861001','#0F6E56','For urgent Trust matters outside office hours.')">01932 861 001</button></div>
-    <div class="contact-label">NHS and health</div>
-    <div class="contact-row"><div><div class="contact-name">NHS non-emergency</div><div class="contact-hrs">24 hours, 7 days</div></div><button class="call-chip call-chip-blue" onclick="dial('NHS 111','111','111','#185FA5','For urgent medical concerns that are not life-threatening.')">111</button></div>
-    <div class="contact-row"><div><div class="contact-name">The Manor Practice</div><div class="contact-hrs">Your local GP</div></div><button class="call-chip" onclick="dial('The Manor Practice','01932 220 900','01932220900','#0F6E56','')">01932 220 900</button></div>
-    <div class="contact-label">Dentist</div>
-    <div class="contact-row"><div><div class="contact-name">Hersham Dental Practice</div><div class="contact-hrs">5 The Green, Hersham</div></div><button class="call-chip" onclick="dial('Hersham Dental','01932 248 348','01932248348','#0F6E56','NHS adult places limited.')">01932 248 348</button></div>
-    <div class="contact-row"><div><div class="contact-name">Windsor House Dental</div><div class="contact-hrs">20 Queens Road, Hersham</div></div><button class="call-chip" onclick="dial('Windsor House Dental','01932 229 977','01932229977','#0F6E56','')">01932 229 977</button></div>
-    <div class="contact-row"><div><div class="contact-name">Walton Dental Surgery</div><div class="contact-hrs">71A Hersham Road, Walton</div></div><button class="call-chip" onclick="dial('Walton Dental','01932 225 748','01932225748','#0F6E56','')">01932 225 748</button></div>
-    <div class="contact-row" style="background:#f8f8f4;"><div><div class="contact-name">NHS dental helpline</div><div class="contact-hrs">Cannot find an NHS dentist?</div></div><button class="call-chip call-chip-blue" onclick="dial('NHS dental helpline','0300 311 2233','03003112233','#185FA5','NHS England will find your nearest available dentist.')">0300 311 2233</button></div>
-    <div class="contact-label">Village Voice Panel</div>
-    <div class="contact-row" style="margin-bottom:20px;"><div><div class="contact-name">Panel enquiries</div><div class="contact-hrs">Via the Message Board</div></div><button class="call-chip" onclick="showSection('board')" style="background:#EEEDFE;color:#534AB7;">Open board</button></div>
-  </div>
 
-  <!-- SERVICES -->
-  <div class="section" id="sec-services">
-    <h2>Local Services</h2>
-    <div class="svc-group">
-      <div class="svc-label">GP surgeries</div>
-      <div class="svc-card"><span class="svc-badge badge-open">Accepting patients</span><div class="svc-name">The Manor Practice</div><div class="svc-addr">Manor Road South, Esher, KT10 0AD</div><div class="svc-phone" onclick="dial('The Manor Practice','01932 220 900','01932220900','#0F6E56','')">01932 220 900 -- tap to call</div><div class="svc-dist">1.2 miles - Mon-Fri 8am-6:30pm</div></div>
-      <div class="svc-card"><span class="svc-badge badge-check">Check availability</span><div class="svc-name">Walton Health Centre</div><div class="svc-addr">Hersham Road, Walton-on-Thames, KT12 1LE</div><div class="svc-phone" onclick="dial('Walton Health Centre','01932 253 400','01932253400','#185FA5','')">01932 253 400 -- tap to call</div><div class="svc-dist">1.8 miles - Mon-Fri 8am-6pm</div></div>
-    </div>
-    <div class="svc-group">
-      <div class="svc-label">Dentist</div>
-      <div class="svc-card"><span class="svc-badge badge-check">NHS and private</span><div class="svc-name">Hersham Dental Practice</div><div class="svc-addr">5 The Green, Hersham, KT12 4HW</div><div class="svc-phone" onclick="dial('Hersham Dental','01932 248 348','01932248348','#0F6E56','NHS adult places limited.')">01932 248 348 -- tap to call</div><div class="svc-dist">0.6 miles</div></div>
-      <div class="svc-card"><span class="svc-badge badge-check">NHS and private</span><div class="svc-name">Windsor House Dental Surgery</div><div class="svc-addr">20 Queens Road, Hersham, KT12 5LR</div><div class="svc-phone" onclick="dial('Windsor House Dental','01932 229 977','01932229977','#0F6E56','')">01932 229 977 -- tap to call</div><div class="svc-dist">0.9 miles</div></div>
-      <div class="svc-card"><span class="svc-badge badge-check">NHS and private</span><div class="svc-name">Walton Dental Surgery</div><div class="svc-addr">71A Hersham Road, Walton-on-Thames, KT12 1LL</div><div class="svc-phone" onclick="dial('Walton Dental Surgery','01932 225 748','01932225748','#0F6E56','')">01932 225 748 -- tap to call</div><div class="svc-dist">1.4 miles</div></div>
-      <div class="svc-card" style="background:#f8f8f4;"><div class="svc-name" style="font-size:13px;">Cannot find an NHS dentist?</div><div class="svc-addr">Call NHS England -- they will find your nearest practice</div><div class="svc-phone" onclick="dial('NHS dental helpline','0300 311 2233','03003112233','#185FA5','')">0300 311 2233 -- tap to call</div></div>
-    </div>
-    <div class="svc-group">
-      <div class="svc-label">Pharmacy</div>
-      <div class="svc-card"><span class="svc-badge badge-open">Open today</span><div class="svc-name">Boots Pharmacy, Walton</div><div class="svc-addr">3-5 High Street, Walton-on-Thames, KT12 1DE</div><div class="svc-phone" onclick="dial('Boots Pharmacy','01932 222 476','01932222476','#0F6E56','')">01932 222 476 -- tap to call</div><div class="svc-dist">1.6 miles - Mon-Sat 9am-5:30pm</div></div>
-      <div class="svc-card"><span class="svc-badge badge-open">Open today</span><div class="svc-name">Lloyds Pharmacy, Hersham</div><div class="svc-addr">Hersham Village, KT12 4LF</div><div class="svc-phone" onclick="dial('Lloyds Pharmacy','01932 229 331','01932229331','#0F6E56','')">01932 229 331 -- tap to call</div><div class="svc-dist">0.7 miles - Mon-Fri 9am-6pm</div></div>
-    </div>
-    <div class="svc-group">
-      <div class="svc-label">Hospital</div>
-      <div class="svc-card"><span class="svc-badge badge-open">A and E open 24hrs</span><div class="svc-name">St Peter's Hospital</div><div class="svc-addr">Guildford Road, Chertsey, KT16 0PZ</div><div class="svc-phone" onclick="dial('St Peters Hospital','01932 872 000','01932872000','#185FA5','')">01932 872 000 -- tap to call</div><div class="svc-dist">5.4 miles</div></div>
-    </div>
-    <div class="svc-group">
-      <div class="svc-label">Transport</div>
-      <div class="svc-card"><span class="svc-badge badge-open">London Waterloo</span><div class="svc-name">Hersham Rail Station</div><div class="svc-addr">Station Road, Hersham, KT12 4BB</div><div class="svc-phone" onclick="dial('National Rail','03457 484950','03457484950','#185FA5','')">03457 484950 -- tap to call</div><div class="svc-dist">0.9 miles</div></div>
-      <div class="svc-card"><span class="svc-badge badge-check">Booking required</span><div class="svc-name">Surrey Community Transport</div><div class="svc-addr">Door-to-door for those with mobility needs</div><div class="svc-phone" onclick="dial('Surrey Community Transport','0300 200 1003','03002001003','#0F6E56','Booking required in advance.')">0300 200 1003 -- tap to call</div></div>
-    </div>
-  </div>
-
-  <!-- NEWS -->
-  <div class="section" id="sec-news">
-    <h2>Village News</h2>
-
-    <div id="trust-msgs"></div>
-    <div id="static-news">
-      <div class="card"><span class="tag tag-teal">Trust update</span><h3>Insulation programme -- phase 2 begins 24 March</h3><p>Loft insulation works will begin in Octagon Road properties from 24 March. Individual appointment letters have been posted to all affected residents. Contractors will carry Trust identification.</p><div class="newsdate">Today, 9:00am</div></div>
-      <div class="card"><span class="tag tag-purple">Panel report</span><h3>Village Voice Panel -- February summary</h3><p>The Panel met on 12 February and discussed 14 resident submissions. Key themes included heating concerns and requests for improved social activities. A summary has been submitted to the Trust Board.</p><div class="newsdate">28 February</div></div>
+    <!-- NEWS -->
+    <div class="section" id="sec-news">
+      <h2>Village News</h2>
+      <div id="trust-msgs"></div>
+      <div class="card"><span class="tag tag-teal">Trust update</span><h3>Insulation programme -- phase 2 begins 24 March</h3><p>Loft insulation works will begin in Octagon Road properties from 24 March. Individual appointment letters have been posted. Contractors will carry Trust identification.</p><div class="newsdate">Today, 9:00am</div></div>
+      <div class="card"><span class="tag tag-purple">Panel report</span><h3>Village Voice Panel -- February summary</h3><p>The Panel met on 12 February and discussed 14 resident submissions. Key themes included heating concerns and requests for improved social activities.</p><div class="newsdate">28 February</div></div>
       <div class="card"><span class="tag tag-blue">Trust update</span><h3>Spring grounds maintenance schedule</h3><p>Hedge cutting and path repairs throughout March and April. Some footpaths may be temporarily closed.</p><div class="newsdate">10 March</div></div>
       <div class="card"><span class="tag tag-amber">Notice</span><h3>Village Voice app -- trial underway</h3><p>The Village Voice Panel has launched this app on a trial basis. Your feedback is very welcome via the Message Board.</p><div class="newsdate">1 March</div></div>
     </div>
-  </div>
 
-  <!-- EVENTS -->
-  <div class="section" id="sec-events">
-    <h2>Events and Social</h2>
-    <div style="margin-bottom:12px;">
-      <input style="width:100%;padding:10px 14px;border:1px solid #ddd;border-radius:10px;font-size:14px;font-family:inherit;color:#1a1a1a;" id="ev-search" placeholder="Search events..." oninput="renderEvents()"/>
+    <!-- EVENTS -->
+    <div class="section" id="sec-events">
+      <h2>Events and Social</h2>
+      <div style="margin-bottom:12px;"><input style="width:100%;padding:10px 14px;border:1px solid #ddd;border-radius:10px;font-size:14px;font-family:inherit;color:#1a1a1a;" id="ev-search" placeholder="Search events..." oninput="renderEvents()"/></div>
+      <p style="font-size:13px;color:#888;margin-bottom:12px;">Listed in date order -- tap to add to your calendar</p>
+      <div id="ev-list"><div class="loading">Loading events...</div></div>
     </div>
-    <p style="font-size:13px;color:#888;margin-bottom:12px;">Listed in date order -- tap a button to add to your calendar</p>
-    <div id="ev-list"><div class="loading">Loading events...</div></div>
-  </div>
 
-  <!-- DOCUMENTS -->
-  <div class="section" id="sec-documents">
-    <h2>Community Documents</h2>
-    <div style="margin-bottom:12px;">
-      <div class="card" style="margin-bottom:10px;padding:12px 14px;cursor:pointer;background:#f0faf5;border-color:#9FE1CB;" onclick="openTrustSite()">
+    <!-- BOARD -->
+    <div class="section" id="sec-board">
+      <div class="board-header">
+        <h2>Message Board</h2>
+        <button type="button" class="fab" id="fab-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="white" stroke-width="2.5" stroke-linecap="round"/></svg></button>
+      </div>
+      <div class="board-notice">Submissions are read by the Village Voice Panel. For urgent matters use Emergency Contacts.</div>
+      <div id="board-feed"><div class="loading">Loading posts...</div></div>
+    </div>
+
+    <!-- COMMUNITY -->
+    <div class="section" id="sec-community">
+      <h2>Community Contacts</h2>
+      <div style="margin-bottom:12px;"><input style="width:100%;padding:10px 14px;border:1px solid #ddd;border-radius:10px;font-size:14px;font-family:inherit;" id="cc-search" placeholder="Search contacts..." oninput="renderCommunity()"/></div>
+      <div id="cc-list"><div class="loading">Loading...</div></div>
+    </div>
+
+    <!-- DOCUMENTS -->
+    <div class="section" id="sec-documents">
+      <h2>Community Documents</h2>
+      <div class="card" style="background:#f0faf5;border-color:#9FE1CB;cursor:pointer;" id="trust-website-card">
         <div style="display:flex;align-items:center;gap:10px;">
-          <div style="width:36px;height:36px;border-radius:50%;background:#E1F5EE;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#0F6E56" stroke-width="1.5"/><line x1="2" y1="12" x2="22" y2="12" stroke="#0F6E56" stroke-width="1.5" stroke-linecap="round"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20" stroke="#0F6E56" stroke-width="1.5" stroke-linecap="round"/></svg>
-          </div>
-          <div style="flex:1;">
-            <div style="font-size:14px;font-weight:700;color:#1a1a1a;">Whiteley Homes Trust website</div>
-            <div style="font-size:12px;color:#888;">www.whiteleyhomestrust.org.uk</div>
-          </div>
+          <div style="width:36px;height:36px;border-radius:50%;background:#E1F5EE;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#0F6E56" stroke-width="1.5"/><line x1="2" y1="12" x2="22" y2="12" stroke="#0F6E56" stroke-width="1.5" stroke-linecap="round"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20" stroke="#0F6E56" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+          <div style="flex:1;"><div style="font-size:14px;font-weight:700;color:#1a1a1a;">Whiteley Homes Trust website</div><div style="font-size:12px;color:#888;">www.whiteleyhomestrust.org.uk</div></div>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6" stroke="#aaa" stroke-width="1.5" stroke-linecap="round"/><polyline points="15 3 21 3 21 9" stroke="#aaa" stroke-width="1.5" stroke-linecap="round"/><line x1="10" y1="14" x2="21" y2="3" stroke="#aaa" stroke-width="1.5" stroke-linecap="round"/></svg>
         </div>
       </div>
+      <div style="margin-bottom:12px;"><input style="width:100%;padding:10px 14px;border:1px solid #ddd;border-radius:10px;font-size:14px;font-family:inherit;" id="doc-search" placeholder="Search documents..." oninput="renderDocuments()"/></div>
+      <div id="doc-list"><div class="loading">Loading...</div></div>
     </div>
-    <div style="margin-bottom:12px;">
-      <input style="width:100%;padding:10px 14px;border:1px solid #ddd;border-radius:10px;font-size:14px;font-family:inherit;color:#1a1a1a;" id="doc-search" placeholder="Search documents..." oninput="renderDocuments()"/>
-    </div>
-    <div id="doc-list"><div class="loading">Loading documents...</div></div>
-  </div>
 
-  <!-- COMMUNITY CONTACTS -->
-  <div class="section" id="sec-community">
-    <h2>Community Contacts</h2>
-    <div style="margin-bottom:12px;">
-      <input style="width:100%;padding:10px 14px;border:1px solid #ddd;border-radius:10px;font-size:14px;font-family:inherit;color:#1a1a1a;" id="cc-search" placeholder="Search by name, role or category..." oninput="renderCommunity()"/>
+    <!-- SURVEYS -->
+    <div class="section" id="sec-surveys">
+      <h2>Surveys</h2>
+      <p style="font-size:13px;color:#888;margin-bottom:16px;">Share your views. All responses are anonymous.</p>
+      <div id="surveys-list"><div class="loading">Loading surveys...</div></div>
     </div>
-    <div id="cc-list"><div class="loading">Loading contacts...</div></div>
-  </div>
 
-  <!-- SURVEYS -->
-  <div class="section" id="sec-surveys">
-    <h2>Surveys</h2>
-    <p style="font-size:13px;color:#888;margin-bottom:16px;">Share your views. All responses are anonymous and results update in real time.</p>
-    <div id="surveys-list"><div class="loading">Loading surveys...</div></div>
-  </div>
-
-  <!-- BOARD -->
-  <div class="section" id="sec-board">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
-      <h2 style="margin-bottom:0;">Message Board</h2>
-      <button class="fab" id="fab" onclick="openPost()" title="Add post"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="white" stroke-width="2.5" stroke-linecap="round"/></svg></button>
-    </div>
-    <div class="board-notice">Your submissions are read by the Village Voice Panel. For urgent matters use Emergency Contacts.</div>
-    <div id="board-feed"><div class="loading">Loading posts...</div></div>
   </div>
 </div>
 
 <!-- NAV -->
 <div class="nav" id="main-nav">
-  <button class="nav-btn on" id="nav-home" onclick="goHome()">
-    <div class="nav-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
-    <span class="nav-lbl">Home</span>
-  </button>
-  <button class="nav-btn" id="nav-news" onclick="showSection('news')">
-    <div class="nav-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.5"><path d="M4 22h16a2 2 0 002-2V4a2 2 0 00-2-2H8a2 2 0 00-2 2v16"/><path d="M2 20a2 2 0 004 0V4"/><line x1="10" y1="8" x2="18" y2="8" stroke-linecap="round"/><line x1="10" y1="12" x2="18" y2="12" stroke-linecap="round"/></svg></div>
-    <span class="nav-lbl">News</span>
-  </button>
-  <button class="nav-btn" id="nav-events" onclick="showSection('events')">
-    <div class="nav-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6" stroke-linecap="round"/><line x1="8" y1="2" x2="8" y2="6" stroke-linecap="round"/><line x1="3" y1="10" x2="21" y2="10" stroke-linecap="round"/></svg></div>
-    <span class="nav-lbl">Events</span>
-  </button>
-  <button class="nav-btn" id="nav-board" onclick="showSection('board')">
-    <div class="nav-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke-linecap="round"/></svg></div>
-    <span class="nav-lbl">Board</span>
-  </button>
-  <button class="nav-btn" id="nav-community" onclick="showSection('community')">
-    <div class="nav-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" stroke-linecap="round"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke-linecap="round"/></svg></div>
-    <span class="nav-lbl">Community</span>
-  </button>
-  <button class="nav-btn" id="nav-surveys" onclick="showSection('surveys')">
-    <div class="nav-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.5"><path d="M9 11l3 3L22 4" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" stroke-linecap="round"/></svg></div>
-    <span class="nav-lbl">Surveys</span>
-  </button>
-  <button class="nav-btn" id="nav-emergency" onclick="showSection('emergency')">
-    <div class="nav-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-.18-8.7A2 2 0 014.11 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" stroke-linecap="round"/></svg></div>
-    <span class="nav-lbl">Contacts</span>
-  </button>
+  <button type="button" class="nav-btn on" id="nav-home"><div class="nav-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div><span class="nav-lbl">Home</span></button>
+  <button type="button" class="nav-btn" id="nav-news"><div class="nav-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.5"><path d="M4 22h16a2 2 0 002-2V4a2 2 0 00-2-2H8a2 2 0 00-2 2v16"/><path d="M2 20a2 2 0 004 0V4"/><line x1="10" y1="8" x2="18" y2="8" stroke-linecap="round"/><line x1="10" y1="12" x2="18" y2="12" stroke-linecap="round"/></svg></div><span class="nav-lbl">News</span></button>
+  <button type="button" class="nav-btn" id="nav-events"><div class="nav-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6" stroke-linecap="round"/><line x1="8" y1="2" x2="8" y2="6" stroke-linecap="round"/><line x1="3" y1="10" x2="21" y2="10" stroke-linecap="round"/></svg></div><span class="nav-lbl">Events</span></button>
+  <button type="button" class="nav-btn" id="nav-board"><div class="nav-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke-linecap="round"/></svg></div><span class="nav-lbl">Board</span></button>
+  <button type="button" class="nav-btn" id="nav-emergency"><div class="nav-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-.18-8.7A2 2 0 014.11 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" stroke-linecap="round"/></svg></div><span class="nav-lbl">Contacts</span></button>
 </div>
 
 <!-- POST MODAL -->
-<div class="modal-bg" id="post-modal" onclick="if(event.target===this)closePost()">
+<div class="modal-bg" id="post-modal">
   <div class="modal-sheet">
     <h3>Share your view</h3>
-    <p>Submissions are read by the Village Voice Panel. They do not go directly to the Trust.</p>
-    <div class="form-group"><div class="form-label">Topic</div>
-            <div class="cat-opts" id="cat-opts-container">
-        <button type="button" id="copt-activities" class="cat-opt" style="background:#E1F5EE;color:#0F6E56;border-color:#0F6E56;" data-cat="activities" onclick="pickCatBtn(this)">Activities</button>
-        <button type="button" id="copt-cafe" class="cat-opt" style="background:#FAEEDA;color:#854F0B;border-color:#854F0B;" data-cat="cafe" onclick="pickCatBtn(this)">Cafe</button>
-        <button type="button" id="copt-concerns" class="cat-opt" style="background:#FCEBEB;color:#A32D2D;border-color:#A32D2D;" data-cat="concerns" onclick="pickCatBtn(this)">Concerns</button>
-        <button type="button" id="copt-decoration" class="cat-opt" style="background:#EEEDFE;color:#534AB7;border-color:#534AB7;" data-cat="decoration" onclick="pickCatBtn(this)">Decoration</button>
-        <button type="button" id="copt-events" class="cat-opt" style="background:#E6F1FB;color:#185FA5;border-color:#185FA5;" data-cat="events" onclick="pickCatBtn(this)">Events</button>
-        <button type="button" id="copt-floors" class="cat-opt" style="background:#f0f0e8;color:#555555;border-color:#555555;" data-cat="floors" onclick="pickCatBtn(this)">Floor coverings</button>
-        <button type="button" id="copt-grounds" class="cat-opt" style="background:#E1F5EE;color:#0F6E56;border-color:#0F6E56;" data-cat="grounds" onclick="pickCatBtn(this)">Grounds</button>
-        <button type="button" id="copt-heating" class="cat-opt" style="background:#FAEEDA;color:#854F0B;border-color:#854F0B;" data-cat="heating" onclick="pickCatBtn(this)">Heating</button>
-        <button type="button" id="copt-lighting" class="cat-opt" style="background:#FAEEDA;color:#854F0B;border-color:#854F0B;" data-cat="lighting" onclick="pickCatBtn(this)">Lighting</button>
-        <button type="button" id="copt-security" class="cat-opt" style="background:#FCEBEB;color:#A32D2D;border-color:#A32D2D;" data-cat="security" onclick="pickCatBtn(this)">Security</button>
-        <button type="button" id="copt-transport" class="cat-opt" style="background:#E6F1FB;color:#185FA5;border-color:#185FA5;" data-cat="transport" onclick="pickCatBtn(this)">Transport</button>
-        <button type="button" id="copt-windows" class="cat-opt" style="background:#EEEDFE;color:#534AB7;border-color:#534AB7;" data-cat="windows" onclick="pickCatBtn(this)">Windows and doors</button>
+    <p>Submissions go to the Village Voice Panel only -- not directly to the Trust.</p>
+    <div class="form-group">
+      <div class="form-label">Topic -- tap to select</div>
+      <div class="cat-opts" id="cat-opts">
+        <button type="button" class="cat-opt" style="background:#E1F5EE;color:#0F6E56;border-color:#9FE1CB;">Activities</button>
+        <button type="button" class="cat-opt" style="background:#FAEEDA;color:#854F0B;border-color:#FAC775;">Cafe</button>
+        <button type="button" class="cat-opt" style="background:#FCEBEB;color:#A32D2D;border-color:#F7C1C1;">Concerns</button>
+        <button type="button" class="cat-opt" style="background:#EEEDFE;color:#534AB7;border-color:#CECBF6;">Decoration</button>
+        <button type="button" class="cat-opt" style="background:#E6F1FB;color:#185FA5;border-color:#B5D4F4;">Events</button>
+        <button type="button" class="cat-opt" style="background:#f0f0e8;color:#555;border-color:#ccc;">Floor coverings</button>
+        <button type="button" class="cat-opt" style="background:#E1F5EE;color:#0F6E56;border-color:#9FE1CB;">Grounds</button>
+        <button type="button" class="cat-opt" style="background:#FAEEDA;color:#854F0B;border-color:#FAC775;">Heating</button>
+        <button type="button" class="cat-opt" style="background:#FAEEDA;color:#854F0B;border-color:#FAC775;">Lighting</button>
+        <button type="button" class="cat-opt" style="background:#FCEBEB;color:#A32D2D;border-color:#F7C1C1;">Security</button>
+        <button type="button" class="cat-opt" style="background:#E6F1FB;color:#185FA5;border-color:#B5D4F4;">Transport</button>
+        <button type="button" class="cat-opt" style="background:#EEEDFE;color:#534AB7;border-color:#CECBF6;">Windows and doors</button>
       </div>
     </div>
     <div class="form-group"><label class="form-label">Subject</label><input class="form-input" id="pt" maxlength="80" placeholder="Brief description"/></div>
     <div class="form-group"><label class="form-label">Your comment</label><textarea class="form-input" id="pb" rows="4" maxlength="500" placeholder="Share as much detail as you are comfortable with..."></textarea></div>
-    <button class="submit-btn" onclick="submitPost()">Submit to the panel</button>
-    <button class="cancel-btn" onclick="closePost()">Cancel</button>
-  </div>
-</div>
-
-<!-- TRUST WEBSITE MODAL -->
-<div class="call-modal-bg" id="trust-modal" onclick="if(event.target===this)closeTrust()">
-  <div class="call-modal-box">
-    <div class="cm-icon" style="background:#E1F5EE;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#0F6E56" stroke-width="1.5"/><line x1="2" y1="12" x2="22" y2="12" stroke="#0F6E56" stroke-width="1.5" stroke-linecap="round"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20" stroke="#0F6E56" stroke-width="1.5" stroke-linecap="round"/></svg></div>
-    <div class="cm-label">Opening external website</div>
-    <div class="cm-name">Whiteley Homes Trust</div>
-    <div class="cm-num" style="font-size:14px;color:#0F6E56;">www.whiteleyhomestrust.org.uk</div>
-    <div class="cm-note">This will open the Trust website in your browser. Tap Back when you want to return to Village Voice.</div>
-    <div class="cm-btns">
-      <button class="cm-cancel" onclick="closeTrust()">Cancel</button>
-      <button class="cm-confirm" style="background:#0F6E56;" onclick="goTrust()">Open website</button>
-    </div>
-  </div>
-</div>
-
-<!-- DOCUMENT OPEN MODAL -->
-<div class="call-modal-bg" id="doc-modal" onclick="if(event.target===this)closeDoc()">
-  <div class="call-modal-box">
-    <div class="cm-icon" style="background:#E1F5EE;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" stroke="#0F6E56" stroke-width="1.5"/><polyline points="14 2 14 8 20 8" stroke="#0F6E56" stroke-width="1.5"/></svg></div>
-    <div class="cm-label">Opening document</div>
-    <div class="cm-name" id="doc-modal-name"></div>
-    <div class="cm-note" id="doc-modal-desc"></div>
-    <div class="cm-note" style="color:#aaa;font-size:11px;">This will open in your browser. Tap Back to return to Village Voice.</div>
-    <div class="cm-btns">
-      <button class="cm-cancel" onclick="closeDoc()">Cancel</button>
-      <button class="cm-confirm" style="background:#0F6E56;" onclick="goDoc()">Open document</button>
-    </div>
+    <button type="button" class="submit-btn" id="post-submit-btn">Submit to the panel</button>
+    <button type="button" class="cancel-btn" id="post-cancel-btn">Cancel</button>
   </div>
 </div>
 
 <!-- CALL MODAL -->
-<div class="call-modal-bg" id="call-modal" onclick="if(event.target===this)closeCall()">
+<div class="call-modal-bg" id="call-modal">
   <div class="call-modal-box">
     <div class="cm-icon" id="cm-icon"></div>
     <div class="cm-label">Call this number?</div>
@@ -560,14 +476,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div class="cm-num" id="cm-num"></div>
     <div class="cm-note" id="cm-note"></div>
     <div class="cm-btns">
-      <button class="cm-cancel" onclick="closeCall()">Cancel</button>
-      <button class="cm-confirm" id="cm-confirm" onclick="doCall()">Confirm call</button>
+      <button type="button" class="cm-cancel" id="call-cancel-btn">Cancel</button>
+      <button type="button" class="cm-confirm" id="call-confirm-btn">Confirm call</button>
     </div>
   </div>
 </div>
 
 <!-- ADMIN PW MODAL -->
-<div class="pw-modal-bg" id="pw-modal" onclick="if(event.target===this)closePw()">
+<div class="pw-modal-bg" id="pw-modal">
   <div class="pw-modal-box">
     <div class="pw-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="11" width="18" height="11" rx="2" stroke="#534AB7" stroke-width="1.5"/><path d="M7 11V7a5 5 0 0110 0v4" stroke="#534AB7" stroke-width="1.5" stroke-linecap="round"/></svg></div>
     <div class="pw-title">Admin access</div>
@@ -575,54 +491,93 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <input class="pw-input" id="pw-input" type="password" placeholder="Password" maxlength="20"/>
     <div class="pw-error" id="pw-error"></div>
     <div class="pw-btns">
-      <button class="pw-cancel" onclick="closePw()">Cancel</button>
-      <button class="pw-go" onclick="checkPw()">Enter</button>
+      <button type="button" class="pw-cancel" id="pw-cancel-btn">Cancel</button>
+      <button type="button" class="pw-go" id="pw-go-btn">Enter</button>
+    </div>
+  </div>
+</div>
+
+<!-- TRUST MODAL -->
+<div class="call-modal-bg" id="trust-modal">
+  <div class="call-modal-box">
+    <div class="cm-icon" style="background:#E1F5EE;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#0F6E56" stroke-width="1.5"/><line x1="2" y1="12" x2="22" y2="12" stroke="#0F6E56" stroke-width="1.5" stroke-linecap="round"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20" stroke="#0F6E56" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+    <div class="cm-label">Opening external website</div>
+    <div class="cm-name">Whiteley Homes Trust</div>
+    <div class="cm-num" style="font-size:14px;color:#0F6E56;">www.whiteleyhomestrust.org.uk</div>
+    <div class="cm-note">This will open the Trust website in your browser. Tap Back to return.</div>
+    <div class="cm-btns">
+      <button type="button" class="cm-cancel" id="trust-cancel-btn">Cancel</button>
+      <button type="button" class="cm-confirm" style="background:#0F6E56;" id="trust-go-btn">Open website</button>
+    </div>
+  </div>
+</div>
+
+<!-- DOC MODAL -->
+<div class="call-modal-bg" id="doc-modal">
+  <div class="call-modal-box">
+    <div class="cm-icon" style="background:#E1F5EE;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" stroke="#0F6E56" stroke-width="1.5"/><polyline points="14 2 14 8 20 8" stroke="#0F6E56" stroke-width="1.5"/></svg></div>
+    <div class="cm-label">Opening document</div>
+    <div class="cm-name" id="doc-modal-name"></div>
+    <div class="cm-note" id="doc-modal-desc"></div>
+    <div class="cm-btns">
+      <button type="button" class="cm-cancel" id="doc-cancel-btn">Cancel</button>
+      <button type="button" class="cm-confirm" style="background:#0F6E56;" id="doc-go-btn">Open document</button>
     </div>
   </div>
 </div>
 
 <!-- REG MODAL -->
-<div class="modal-bg" id="reg-modal" onclick="if(event.target===this)closeReg()">
+<div class="modal-bg" id="reg-modal">
   <div class="modal-sheet">
     <h3>New resident registration</h3>
-    <p>Enter your details. The Panel administrator will be notified and set up your access.</p>
+    <p>The Panel administrator will be notified and set up your access.</p>
     <div class="form-group"><label class="form-label">First name</label><input class="form-input" id="reg-first" placeholder="e.g. Margaret" maxlength="50"/></div>
     <div class="form-group"><label class="form-label">Surname</label><input class="form-input" id="reg-last" placeholder="e.g. Harrison" maxlength="50"/></div>
     <div class="form-group"><label class="form-label">Email address</label><input class="form-input" id="reg-email" type="email" placeholder="email@example.com" maxlength="100"/></div>
     <div class="form-group"><label class="form-label">Mobile <span style="font-weight:400;color:#aaa;">(optional)</span></label><input class="form-input" id="reg-mobile" type="tel" placeholder="07700 900123" maxlength="20"/></div>
     <div class="form-group"><label class="form-label">Cottage / address</label><input class="form-input" id="reg-address" placeholder="e.g. Cottage 14, Octagon Road" maxlength="100"/></div>
-    <div style="margin:16px 0 8px;padding-top:16px;border-top:1px solid #f0f0ea;">
-      <div style="font-size:13px;font-weight:700;color:#888;margin-bottom:12px;">Nominated emergency contact <span style="font-weight:400;">(optional but recommended)</span></div>
+    <div style="margin:16px 0 12px;padding-top:14px;border-top:1px solid #f0f0ea;">
+      <div style="font-size:13px;font-weight:700;color:#888;margin-bottom:10px;">Emergency contact <span style="font-weight:400;">(optional but recommended)</span></div>
       <div class="form-group"><label class="form-label">Contact name</label><input class="form-input" id="reg-ec-name" placeholder="e.g. Jane Smith" maxlength="100"/></div>
-      <div class="form-group"><label class="form-label">Relationship</label><input class="form-input" id="reg-ec-relation" placeholder="e.g. Daughter, Son, Friend" maxlength="50"/></div>
-      <div class="form-group"><label class="form-label">Contact phone number</label><input class="form-input" id="reg-ec-phone" type="tel" placeholder="e.g. 07700 900456" maxlength="20"/></div>
+      <div class="form-group"><label class="form-label">Relationship</label><input class="form-input" id="reg-ec-relation" placeholder="e.g. Daughter" maxlength="50"/></div>
+      <div class="form-group"><label class="form-label">Contact phone</label><input class="form-input" id="reg-ec-phone" type="tel" placeholder="07700 900456" maxlength="20"/></div>
     </div>
-    <div style="margin:16px 0 14px;padding:14px;background:#f8f8f4;border-radius:10px;border:1px solid #e8e8e2;">
-      <label style="display:flex;align-items:flex-start;gap:12px;cursor:pointer;">
-        <input type="checkbox" id="reg-consent" style="width:20px;height:20px;margin-top:2px;flex-shrink:0;accent-color:#0F6E56;cursor:pointer;"/>
-        <span style="font-size:13px;color:#444;line-height:1.6;">I agree that my personal details (name, address, email and emergency contact if provided) will be stored securely by VoiceVillage for the purpose of the Village Voice resident trial. My details will not be shared with third parties and I can ask for them to be removed at any time by contacting the Panel administrator.</span>
+    <div style="margin:0 0 14px;padding:13px;background:#f8f8f4;border-radius:10px;border:1px solid #e8e8e2;">
+      <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;">
+        <input type="checkbox" id="reg-consent" style="width:20px;height:20px;margin-top:2px;flex-shrink:0;accent-color:#0F6E56;"/>
+        <span style="font-size:13px;color:#444;line-height:1.6;">I agree that my personal details will be stored securely by VoiceVillage for the purpose of this trial and will not be shared with third parties. I can ask for removal at any time.</span>
       </label>
     </div>
-    <button class="submit-btn" onclick="submitReg()">Submit registration</button>
-    <button class="cancel-btn" onclick="closeReg()">Cancel</button>
+    <button type="button" class="submit-btn" id="reg-submit-btn">Submit registration</button>
+    <button type="button" class="cancel-btn" id="reg-cancel-btn">Cancel</button>
   </div>
 </div>
 
 <script>
 var SUPA_URL = 'https://wkjkmmmhftmjjkkmczbz.supabase.co';
 var SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndramttbW1oZnRtampra21jemJ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5MjU5NzQsImV4cCI6MjA4OTUwMTk3NH0.VFceyx0IwbmWK8WJJzgeenGHE8kBbmBdoLrPp7IrM5M';
+var ADMIN_HASH = 'e10ca518d53808191a832621e76d8c6495ce26f049622ed7912fdfd8936e2e47';
 
 var currentUser = null;
-var isPanel = false;
-var selCat = '';
-var pendingNum = '';
 var sessionId = 'sess_' + Math.random().toString(36).slice(2);
+var selCat = '';
+var surveyVotes = {};
+var pendingVotes = {};
+var storedContacts = [];
+var storedDocs = [];
+var storedSurveys = [];
+var storedEvents = [];
+var pendingDocUrl = '';
+var pendingCallNum = '';
 
 var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 var MONTHS_L = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 var DAYS_L = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 
-var storedEvents = [];
+var CAT_KEYS = ['activities','cafe','concerns','decoration','events','floors','grounds','heating','lighting','security','transport','windows'];
+var CAT_BG   = ['E1F5EE','FAEEDA','FCEBEB','EEEDFE','E6F1FB','f0f0e8','E1F5EE','FAEEDA','FAEEDA','FCEBEB','E6F1FB','EEEDFE'];
+var CAT_COL  = ['0F6E56','854F0B','A32D2D','534AB7','185FA5','555555','0F6E56','854F0B','854F0B','A32D2D','185FA5','534AB7'];
+var CAT_LBL  = ['Activities','Cafe','Concerns','Decoration','Events','Floor coverings','Grounds','Heating','Lighting','Security','Transport','Windows and doors'];
 
 var BH = [
   {id:'bh1',date:'2026-01-01',title:'New Years Day',bh:true},
@@ -635,139 +590,30 @@ var BH = [
   {id:'bh8',date:'2026-12-28',title:'Boxing Day (substitute)',bh:true}
 ];
 
-var CAT_EV = {
-  social:   {bg:'#EEEDFE',color:'#534AB7',label:'Social'},
-  outdoors: {bg:'#E1F5EE',color:'#0F6E56',label:'Outdoors'},
-  trust:    {bg:'#FAEEDA',color:'#854F0B',label:'Trust'},
-  panel:    {bg:'#EEEDFE',color:'#534AB7',label:'Panel'},
-  other:    {bg:'#f0f0e8',color:'#555',label:'Other'}
-};
-
-// SUPABASE API
+// SUPABASE
 function sbFetch(path, opts) {
   var url = SUPA_URL + '/rest/v1/' + path;
-  var headers = {
-    'apikey': SUPA_KEY,
-    'Authorization': 'Bearer ' + SUPA_KEY,
-    'Content-Type': 'application/json',
-    'Prefer': 'return=representation'
-  };
-  if (opts && opts.headers) {
-    for (var k in opts.headers) headers[k] = opts.headers[k];
-  }
-  return fetch(url, {
-    method: opts && opts.method ? opts.method : 'GET',
-    headers: headers,
-    body: opts && opts.body ? JSON.stringify(opts.body) : undefined
-  }).then(function(r) { return r.json(); });
+  var headers = {'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Content-Type':'application/json','Prefer':'return=representation'};
+  return fetch(url, {method:opts&&opts.method?opts.method:'GET', headers:headers, body:opts&&opts.body?JSON.stringify(opts.body):undefined}).then(function(r){return r.json();});
 }
 
 // CLOCK
-function ordinal(n) {
-  var s = ['th','st','nd','rd'];
-  var v = n % 100;
-  return n + (s[(v-20)%10] || s[v] || s[0]);
-}
-
+function ordinal(n) { var s=['th','st','nd','rd']; var v=n%100; return n+(s[(v-20)%10]||s[v]||s[0]); }
 function updateClock() {
   var now = new Date();
-  var h = now.getHours();
-  var m = now.getMinutes();
-  var ampm = h >= 12 ? 'PM' : 'AM';
+  var h = now.getHours(); var m = now.getMinutes();
+  var ampm = h >= 12 ? 'pm' : 'am';
   var h12 = h % 12 || 12;
-  var mStr = m < 10 ? '0' + m : String(m);
-  var timeStr = h12 + ':' + mStr + ' ' + ampm;
+  var mStr = m < 10 ? '0'+m : ''+m;
+  var timeStr = h12 + ':' + mStr + ampm;
   var dateStr = DAYS_L[now.getDay()] + ' ' + ordinal(now.getDate()) + ' ' + MONTHS_L[now.getMonth()] + ' ' + now.getFullYear();
-  var ids = ['clock-time','clock-time2'];
-  var dids = ['clock-date','clock-date2'];
-  for (var i = 0; i < ids.length; i++) {
-    var el = document.getElementById(ids[i]);
-    if (el) el.textContent = timeStr;
-  }
-  for (var i = 0; i < dids.length; i++) {
-    var el = document.getElementById(dids[i]);
-    if (el) el.textContent = dateStr;
-  }
+  var t1 = document.getElementById('clock-time'); if(t1) t1.textContent = timeStr;
+  var t2 = document.getElementById('clock-time2'); if(t2) t2.textContent = timeStr;
+  var d1 = document.getElementById('clock-date'); if(d1) d1.textContent = dateStr;
+  var d2 = document.getElementById('clock-date2'); if(d2) d2.textContent = dateStr;
 }
-updateClock();
 setInterval(updateClock, 1000);
-
-// LOAD RESIDENTS
-function loadResidents() {
-  sbFetch('residents?status=eq.active&order=last.asc').then(function(data) {
-    var list = document.getElementById('resident-list');
-    if (!list) return;
-    if (!data || !data.length) {
-      list.innerHTML = '<div style="font-size:13px;color:#aaa;padding:8px 0 4px;">No residents added yet.</div>';
-      return;
-    }
-    var avs = ['av-teal','av-amber','av-blue','av-purple','av-coral'];
-    var html = '';
-    for (var i = 0; i < data.length; i++) {
-      var r = data[i];
-      var av = avs[i % avs.length];
-      var ini = r.first.charAt(0) + r.last.charAt(0);
-      var name = r.first + ' ' + r.last;
-      var addr = r.address || 'Whiteley Village';
-      html += '<button class="namebtn" data-uid="' + r.id + '" data-name="' + name + '" data-cottage="' + addr + '" data-ini="' + ini + '" data-av="' + av + '" onclick="loginFromBtn(this)">';
-      html += '<div class="av ' + av + '">' + ini + '</div>';
-      html += '<div><span class="nametxt">' + name + '</span><span class="cottxt">' + addr + '</span></div>';
-      html += '</button>';
-    }
-    list.innerHTML = html;
-  }).catch(function() {
-    var list = document.getElementById('resident-list');
-    if (list) list.innerHTML = '<div style="font-size:13px;color:#aaa;padding:8px 0 4px;">Could not load residents.</div>';
-  });
-}
-loadResidents();
-
-// LOGIN
-function doLogin(uid, name, cottage, ini, av, panel) {
-  currentUser = {uid:uid, name:name, cottage:cottage, ini:ini, av:av, panel:panel};
-  isPanel = panel;
-  var now = new Date();
-  var h = now.getHours();
-  var first = name.split(' ')[0];
-  document.getElementById('greeting').textContent = (h < 12 ? 'Good morning, ' : 'Good afternoon, ') + first + '.';
-  if (panel) {
-    var sb = document.getElementById('start-btn');
-    var sb2 = document.getElementById('start-btn2');
-    if (sb) sb.style.display = 'inline';
-    if (sb2) sb2.style.display = 'inline';
-  }
-  document.getElementById('sos-btn').classList.add('on');
-  document.getElementById('main-nav').classList.add('on');
-  loadBoardCount();
-  loadEmergencyContact(uid);
-  loadSurveyCount();
-  renderBoard();
-  loadEventsData();
-  showScreen('s-home');
-  setNav('nav-home');
-}
-
-function doSignOut() {
-  currentUser = null;
-  isPanel = false;
-  document.getElementById('sos-btn').classList.remove('on');
-  document.getElementById('main-nav').classList.remove('on');
-
-  var sb = document.getElementById('start-btn');
-  var sb2 = document.getElementById('start-btn2');
-  if (sb) sb.style.display = 'none';
-  if (sb2) sb2.style.display = 'none';
-  loadResidents();
-  showScreen('s-login');
-}
-
-function loadBoardCount() {
-  sbFetch('posts?removed=eq.false&select=id').then(function(data) {
-    var c = data ? data.length : 0;
-    var el = document.getElementById('board-count');
-    if (el) el.textContent = c + ' submission' + (c !== 1 ? 's' : '');
-  }).catch(function() {});
-}
+updateClock();
 
 // SCREENS
 function showScreen(id) {
@@ -777,13 +623,95 @@ function showScreen(id) {
   if (el) el.classList.add('on');
 }
 
-function goHome() {
+function setNav(id) {
+  var all = document.querySelectorAll('.nav-btn');
+  for (var i = 0; i < all.length; i++) all[i].classList.remove('on');
+  var el = document.getElementById(id);
+  if (el) el.classList.add('on');
+}
+
+// LOGIN
+function loadResidents() {
+  sbFetch('residents?status=eq.active&order=last.asc').then(function(data) {
+    var list = document.getElementById('resident-list');
+    if (!list) return;
+    if (!data || !data.length) { list.innerHTML = ''; return; }
+    var avs = ['av-teal','av-amber','av-blue','av-purple','av-coral'];
+    var html = '';
+    for (var i = 0; i < data.length; i++) {
+      var r = data[i];
+      var av = avs[i % avs.length];
+      var ini = r.first.charAt(0) + r.last.charAt(0);
+      var name = r.first + ' ' + r.last;
+      var addr = r.address || 'Whiteley Village';
+      html += '<button type="button" class="namebtn"';
+      html += ' data-uid="' + r.id + '"';
+      html += ' data-name="' + name.replace(/"/g,'') + '"';
+      html += ' data-addr="' + addr.replace(/"/g,'') + '"';
+      html += ' data-ini="' + ini + '"';
+      html += ' data-av="' + av + '">';
+      html += '<div class="av ' + av + '">' + ini + '</div>';
+      html += '<div><span class="nametxt">' + name + '</span><span class="cottxt">' + addr + '</span></div>';
+      html += '</button>';
+    }
+    list.innerHTML = html;
+    var btns = list.querySelectorAll('.namebtn');
+    for (var j = 0; j < btns.length; j++) {
+      btns[j].addEventListener('click', function() {
+        doLogin(this.getAttribute('data-uid'), this.getAttribute('data-name'), this.getAttribute('data-addr'), this.getAttribute('data-ini'), this.getAttribute('data-av'), false);
+      });
+    }
+  }).catch(function(){
+    var list = document.getElementById('resident-list');
+    if (list) list.innerHTML = '<div style="font-size:13px;color:#aaa;padding:8px 0;">Could not load residents.</div>';
+  });
+}
+
+function doLogin(uid, name, addr, ini, av, panel) {
+  currentUser = {uid:uid, name:name, addr:addr, ini:ini, av:av, panel:panel};
+  var now = new Date();
+  var h = now.getHours();
+  var first = name.split(' ')[0];
+  var greeting = (h < 12 ? 'Good morning, ' : h < 18 ? 'Good afternoon, ' : 'Good evening, ') + first + '.';
+  var g = document.getElementById('greeting'); if (g) g.textContent = greeting;
+  var sos = document.getElementById('sos-btn'); if (sos) sos.classList.add('on');
+  var nav = document.getElementById('main-nav'); if (nav) nav.classList.add('on');
+  var ab = document.getElementById('admin-btn');
+  if (panel && ab) ab.style.display = 'flex';
+  else if (ab) ab.style.display = 'none';
+  var sb = document.getElementById('start-btn'); if (sb) sb.style.display = panel ? 'inline' : 'none';
+  var sb2 = document.getElementById('start-btn2'); if (sb2) sb2.style.display = panel ? 'inline' : 'none';
+  loadBoardCount();
+  loadSurveyCount();
+  loadEmergencyContact(uid);
   showScreen('s-home');
   setNav('nav-home');
-
-  var sos = document.getElementById('sos-btn');
-  if (sos) sos.style.opacity = '1';
 }
+
+function doSignOut() {
+  currentUser = null;
+  var sos = document.getElementById('sos-btn'); if (sos) sos.classList.remove('on');
+  var nav = document.getElementById('main-nav'); if (nav) nav.classList.remove('on');
+  showScreen('s-login');
+}
+
+function loadEmergencyContact(uid) {
+  sbFetch('residents?id=eq.' + uid + '&select=emergency_name,emergency_phone,emergency_relation').then(function(data) {
+    if (!data || !data.length) return;
+    var r = data[0];
+    if (!r.emergency_name) return;
+    var card = document.getElementById('ec-card'); if (!card) return;
+    document.getElementById('ec-name').textContent = r.emergency_name;
+    document.getElementById('ec-relation').textContent = r.emergency_relation || '';
+    document.getElementById('ec-phone').textContent = r.emergency_phone || '';
+    var btn = document.getElementById('ec-call-btn');
+    if (btn && r.emergency_phone) btn.addEventListener('click', function() { dial(r.emergency_name, r.emergency_phone, r.emergency_phone.replace(/\s/g,''), '#534AB7', ''); });
+    card.classList.add('on');
+  }).catch(function(){});
+}
+
+// NAVIGATION
+function goHome() { showScreen('s-home'); setNav('nav-home'); }
 
 function showSection(sec) {
   showScreen('s-sections');
@@ -792,7 +720,6 @@ function showSection(sec) {
   var el = document.getElementById('sec-' + sec);
   if (el) el.classList.add('on');
   setNav('nav-' + sec);
-
   var sos = document.getElementById('sos-btn');
   if (sos) sos.style.opacity = sec === 'emergency' ? '0' : '1';
   if (sec === 'news') loadTrustMsgs();
@@ -801,14 +728,16 @@ function showSection(sec) {
   if (sec === 'community') loadCommunityData();
   if (sec === 'documents') loadDocumentsData();
   if (sec === 'surveys') loadSurveys();
-  window.scrollTo(0,0);
+  window.scrollTo(0, 0);
 }
 
-function setNav(activeId) {
-  var btns = document.querySelectorAll('.nav-btn');
-  for (var i = 0; i < btns.length; i++) btns[i].classList.remove('on');
-  var el = document.getElementById(activeId);
-  if (el) el.classList.add('on');
+// BOARD COUNT
+function loadBoardCount() {
+  sbFetch('posts?removed=eq.false&select=id').then(function(data) {
+    var c = data ? data.length : 0;
+    var el = document.getElementById('board-count');
+    if (el) el.textContent = c + ' submission' + (c !== 1 ? 's' : '');
+  }).catch(function(){});
 }
 
 // BOARD
@@ -818,229 +747,191 @@ function renderBoard() {
   feed.innerHTML = '<div class="loading">Loading posts...</div>';
   sbFetch('posts?removed=eq.false&order=created_at.desc').then(function(data) {
     if (!data || !data.length) {
-      feed.innerHTML = '<div style="text-align:center;padding:32px;color:#aaa;font-size:14px;">No submissions yet.</div>';
+      feed.innerHTML = '<div class="loading">No submissions yet. Tap + to be the first!</div>';
       return;
     }
-    var catMap = {
-      activities:'Activities', cafe:'Cafe', concerns:'Concerns', decoration:'Decoration',
-      events:'Events', floors:'Floor coverings', grounds:'Grounds', heating:'Heating',
-      lighting:'Lighting', security:'Security', transport:'Transport', windows:'Windows and doors',
-      maintenance:'Maintenance'
-    };
     var html = '';
     for (var i = 0; i < data.length; i++) {
       var p = data[i];
-      var catCls = 'cat-' + (p.cat || 'heating');
-      var catName = catMap[p.cat] || p.cat;
+      var catIdx = CAT_KEYS.indexOf(p.cat);
+      var bg = catIdx > -1 ? CAT_BG[catIdx] : 'f0f0e8';
+      var col = catIdx > -1 ? CAT_COL[catIdx] : '555555';
+      var lbl = catIdx > -1 ? CAT_LBL[catIdx] : p.cat;
       html += '<div class="post-card">';
-      html += '<div class="post-meta"><div class="post-av ' + p.av + '">' + p.ini + '</div>';
-      html += '<div><div class="post-author">' + p.name + '</div><div class="post-time">' + p.time + '</div></div>';
-      html += '<span class="cat-tag ' + catCls + '" style="margin-left:auto;">' + catName + '</span></div>';
-      html += '<div class="post-title">' + p.title + '</div>';
-      html += '<div class="post-body">' + (p.body.length > 100 ? p.body.slice(0,100) + '...' : p.body) + '</div>';
+      html += '<div class="post-meta">';
+      html += '<div class="post-av av-' + (p.av||'teal') + '">' + (p.ini||'?') + '</div>';
+      html += '<div><div class="post-author">' + (p.name||'Resident') + '</div>';
+      html += '<div class="post-time">' + (p.time||'') + '</div></div>';
+      html += '<span class="cat-tag" style="margin-left:auto;background:#' + bg + ';color:#' + col + ';">' + lbl + '</span>';
+      html += '</div>';
+      html += '<div class="post-title">' + (p.title||'') + '</div>';
+      html += '<div class="post-body">' + (p.body ? (p.body.length > 120 ? p.body.slice(0,120) + '...' : p.body) : '') + '</div>';
       html += '<div class="post-ft">';
-      html += '<button class="like-btn" onclick="doLike(' + p.id + ',this)">';
-      html += '<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#888" stroke-width="1.5"><path d="M8 13.5S2 10 2 5.5A3.5 3.5 0 018 3a3.5 3.5 0 016 2c0 4.5-6 8.5-6 8.5z"/></svg>';
-      html += '<span id="likes-' + p.id + '">' + p.likes + '</span> share this view</button>';
-      html += '<span class="rep-count">' + p.replies + ' comment' + (p.replies !== 1 ? 's' : '') + '</span></div></div>';
+      html += '<button type="button" class="like-btn" data-pid="' + p.id + '">';
+      html += '<svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" stroke="#aaa" stroke-width="1.5"/></svg>';
+      html += (p.likes||0) + ' like' + (p.likes !== 1 ? 's' : '') + '</button>';
+      html += '<span class="rep-count">' + (p.replies||0) + ' replies</span>';
+      html += '</div></div>';
     }
     feed.innerHTML = html;
-    loadBoardCount();
+    var likebtns = feed.querySelectorAll('.like-btn');
+    for (var j = 0; j < likebtns.length; j++) {
+      likebtns[j].addEventListener('click', function() { doLike(this.getAttribute('data-pid')); });
+    }
   }).catch(function() {
-    feed.innerHTML = '<div style="text-align:center;padding:32px;color:#aaa;font-size:14px;">Could not load posts.</div>';
+    feed.innerHTML = '<div class="loading">Could not load posts.</div>';
   });
 }
 
-function doLike(id, btn) {
-  sbFetch('likes', {
-    method: 'POST',
-    body: {post_id: id, session_id: sessionId}
-  }).then(function() {
-    return sbFetch('posts?id=eq.' + id, {
-      method: 'PATCH',
-      headers: {'Prefer': 'return=representation'},
-      body: {likes: undefined}
+function doLike(pid) {
+  sbFetch('likes', {method:'POST', body:{post_id:pid, session_id:sessionId}}).then(function() {
+    sbFetch('posts?id=eq.' + pid + '&select=likes').then(function(d) {
+      if (!d || !d.length) return;
+      sbFetch('posts?id=eq.' + pid, {method:'PATCH', body:{likes:(d[0].likes||0)+1}}).then(function() { renderBoard(); });
     });
-  }).catch(function() {});
-  var el = document.getElementById('likes-' + id);
-  if (el) {
-    var n = parseInt(el.textContent) + 1;
-    el.textContent = n;
-  }
-  if (btn) btn.style.color = '#0F6E56';
+  }).catch(function(){});
 }
 
 // POST MODAL
 function openPost() {
+  if (!currentUser) return;
   selCat = '';
   document.getElementById('pt').value = '';
   document.getElementById('pb').value = '';
-  var cats2 = ['activities','cafe','concerns','decoration','events','floors','grounds','heating','lighting','security','transport','windows'];
-  var bgs2   = ['E1F5EE','FAEEDA','FCEBEB','EEEDFE','E6F1FB','f0f0e8','E1F5EE','FAEEDA','FAEEDA','FCEBEB','E6F1FB','EEEDFE'];
-  var clrs2  = ['0F6E56','854F0B','A32D2D','534AB7','185FA5','555555','0F6E56','854F0B','854F0B','A32D2D','185FA5','534AB7'];
-  for (var i = 0; i < cats2.length; i++) {
-    var btn2 = document.getElementById('copt-' + cats2[i]);
-    if (!btn2) continue;
-    btn2.style.background = '#' + bgs2[i];
-    btn2.style.color = '#' + clrs2[i];
-    btn2.style.borderColor = '#' + clrs2[i];
-    btn2.style.borderWidth = '2px';
-    btn2.style.fontWeight = '600';
-    btn2.style.boxShadow = 'none';
-  }
+  var opts = document.getElementById('cat-opts').querySelectorAll('.cat-opt');
+  for (var i = 0; i < opts.length; i++) opts[i].style.opacity = '1';
   document.getElementById('post-modal').classList.add('on');
 }
+
 function closePost() { document.getElementById('post-modal').classList.remove('on'); }
 
-function pickCat(c, el) {
-  selCat = c;
-  var cats = ['activities','cafe','concerns','decoration','events','floors','grounds','heating','lighting','security','transport','windows'];
-  var bgs   = ['E1F5EE','FAEEDA','FCEBEB','EEEDFE','E6F1FB','f0f0e8','E1F5EE','FAEEDA','FAEEDA','FCEBEB','E6F1FB','EEEDFE'];
-  var clrs  = ['0F6E56','854F0B','A32D2D','534AB7','185FA5','555555','0F6E56','854F0B','854F0B','A32D2D','185FA5','534AB7'];
-  for (var i = 0; i < cats.length; i++) {
-    var btn = document.getElementById('copt-' + cats[i]);
-    if (!btn) continue;
-    if (cats[i] === c) {
-      btn.style.background = '#' + bgs[i];
-      btn.style.color = '#' + clrs[i];
-      btn.style.borderColor = '#' + clrs[i];
-      btn.style.borderWidth = '3px';
-      btn.style.fontWeight = '700';
-      btn.style.boxShadow = '0 2px 6px rgba(0,0,0,0.12)';
-    } else {
-      btn.style.background = '#' + bgs[i] + '88';
-      btn.style.color = '#' + clrs[i] + '99';
-      btn.style.borderColor = '#' + clrs[i] + '44';
-      btn.style.borderWidth = '2px';
-      btn.style.fontWeight = '600';
-      btn.style.boxShadow = 'none';
-    }
-  }
-  
-  var col = colors[c] || {bg:'#E1F5EE',c:'#0F6E56',b:'#0F6E56'};
-  el.style.background = col.bg;
-  el.style.color = col.c;
-  el.style.borderColor = col.b;
+function pickCat(el) {
+  selCat = el.textContent.trim().toLowerCase().replace(/ /g,'_').replace('floor_coverings','floors').replace('windows_and_doors','windows').replace('floor_coverings','floors');
+  var catMap = {'activities':'activities','cafe':'cafe','concerns':'concerns','decoration':'decoration','events':'events','floor_coverings':'floors','floors':'floors','grounds':'grounds','heating':'heating','lighting':'lighting','security':'security','transport':'transport','windows_and_doors':'windows','windows':'windows'};
+  selCat = catMap[selCat] || selCat;
+  var opts = document.getElementById('cat-opts').querySelectorAll('.cat-opt');
+  for (var i = 0; i < opts.length; i++) opts[i].style.opacity = opts[i] === el ? '1' : '0.45';
+  el.style.borderWidth = '3px';
 }
 
 function submitPost() {
   var t = document.getElementById('pt').value.trim();
   var b = document.getElementById('pb').value.trim();
-  if (!t || !b || !selCat) { alert('Please choose a topic and fill in both fields.'); return; }
+  if (!selCat) { alert('Please choose a topic.'); return; }
+  if (!t || !b) { alert('Please fill in both subject and comment.'); return; }
   var now = new Date();
   var timeStr = now.toLocaleDateString('en-GB',{day:'numeric',month:'short'}) + ', ' + now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
-  sbFetch('posts', {
-    method: 'POST',
-    body: {
-      name: currentUser.name, ini: currentUser.ini, av: currentUser.av,
-      cat: selCat, title: t, body: b, time: timeStr, likes: 0, replies: 0
-    }
-  }).then(function() {
+  sbFetch('posts', {method:'POST', body:{id:'p_'+Date.now(), name:currentUser.name, ini:currentUser.ini, av:currentUser.av, cat:selCat, title:t, body:b, time:timeStr, likes:0, replies:0, removed:false}}).then(function() {
     closePost();
     renderBoard();
-  }).catch(function() {
-    alert('Could not submit post. Please try again.');
-  });
+    loadBoardCount();
+  }).catch(function(){ alert('Could not submit. Please try again.'); });
 }
 
 // EVENTS
-function fmtTime(t) {
-  if (!t) return '';
-  var p = t.split(':');
-  var h = parseInt(p[0]);
-  var m = p[1];
-  return (h % 12 || 12) + ':' + m + (h >= 12 ? 'pm' : 'am');
-}
-
-function gcal(ev) {
-  var base = 'https://calendar.google.com/calendar/render?action=TEMPLATE';
-  var ds = ev.date.replace(/-/g,'');
-  if (ev.bh) {
-    var d2 = new Date(ev.date + 'T12:00:00'); d2.setDate(d2.getDate()+1);
-    return base + '&text=' + encodeURIComponent(ev.title) + '&dates=' + ds + '/' + d2.toISOString().slice(0,10).replace(/-/g,'');
-  }
-  var st = (ev.start_time||ev.start||'09:00').replace(':','') + '00';
-  var en = (ev.end_time||ev.end||'10:00').replace(':','') + '00';
-  return base + '&text=' + encodeURIComponent(ev.title) + '&dates=' + ds + 'T' + st + '/' + ds + 'T' + en + '&location=' + encodeURIComponent(ev.loc||'');
-}
-
-function icsData(ev) {
-  var ds = ev.date.replace(/-/g,'');
-  var lines;
-  if (ev.bh) {
-    var d2 = new Date(ev.date + 'T12:00:00'); d2.setDate(d2.getDate()+1);
-    var de = d2.toISOString().slice(0,10).replace(/-/g,'');
-    lines = ['BEGIN:VCALENDAR','VERSION:2.0','BEGIN:VEVENT','DTSTART;VALUE=DATE:'+ds,'DTEND;VALUE=DATE:'+de,'SUMMARY:'+ev.title,'END:VEVENT','END:VCALENDAR'];
-  } else {
-    var st = (ev.start_time||ev.start||'09:00').replace(':','') + '00';
-    var en = (ev.end_time||ev.end||'10:00').replace(':','') + '00';
-    lines = ['BEGIN:VCALENDAR','VERSION:2.0','BEGIN:VEVENT','DTSTART:'+ds+'T'+st,'DTEND:'+ds+'T'+en,'SUMMARY:'+ev.title,'LOCATION:'+(ev.loc||''),'END:VEVENT','END:VCALENDAR'];
-  }
-  return 'data:text/calendar;charset=utf8,' + encodeURIComponent(lines.join('\r\n'));
-}
-
 function loadEventsData() {
-  var list = document.getElementById('ev-list');
-  if (list) list.innerHTML = '<div class="loading">Loading events...</div>';
   sbFetch('events?order=date.asc').then(function(data) {
     storedEvents = data || [];
     renderEvents();
   }).catch(function() {
-    if (list) list.innerHTML = '<div class="loading">Could not load events.</div>';
+    var el = document.getElementById('ev-list');
+    if (el) el.innerHTML = '<div class="loading">Could not load events.</div>';
   });
 }
 
+function fmtTime(t) { if (!t) return ''; var p = t.split(':'); var h = parseInt(p[0]); var m = p[1]; return (h%12||12) + ':' + m + (h>=12?'pm':'am'); }
+
 function renderEvents() {
-  var list = document.getElementById('ev-list');
-  if (!list) return;
-  var evs = storedEvents || [];
+  var el = document.getElementById('ev-list');
+  if (!el) return;
+  var q = (document.getElementById('ev-search').value || '').toLowerCase();
   var all = [];
   for (var i = 0; i < BH.length; i++) all.push(BH[i]);
-  for (var i = 0; i < evs.length; i++) all.push(evs[i]);
-  all.sort(function(a,b){ return a.date < b.date ? -1 : 1; });
-  var searchEl = document.getElementById('ev-search');
-  var q = searchEl ? searchEl.value.toLowerCase() : '';
+  for (var i = 0; i < storedEvents.length; i++) all.push(storedEvents[i]);
+  all.sort(function(a,b) { return a.date < b.date ? -1 : 1; });
   if (q) {
     var filtered = [];
     for (var i = 0; i < all.length; i++) {
       var ev = all[i];
       var d = new Date(ev.date + 'T12:00:00');
-      var monthName = MONTHS_L[d.getMonth()].toLowerCase();
-      var monthShort = MONTHS[d.getMonth()].toLowerCase();
-      var dayName = DAYS_L[d.getDay()].toLowerCase();
-      var catLabel = isBH ? 'bank holiday' : (CAT_EV[ev.cat] ? CAT_EV[ev.cat].label.toLowerCase() : (ev.cat||''));
-        var searchStr = (ev.title + ' ' + (ev.loc||'') + ' ' + (ev.details||'') + ' ' + monthName + ' ' + monthShort + ' ' + dayName + ' ' + ev.date + ' ' + catLabel + ' ' + (ev.cat||'')).toLowerCase();
-      if (searchStr.indexOf(q) > -1) filtered.push(ev);
+      var str = ((ev.title||'') + ' ' + (ev.loc||'') + ' ' + (ev.details||'') + ' ' + MONTHS_L[d.getMonth()].toLowerCase() + ' ' + DAYS_L[d.getDay()].toLowerCase()).toLowerCase();
+      if (str.indexOf(q) > -1) filtered.push(ev);
     }
     all = filtered;
   }
+  if (!all.length) { el.innerHTML = '<div class="loading">No events found.</div>'; return; }
   var html = '';
   for (var i = 0; i < all.length; i++) {
     var ev = all[i];
     var d = new Date(ev.date + 'T12:00:00');
-    var day = d.getDate();
-    var mon = MONTHS[d.getMonth()];
     var isBH = ev.bh ? true : false;
-    var cs = CAT_EV[ev.cat] || {bg:'#f0f0e8',color:'#555',label:'Bank holiday'};
-    if (isBH) cs = {bg:'#f0f0e8',color:'#555',label:'Bank holiday'};
-    var st = ev.start_time || ev.start || '';
-    var en = ev.end_time || ev.end || '';
-    var meta = isBH ? 'England bank holiday - all day' : (fmtTime(st) + (en ? ' - ' + fmtTime(en) : '') + (ev.loc ? '  |  ' + ev.loc : ''));
-    var fn = ev.title.replace(/[^a-zA-Z0-9]/g,'_');
-    var ics = icsData(ev);
+    var meta = isBH ? 'Bank holiday -- all day' : '';
+    if (!isBH) { var parts = []; if (ev.start_time) parts.push(fmtTime(ev.start_time) + (ev.end_time ? ' - ' + fmtTime(ev.end_time) : '')); if (ev.loc) parts.push(ev.loc); meta = parts.join(' | '); }
     html += '<div class="ev-card' + (isBH ? ' bh' : '') + '">';
     html += '<div class="ev-inner">';
-    html += '<div class="ev-date' + (isBH ? ' bh' : '') + '"><div class="ev-day">' + day + '</div><div class="ev-mon">' + mon + '</div></div>';
-    html += '<div class="ev-info"><div class="ev-title">' + ev.title + '</div><div class="ev-meta">' + meta + '</div>';
-    html += '<span class="ev-tag" style="background:' + cs.bg + ';color:' + cs.color + ';">' + cs.label + '</span></div></div>';
-    html += '<div class="cal-btns"><a class="cal-btn cal-g" href="' + gcal(ev) + '" target="_blank">Google</a>';
-    html += '<a class="cal-btn cal-a" href="' + ics + '" download="' + fn + '.ics">Apple</a>';
-    html += '<a class="cal-btn cal-i" href="' + ics + '" download="' + fn + '.ics">iCal</a></div></div>';
+    html += '<div class="ev-date' + (isBH ? ' bh' : '') + '"><div class="ev-day">' + d.getDate() + '</div><div class="ev-mon">' + MONTHS[d.getMonth()] + '</div></div>';
+    html += '<div class="ev-info"><div class="ev-title">' + (ev.title||'') + '</div>';
+    if (meta) html += '<div class="ev-meta">' + meta + '</div>';
+    if (!isBH && ev.cat) {
+      var cidx = CAT_KEYS.indexOf(ev.cat);
+      var cbg = cidx > -1 ? CAT_BG[cidx] : 'f0f0e8';
+      var ccol = cidx > -1 ? CAT_COL[cidx] : '555';
+      var clbl = cidx > -1 ? CAT_LBL[cidx] : ev.cat;
+      html += '<div><span class="ev-tag" style="background:#' + cbg + ';color:#' + ccol + ';">' + clbl + '</span></div>';
+    }
+    if (!isBH) {
+      var ds = ev.date.replace(/-/g,'');
+      var st = (ev.start_time||'09:00').replace(':','') + '00';
+      var en2 = (ev.end_time||'10:00').replace(':','') + '00';
+      var title = encodeURIComponent(ev.title||'');
+      var loc = encodeURIComponent(ev.loc||'');
+      var gUrl = 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=' + title + '&dates=' + ds + 'T' + st + '/' + ds + 'T' + en2 + '&location=' + loc;
+      html += '<div class="cal-btns"><a class="cal-btn cal-g" href="' + gUrl + '" target="_blank">Google Calendar</a>';
+      html += '<a class="cal-btn cal-a" href="' + gcal(ev) + '" download="event.ics">Apple / Outlook</a></div>';
+    }
+    html += '</div></div></div>';
   }
-  if (!all.length) html = '<div class="loading">No events found.</div>';
-  list.innerHTML = html;
+  el.innerHTML = html;
 }
 
+function gcal(ev) {
+  var ds = ev.date.replace(/-/g,'');
+  var st = (ev.start_time||'09:00').replace(':','') + '00';
+  var en = (ev.end_time||'10:00').replace(':','') + '00';
+  var ics = 'BEGIN:VCALENDAR\r\nVERSION:2.0\r\nBEGIN:VEVENT\r\nDTSTART:' + ds + 'T' + st + '\r\nDTEND:' + ds + 'T' + en + '\r\nSUMMARY:' + (ev.title||'') + '\r\nLOCATION:' + (ev.loc||'') + '\r\nDESCRIPTION:' + (ev.details||'') + '\r\nEND:VEVENT\r\nEND:VCALENDAR';
+  return 'data:text/calendar;charset=utf8,' + encodeURIComponent(ics);
+}
+
+// NEWS
+function loadTrustMsgs() {
+  var el = document.getElementById('trust-msgs');
+  if (!el) return;
+  sbFetch('messages?order=created_at.desc').then(function(data) {
+    if (!data || !data.length) { el.innerHTML = ''; return; }
+    var html = '';
+    var tagCss = {trust:'tag-teal', panel:'tag-purple', notice:'tag-blue', urgent:'tag-amber'};
+    for (var i = 0; i < data.length; i++) {
+      var m = data[i];
+      var tcss = tagCss[m.tag] || 'tag-teal';
+      html += '<div class="card" style="border-left:3px solid #0F6E56;">';
+      html += '<span class="tag ' + tcss + '">' + (m.label||'Trust') + '</span>';
+      html += '<h3>' + (m.title||'') + '</h3>';
+      html += '<p>' + (m.body||'') + '</p>';
+      html += '<div class="newsdate">' + (m.date||'') + '</div>';
+      html += '</div>';
+    }
+    el.innerHTML = html;
+  }).catch(function(){ el.innerHTML = ''; });
+}
+
+// COMMUNITY CONTACTS
+var CC_CATS = {
+  staff:      {label:'Village staff and wardens', bg:'E1F5EE', col:'0F6E56'},
+  panel:      {label:'Panel members',             bg:'EEEDFE', col:'534AB7'},
+  facilities: {label:'Village facilities',        bg:'E6F1FB', col:'185FA5'},
+  welfare:    {label:'Welfare and support',       bg:'FCEBEB', col:'A32D2D'},
+  activities: {label:'Activity leaders',          bg:'FAEEDA', col:'854F0B'}
+};
 
 function loadCommunityData() {
   sbFetch('community_contacts?active=eq.true&order=category.asc,display_order.asc').then(function(data) {
@@ -1055,64 +946,56 @@ function loadCommunityData() {
 function renderCommunity() {
   var el = document.getElementById('cc-list');
   if (!el) return;
+  var q = (document.getElementById('cc-search').value || '').toLowerCase();
   var contacts = storedContacts;
-  var searchEl = document.getElementById('cc-search');
-  var q = searchEl ? searchEl.value.toLowerCase() : '';
   if (q) {
     var filtered = [];
     for (var i = 0; i < contacts.length; i++) {
       var c = contacts[i];
-      var cat = CC_CATS[c.category] || {label:c.category};
-      var str = (c.name + ' ' + c.role + ' ' + c.category + ' ' + cat.label + ' ' + (c.notes||'') + ' ' + (c.phone||'') + ' ' + (c.email||'')).toLowerCase();
+      var cs = CC_CATS[c.category] || {label:c.category};
+      var str = ((c.name||'') + ' ' + (c.role||'') + ' ' + (c.category||'') + ' ' + cs.label + ' ' + (c.notes||'') + ' ' + (c.phone||'') + ' ' + (c.email||'')).toLowerCase();
       if (str.indexOf(q) > -1) filtered.push(c);
     }
     contacts = filtered;
   }
-  if (!contacts.length) {
-    el.innerHTML = '<div style="text-align:center;padding:32px;color:#aaa;font-size:14px;">No contacts found.</div>';
-    return;
-  }
+  if (!contacts.length) { el.innerHTML = '<div class="loading">No contacts found.</div>'; return; }
   var html = '';
   var lastCat = '';
   for (var i = 0; i < contacts.length; i++) {
     var c = contacts[i];
-    var cs = CC_CATS[c.category] || {label:c.category, bg:'#f0f0e8', color:'#555'};
+    var cs = CC_CATS[c.category] || {label:c.category, bg:'f0f0e8', col:'555'};
     if (!q && c.category !== lastCat) {
-      html += '<div style="font-size:13px;font-weight:700;color:#888;margin:' + (lastCat ? '16px' : '0') + ' 0 8px;">' + cs.label + '</div>';
+      html += '<div class="cc-section-label">' + cs.label + '</div>';
       lastCat = c.category;
     }
     html += '<div class="card" style="margin-bottom:8px;padding:12px 14px;">';
     html += '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;">';
-    html += '<div style="flex:1;">';
-    html += '<div style="font-size:15px;font-weight:700;color:#1a1a1a;margin-bottom:2px;">' + c.name + '</div>';
-    if (c.role) html += '<div style="font-size:12px;color:#888;margin-bottom:4px;">' + c.role + '</div>';
-    if (c.notes) html += '<div style="font-size:12px;color:#aaa;margin-bottom:6px;">' + c.notes + '</div>';
-    if (c.phone) {
-        html += '<div style="font-size:13px;font-weight:600;color:#0F6E56;cursor:pointer;touch-action:manipulation;margin-bottom:3px;" ' + 'onclick="dialCC(this)" data-name="' + c.name.replace(/"/g,'') + '" data-phone="' + c.phone + '">';
-      html += '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" style="vertical-align:middle;margin-right:4px;"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-.18-8.7A2 2 0 014.11 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" stroke="#0F6E56" stroke-width="1.5" stroke-linecap="round" fill="none"/></svg>';
-      html += c.phone + ' -- tap to call</div>';
-    }
-    if (c.email) {
-      html += '<div style="font-size:13px;font-weight:600;color:#185FA5;margin-bottom:3px;">';
-      html += '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" style="vertical-align:middle;margin-right:4px;"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="#185FA5" stroke-width="1.5"/><polyline points="22,6 12,13 2,6" stroke="#185FA5" stroke-width="1.5" stroke-linecap="round" fill="none"/></svg>';
-      html += c.email + '</div>';
-    }
+    html += '<div style="flex:1;"><div style="font-size:15px;font-weight:700;color:#1a1a1a;margin-bottom:2px;">' + (c.name||'') + '</div>';
+    if (c.role) html += '<div style="font-size:12px;color:#888;margin-bottom:3px;">' + c.role + '</div>';
+    if (c.notes) html += '<div style="font-size:12px;color:#aaa;margin-bottom:5px;">' + c.notes + '</div>';
+    if (c.phone) html += '<div class="svc-phone" data-name="' + (c.name||'').replace(/"/g,'') + '" data-phone="' + c.phone + '" style="color:#0F6E56;">' + c.phone + ' -- tap to call</div>';
+    if (c.email) html += '<div style="font-size:13px;color:#185FA5;margin-top:3px;">' + c.email + '</div>';
     html += '</div>';
-    html += '<span style="font-size:11px;padding:3px 9px;border-radius:20px;font-weight:700;background:' + cs.bg + ';color:' + cs.color + ';white-space:nowrap;flex-shrink:0;">' + cs.label.split(' ')[0] + '</span>';
+    html += '<span style="font-size:11px;padding:3px 9px;border-radius:20px;font-weight:700;background:#' + cs.bg + ';color:#' + cs.col + ';flex-shrink:0;">' + cs.label.split(' ')[0] + '</span>';
     html += '</div></div>';
   }
   el.innerHTML = html;
+  var phones = el.querySelectorAll('.svc-phone[data-phone]');
+  for (var j = 0; j < phones.length; j++) {
+    phones[j].addEventListener('click', function() {
+      var name = this.getAttribute('data-name');
+      var phone = this.getAttribute('data-phone');
+      dial(name, phone, phone.replace(/\s/g,''), '#0F6E56', '');
+    });
+  }
 }
 
 // DOCUMENTS
-var storedDocs = [];
-var pendingDocUrl = '';
-
 var DOC_CATS = {
-  trust:      {label:'Trust publications',          bg:'#E1F5EE', color:'#0F6E56'},
-  wvrc:       {label:'Residents Committee (WVRC)',  bg:'#EEEDFE', color:'#534AB7'},
-  rules:      {label:'Village rules and policies',  bg:'#E6F1FB', color:'#185FA5'},
-  newsletter: {label:'Newsletters',                 bg:'#FAEEDA', color:'#854F0B'}
+  trust:      {label:'Trust publications', bg:'E1F5EE', col:'0F6E56'},
+  wvrc:       {label:'WVRC',               bg:'EEEDFE', col:'534AB7'},
+  rules:      {label:'Rules and policies', bg:'E6F1FB', col:'185FA5'},
+  newsletter: {label:'Newsletters',        bg:'FAEEDA', col:'854F0B'}
 };
 
 function loadDocumentsData() {
@@ -1128,90 +1011,56 @@ function loadDocumentsData() {
 function renderDocuments() {
   var el = document.getElementById('doc-list');
   if (!el) return;
+  var q = (document.getElementById('doc-search').value || '').toLowerCase();
   var docs = storedDocs;
-  var searchEl = document.getElementById('doc-search');
-  var q = searchEl ? searchEl.value.toLowerCase() : '';
   if (q) {
     var filtered = [];
     for (var i = 0; i < docs.length; i++) {
       var d = docs[i];
-      var cat = DOC_CATS[d.category] || {label:d.category};
-      var str = (d.title + ' ' + d.description + ' ' + d.category + ' ' + cat.label).toLowerCase();
+      var cs = DOC_CATS[d.category] || {label:d.category};
+      var str = ((d.title||'') + ' ' + (d.description||'') + ' ' + (d.category||'') + ' ' + cs.label).toLowerCase();
       if (str.indexOf(q) > -1) filtered.push(d);
     }
     docs = filtered;
   }
-  if (!docs.length) {
-    el.innerHTML = '<div style="text-align:center;padding:32px;color:#aaa;font-size:14px;">No documents found.</div>';
-    return;
-  }
+  if (!docs.length) { el.innerHTML = '<div class="loading">No documents found.</div>'; return; }
   var html = '';
   var lastCat = '';
   for (var i = 0; i < docs.length; i++) {
     var d = docs[i];
-    var cs = DOC_CATS[d.category] || {label:d.category, bg:'#f0f0e8', color:'#555'};
+    var cs = DOC_CATS[d.category] || {label:d.category, bg:'f0f0e8', col:'555'};
     if (!q && d.category !== lastCat) {
-      html += '<div style="font-size:13px;font-weight:700;color:#888;margin:' + (lastCat ? '16px' : '0') + ' 0 8px;">' + cs.label + '</div>';
+      html += '<div class="cc-section-label">' + cs.label + '</div>';
       lastCat = d.category;
     }
-    html += '<div class="card" style="margin-bottom:8px;padding:12px 14px;cursor:pointer;" ' + 'onclick="openDocModalEl(this)" data-title="' + d.title.replace(/"/g,'') + '" data-desc="' + (d.description||"").replace(/"/g,'') + '" data-url="' + d.url + '">';
+    html += '<div class="card" style="margin-bottom:8px;padding:12px 14px;cursor:pointer;" data-title="' + (d.title||'').replace(/"/g,'') + '" data-desc="' + (d.description||'').replace(/"/g,'') + '" data-url="' + (d.url||'') + '">';
     html += '<div style="display:flex;align-items:flex-start;gap:8px;">';
-    html += '<div style="flex:1;">';
-    html += '<div style="font-size:15px;font-weight:700;color:#1a1a1a;margin-bottom:3px;">' + d.title + '</div>';
-    if (d.description) html += '<div style="font-size:12px;color:#888;">' + d.description + '</div>';
-    html += '</div>';
-    html += '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;margin-top:2px;"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6" stroke="#aaa" stroke-width="1.5" stroke-linecap="round"/><polyline points="15 3 21 3 21 9" stroke="#aaa" stroke-width="1.5" stroke-linecap="round"/><line x1="10" y1="14" x2="21" y2="3" stroke="#aaa" stroke-width="1.5" stroke-linecap="round"/></svg>';
+    html += '<div style="flex:1;"><div style="font-size:15px;font-weight:700;color:#1a1a1a;">' + (d.title||'') + '</div>';
+    if (d.description) html += '<div style="font-size:12px;color:#888;margin-top:3px;">' + d.description + '</div>';
+    html += '</div><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6" stroke="#aaa" stroke-width="1.5" stroke-linecap="round"/><polyline points="15 3 21 3 21 9" stroke="#aaa" stroke-width="1.5" stroke-linecap="round"/><line x1="10" y1="14" x2="21" y2="3" stroke="#aaa" stroke-width="1.5" stroke-linecap="round"/></svg>';
     html += '</div></div>';
   }
   el.innerHTML = html;
-}
-
-function openDocModal(title, desc, url) {
-  pendingDocUrl = url;
-  document.getElementById('doc-modal-name').textContent = title;
-  document.getElementById('doc-modal-desc').textContent = desc;
-  document.getElementById('doc-modal').classList.add('on');
-}
-function closeDoc() { document.getElementById('doc-modal').classList.remove('on'); pendingDocUrl = ''; }
-function goDoc() { window.open(pendingDocUrl, '_blank'); closeDoc(); }
-
-// TRUST WEBSITE
-function openTrustSite() {
-  document.getElementById('trust-modal').classList.add('on');
-}
-function closeTrust() { document.getElementById('trust-modal').classList.remove('on'); }
-function goTrust() { window.open('https://www.whiteleyhomestrust.org.uk', '_blank'); closeTrust(); }
-
-function dialCC(el) {
-  var name = el.getAttribute('data-name') || '';
-  var phone = el.getAttribute('data-phone') || '';
-  var raw = phone.replace(/\s/g,'');
-  dial(name, phone, raw, '#0F6E56', '');
-}
-
-function openDocModalEl(el) {
-  var title = el.getAttribute('data-title') || '';
-  var desc = el.getAttribute('data-desc') || '';
-  var url = el.getAttribute('data-url') || '';
-  openDocModal(title, desc, url);
+  var cards = el.querySelectorAll('.card[data-url]');
+  for (var j = 0; j < cards.length; j++) {
+    cards[j].addEventListener('click', function() {
+      openDocModal(this.getAttribute('data-title'), this.getAttribute('data-desc'), this.getAttribute('data-url'));
+    });
+  }
 }
 
 // SURVEYS
-var storedSurveys = [];
-var surveyVotes = {};
-var pendingVotes = {};
+function loadSurveyCount() {
+  sbFetch('surveys?status=eq.active&select=id').then(function(data) {
+    var c = data ? data.length : 0;
+    var el = document.getElementById('survey-count');
+    if (el && c > 0) el.textContent = c + ' active';
+  }).catch(function(){});
+}
 
 function loadSurveys() {
   sbFetch('surveys?order=created_at.desc').then(function(data) {
     storedSurveys = data || [];
-    var active = 0;
-    for (var i = 0; i < storedSurveys.length; i++) {
-      if (storedSurveys[i].status === 'active') active++;
-    }
-    if (active > 0) {
-      var el = document.getElementById('survey-count');
-      if (el) el.textContent = active + ' active';
-    }
     renderSurveys();
   }).catch(function() {
     var el = document.getElementById('surveys-list');
@@ -1229,176 +1078,288 @@ function renderSurveys() {
     else closed.push(storedSurveys[i]);
   }
   if (!storedSurveys.length) {
-    el.innerHTML = '<div style="text-align:center;padding:32px;color:#aaa;font-size:14px;">No surveys at the moment.</div>';
+    el.innerHTML = '<div class="loading">No surveys at the moment.</div>';
     return;
   }
   var html = '';
-  if (closed.length > 0) {
-    html += '<div style="font-size:13px;font-weight:700;color:#888;margin-bottom:10px;">Previous surveys -- final results</div>';
-    for (var j = 0; j < closed.length; j++) {
-      html += '<div id="survey-' + closed[j].id + '" class="loading">Loading...</div>';
-    }
-    html += '<div style="font-size:13px;font-weight:700;color:#888;margin:16px 0 10px;padding-top:16px;border-top:1px solid #f0f0ea;">Current surveys</div>';
+  if (closed.length) html += '<div class="cc-section-label">Previous surveys -- final results</div>';
+  for (var i = 0; i < closed.length; i++) html += '<div id="sv-' + closed[i].id + '" class="loading">Loading...</div>';
+  if (active.length) {
+    if (closed.length) html += '<div class="cc-section-label" style="margin-top:16px;padding-top:16px;border-top:1px solid #f0f0ea;">Current surveys</div>';
+    for (var i = 0; i < active.length; i++) html += '<div id="sv-' + active[i].id + '" class="loading">Loading...</div>';
+  } else {
+    html += '<div class="loading">No active surveys at the moment.</div>';
   }
-  if (!active.length) {
-    html += '<div style="text-align:center;padding:24px;color:#aaa;font-size:14px;">No active surveys at the moment.</div>';
-  }
-  var allSurveys = closed.concat(active);
-  for (var i = 0; i < allSurveys.length; i++) {
-    (function(survey) {
-      sbFetch('survey_options?survey_id=eq.' + survey.id + '&order=display_order.asc').then(function(opts) {
-        sbFetch('survey_responses?survey_id=eq.' + survey.id + '&select=option_id').then(function(responses) {
+  el.innerHTML = html;
+  var all = closed.concat(active);
+  for (var i = 0; i < all.length; i++) {
+    (function(sv) {
+      sbFetch('survey_options?survey_id=eq.' + sv.id + '&order=display_order.asc').then(function(opts) {
+        sbFetch('survey_responses?survey_id=eq.' + sv.id + '&select=option_id,session_id').then(function(responses) {
           var total = responses ? responses.length : 0;
           var counts = {};
+          var myVote = surveyVotes[sv.id] || null;
           if (responses) {
             for (var j = 0; j < responses.length; j++) {
               var oid = responses[j].option_id;
               counts[oid] = (counts[oid] || 0) + 1;
+              if (responses[j].session_id === sessionId) myVote = oid;
             }
           }
-          var myVote = surveyVotes[survey.id] || null;
-          var hasVoted = myVote !== null;
-          var isClosed = survey.status === 'closed';
-          var pending = pendingVotes[survey.id] || null;
+          if (myVote) surveyVotes[sv.id] = myVote;
+          var isClosed = sv.status === 'closed';
+          var pending = pendingVotes[sv.id] || null;
           var shtml = '<div class="survey-card"' + (isClosed ? ' style="background:#fafaf7;border-color:#e8e8d8;"' : '') + '>';
           if (isClosed) shtml += '<div style="font-size:11px;font-weight:700;color:#888;background:#f0f0e8;padding:4px 10px;border-radius:20px;display:inline-block;margin-bottom:10px;">Closed -- final results</div>';
-          shtml += '<div class="survey-q">' + survey.title + '</div>';
-          shtml += '<div style="font-size:13px;color:#666;margin-bottom:12px;">' + survey.question + '</div>';
+          shtml += '<div class="survey-q">' + (sv.title||'') + '</div>';
+          shtml += '<div class="survey-sub">' + (sv.question||'') + '</div>';
           for (var k = 0; k < opts.length; k++) {
             var opt = opts[k];
             var cnt = counts[opt.id] || 0;
             var pct = total > 0 ? Math.round((cnt / total) * 100) : 0;
             var isSelected = (myVote === opt.id);
-            if (isClosed || hasVoted) {
-              var barColor = isSelected ? '#0F6E56' : '#9FE1CB';
+            if (isClosed || myVote) {
               shtml += '<div style="margin-bottom:8px;">';
               shtml += '<div style="display:flex;justify-content:space-between;margin-bottom:3px;">';
-              shtml += '<span style="font-size:13px;color:#1a1a1a;' + (isSelected ? 'font-weight:600;' : '') + '">' + opt.option_text + (isSelected ? ' -- your vote' : '') + '</span>';
-              shtml += '<span style="font-size:13px;font-weight:700;color:#0F6E56;">' + pct + '%</span>';
-              shtml += '</div>';
-              shtml += '<div style="height:8px;background:#f0f0ea;border-radius:4px;overflow:hidden;">';
-              shtml += '<div style="height:100%;background:' + barColor + ';border-radius:4px;width:' + pct + '%;"></div></div>';
+              shtml += '<span style="font-size:13px;color:#1a1a1a;' + (isSelected ? 'font-weight:700;' : '') + '">' + opt.option_text + (isSelected ? ' -- your vote' : '') + '</span>';
+              shtml += '<span style="font-size:13px;font-weight:700;color:#0F6E56;">' + pct + '%</span></div>';
+              shtml += '<div style="height:8px;background:#f0f0ea;border-radius:4px;overflow:hidden;"><div style="height:100%;background:' + (isSelected ? '#0F6E56' : '#9FE1CB') + ';border-radius:4px;width:' + pct + '%;"></div></div>';
               shtml += '</div>';
             } else if (pending) {
               var isPending = (pending.oid === opt.id);
-              shtml += '<button type="button" class="survey-opt' + (isPending ? ' selected' : '') + '" style="cursor:default;">';
+              shtml += '<div class="survey-opt' + (isPending ? ' selected' : '') + '" style="cursor:default;margin-bottom:8px;">';
               shtml += '<span style="flex:1;">' + opt.option_text + '</span>';
-              if (isPending) shtml += '<span style="font-size:11px;color:#0F6E56;font-weight:700;">selected</span>';
-              shtml += '</button>';
+              if (isPending) shtml += '<span style="font-size:12px;color:#0F6E56;font-weight:700;">selected</span>';
+              shtml += '</div>';
             } else {
-              shtml += '<button type="button" class="survey-opt" data-sid="' + survey.id + '" data-oid="' + opt.id + '" onclick="castVoteEl(this)">';
-              shtml += '<span style="flex:1;">' + opt.option_text + '</span>';
-              shtml += '</button>';
+              shtml += '<button type="button" class="survey-opt" data-svid="' + sv.id + '" data-oid="' + opt.id + '" data-text="' + opt.option_text.replace(/"/g,'') + '">' + opt.option_text + '</button>';
             }
           }
-          if (pending && !hasVoted && !isClosed) {
-            shtml += '<div style="background:#E1F5EE;border-radius:10px;padding:12px 14px;margin-top:8px;">';
-            shtml += '<div style="font-size:14px;color:#0F6E56;font-weight:600;margin-bottom:10px;">You selected: ' + pending.text + '</div>';
-            shtml += '<div style="font-size:13px;color:#666;margin-bottom:12px;">Is that correct? You cannot change your answer once submitted.</div>';
-            shtml += '<div style="display:flex;gap:8px;">';
-            shtml += '<button type="button" style="flex:2;padding:11px;background:#0F6E56;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation;" data-sid="' + survey.id + '" onclick="confirmVoteEl(this)">Confirm my answer</button>';
-            shtml += '<button type="button" style="flex:1;padding:11px;background:#fff;color:#888;border:1px solid #e8e8e2;border-radius:10px;font-size:14px;cursor:pointer;font-family:inherit;touch-action:manipulation;" data-sid="' + survey.id + '" onclick="cancelVoteEl(this)">Choose again</button>';
+          if (pending && !myVote && !isClosed) {
+            shtml += '<div class="confirm-box">';
+            shtml += '<p>You selected: ' + pending.text + '</p>';
+            shtml += '<small>Is that correct? You cannot change your answer once submitted.</small>';
+            shtml += '<div class="confirm-btns">';
+            shtml += '<button type="button" class="btn-confirm" data-svid="' + sv.id + '">Confirm my answer</button>';
+            shtml += '<button type="button" class="btn-again" data-svid="' + sv.id + '">Choose again</button>';
             shtml += '</div></div>';
           }
           shtml += '<div class="survey-meta">' + total + ' response' + (total !== 1 ? 's' : '');
-          if (!hasVoted && !isClosed && !pending) shtml += ' -- tap an option to share your view';
+          if (!myVote && !isClosed && !pending) shtml += ' -- tap an option to share your view';
           shtml += '</div></div>';
-          
-          var placeholder = document.getElementById('survey-' + survey.id);
-          if (placeholder) placeholder.outerHTML = shtml;
-          
-          loaded++;
+          var placeholder = document.getElementById('sv-' + sv.id);
+          if (placeholder) {
+            placeholder.outerHTML = shtml;
+            var newEl = document.getElementById('sv-' + sv.id);
+            if (!newEl) return;
+            var optBtns = newEl.querySelectorAll('.survey-opt[data-svid]');
+            for (var m = 0; m < optBtns.length; m++) {
+              optBtns[m].addEventListener('click', function() {
+                pendingVotes[this.getAttribute('data-svid')] = {oid:this.getAttribute('data-oid'), text:this.getAttribute('data-text')};
+                renderSurveys();
+              });
+            }
+            var confirmBtn = newEl.querySelector('.btn-confirm');
+            if (confirmBtn) confirmBtn.addEventListener('click', function() {
+              var sid = this.getAttribute('data-svid');
+              var pending2 = pendingVotes[sid];
+              if (!pending2) return;
+              surveyVotes[sid] = pending2.oid;
+              delete pendingVotes[sid];
+              sbFetch('survey_responses', {method:'POST', body:{survey_id:sid, option_id:pending2.oid, session_id:sessionId}}).then(function(){ renderSurveys(); }).catch(function(){ renderSurveys(); });
+            });
+            var againBtn = newEl.querySelector('.btn-again');
+            if (againBtn) againBtn.addEventListener('click', function() {
+              delete pendingVotes[this.getAttribute('data-svid')];
+              renderSurveys();
+            });
+          }
         });
       });
-    })(storedSurveys[i]);
-    html += '<div id="survey-' + storedSurveys[i].id + '" class="loading">Loading...</div>';
+    })(all[i]);
   }
-  el.innerHTML = html;
 }
 
-function castVote(surveyId, optionId) {
-  surveyVotes[surveyId] = optionId;
-  sbFetch('survey_responses', {
-    method: 'POST',
-    body: {survey_id: surveyId, option_id: optionId, session_id: sessionId}
-  }).then(function() {
-    renderSurveys();
-  }).catch(function() {
-    renderSurveys();
+// CALL MODAL
+function dial(name, display, raw, color, note) {
+  document.getElementById('cm-name').textContent = name;
+  document.getElementById('cm-num').textContent = display;
+  document.getElementById('cm-num').style.color = color;
+  document.getElementById('cm-note').textContent = note || '';
+  document.getElementById('cm-icon').style.background = color + '22';
+  document.getElementById('cm-icon').innerHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-.18-8.7A2 2 0 014.11 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" stroke="' + color + '" stroke-width="1.5" stroke-linecap="round"/></svg>';
+  pendingCallNum = raw;
+  document.getElementById('call-modal').classList.add('on');
+}
+
+// DOC MODAL
+function openDocModal(title, desc, url) {
+  pendingDocUrl = url;
+  document.getElementById('doc-modal-name').textContent = title;
+  document.getElementById('doc-modal-desc').textContent = desc || '';
+  document.getElementById('doc-modal').classList.add('on');
+}
+
+// WIRE UP ALL EVENTS
+window.addEventListener('DOMContentLoaded', function() {
+  loadResidents();
+
+  // Panel button
+  document.getElementById('panel-btn').addEventListener('click', function() {
+    doLogin('panel1', 'Panel Member', 'Village Voice Panel', 'VP', 'av-teal', true);
   });
+
+  // Sign out
+  document.getElementById('signout-btn').addEventListener('click', doSignOut);
+  document.getElementById('signout-btn2').addEventListener('click', doSignOut);
+
+  // Start button (admin)
+  document.getElementById('start-btn').addEventListener('click', function() {
+    document.getElementById('pw-modal').classList.add('on');
+  });
+  document.getElementById('start-btn2').addEventListener('click', function() {
+    document.getElementById('pw-modal').classList.add('on');
+  });
+
+  // Admin button on home
+  document.getElementById('admin-btn').addEventListener('click', function() {
+    document.getElementById('pw-modal').classList.add('on');
+  });
+  document.getElementById('admin-btn').style.display = 'none';
+
+  // Tiles
+  document.getElementById('tile-board').addEventListener('click', function() { showSection('board'); });
+  document.getElementById('tile-emergency').addEventListener('click', function() { showSection('emergency'); });
+  document.getElementById('tile-services').addEventListener('click', function() { showSection('services'); });
+  document.getElementById('tile-events').addEventListener('click', function() { showSection('events'); });
+  document.getElementById('tile-community').addEventListener('click', function() { showSection('community'); });
+  document.getElementById('tile-documents').addEventListener('click', function() { showSection('documents'); });
+  document.getElementById('tile-surveys').addEventListener('click', function() { showSection('surveys'); });
+  document.getElementById('tile-news').addEventListener('click', function() { showSection('news'); });
+
+  // NAV
+  document.getElementById('nav-home').addEventListener('click', goHome);
+  document.getElementById('nav-news').addEventListener('click', function() { showSection('news'); });
+  document.getElementById('nav-events').addEventListener('click', function() { showSection('events'); });
+  document.getElementById('nav-board').addEventListener('click', function() { showSection('board'); });
+  document.getElementById('nav-emergency').addEventListener('click', function() { showSection('emergency'); });
+
+  // FAB
+  document.getElementById('fab-btn').addEventListener('click', openPost);
+
+  // Category buttons
+  var catOpts = document.getElementById('cat-opts').querySelectorAll('.cat-opt');
+  for (var i = 0; i < catOpts.length; i++) {
+    catOpts[i].addEventListener('click', function() { pickCat(this); });
+  }
+
+  // Post submit/cancel
+  document.getElementById('post-submit-btn').addEventListener('click', submitPost);
+  document.getElementById('post-cancel-btn').addEventListener('click', closePost);
+  document.getElementById('post-modal').addEventListener('click', function(e) { if (e.target === this) closePost(); });
+
+  // Call modal
+  document.getElementById('call-cancel-btn').addEventListener('click', function() { document.getElementById('call-modal').classList.remove('on'); });
+  document.getElementById('call-confirm-btn').addEventListener('click', function() { window.location.href = 'tel:' + pendingCallNum; document.getElementById('call-modal').classList.remove('on'); });
+
+  // Emergency call buttons
+  var callBtns = {
+    'btn-999': {name:'Emergency services', num:'999', raw:'999', col:'#A32D2D', note:'For life-threatening emergencies only'},
+    'btn-101': {name:'Non-emergency police', num:'101', raw:'101', col:'#854F0B', note:'For non-urgent matters'},
+    'btn-trust-main': {name:'Village Voice Trust', num:'01932 861 000', raw:'01932861000', col:'#0F6E56', note:'Mon-Fri 9am-5pm'},
+    'btn-trust-ooh': {name:'Trust out of hours', num:'01932 861 001', raw:'01932861001', col:'#0F6E56', note:'Evenings and weekends'},
+    'btn-111': {name:'NHS non-emergency', num:'111', raw:'111', col:'#185FA5', note:'24 hours, 7 days'},
+    'btn-manor': {name:'The Manor Practice', num:'01932 220 900', raw:'01932220900', col:'#0F6E56', note:''},
+    'btn-hersham-dental': {name:'Hersham Dental', num:'01932 248 348', raw:'01932248348', col:'#0F6E56', note:''},
+    'btn-windsor-dental': {name:'Windsor House Dental', num:'01932 229 977', raw:'01932229977', col:'#0F6E56', note:''},
+    'btn-walton-dental': {name:'Walton Dental', num:'01932 225 748', raw:'01932225748', col:'#0F6E56', note:''},
+    'btn-nhs-dental': {name:'NHS dental helpline', num:'0300 311 2233', raw:'03003112233', col:'#185FA5', note:''}
+  };
+  for (var id in callBtns) {
+    (function(btnId, info) {
+      var btn = document.getElementById(btnId);
+      if (btn) btn.addEventListener('click', function() { dial(info.name, info.num, info.raw, info.col, info.note); });
+    })(id, callBtns[id]);
+  }
+  document.getElementById('btn-panel-board').addEventListener('click', function() { showSection('board'); });
+
+  // Services tap-to-call
+  var svcBtns = {
+    'svc-manor': {name:'The Manor Practice', num:'01932 220 900', raw:'01932220900'},
+    'svc-walton-health': {name:'Walton Health Centre', num:'01932 253 400', raw:'01932253400'},
+    'svc-boots': {name:'Boots Pharmacy', num:'01932 222 476', raw:'01932222476'},
+    'svc-lloyds': {name:'Lloyds Pharmacy', num:'01932 229 331', raw:'01932229331'},
+    'svc-stpeters': {name:'St Peters Hospital', num:'01932 872 000', raw:'01932872000'},
+    'svc-rail': {name:'National Rail', num:'03457 484950', raw:'03457484950'},
+    'svc-transport': {name:'Surrey Community Transport', num:'0300 200 1003', raw:'03002001003'}
+  };
+  for (var sid in svcBtns) {
+    (function(svcId, info) {
+      var el = document.getElementById(svcId);
+      if (el) el.addEventListener('click', function() { dial(info.name, info.num, info.raw, '#185FA5', ''); });
+    })(sid, svcBtns[sid]);
+  }
+
+  // Trust website
+  document.getElementById('trust-website-card').addEventListener('click', function() { document.getElementById('trust-modal').classList.add('on'); });
+  document.getElementById('trust-cancel-btn').addEventListener('click', function() { document.getElementById('trust-modal').classList.remove('on'); });
+  document.getElementById('trust-go-btn').addEventListener('click', function() { window.open('https://www.whiteleyhomestrust.org.uk','_blank'); document.getElementById('trust-modal').classList.remove('on'); });
+
+  // Doc modal
+  document.getElementById('doc-cancel-btn').addEventListener('click', function() { document.getElementById('doc-modal').classList.remove('on'); });
+  document.getElementById('doc-go-btn').addEventListener('click', function() { window.open(pendingDocUrl,'_blank'); document.getElementById('doc-modal').classList.remove('on'); });
+
+  // PW modal
+  document.getElementById('pw-cancel-btn').addEventListener('click', function() { document.getElementById('pw-modal').classList.remove('on'); document.getElementById('pw-error').textContent = ''; document.getElementById('pw-input').value = ''; });
+  document.getElementById('pw-go-btn').addEventListener('click', checkPw);
+  document.getElementById('pw-input').addEventListener('keydown', function(e) { if (e.key === 'Enter') checkPw(); });
+
+  // Reg modal
+  document.getElementById('reg-link-btn').addEventListener('click', function() { document.getElementById('reg-modal').classList.add('on'); });
+  document.getElementById('reg-cancel-btn').addEventListener('click', function() { document.getElementById('reg-modal').classList.remove('on'); });
+  document.getElementById('reg-submit-btn').addEventListener('click', submitReg);
+
+  // Events search
+  document.getElementById('ev-search').addEventListener('input', renderEvents);
+});
+
+// ADMIN PW
+function checkPw() {
+  var val = document.getElementById('pw-input').value;
+  if (val === 'panel2026') {
+    document.getElementById('pw-modal').classList.remove('on');
+    document.getElementById('pw-input').value = '';
+    document.getElementById('pw-error').textContent = '';
+    window.open('admin.html', '_blank');
+  } else {
+    document.getElementById('pw-error').textContent = 'Incorrect password. Please try again.';
+    document.getElementById('pw-input').value = '';
+  }
 }
 
-function loadSurveyCount() {
-  sbFetch('surveys?status=eq.active&select=id').then(function(data) {
-    var c = data ? data.length : 0;
-    var el = document.getElementById('survey-count');
-    if (el && c > 0) el.textContent = c + ' active';
-  }).catch(function(){});
+// REGISTRATION
+function submitReg() {
+  var first = document.getElementById('reg-first').value.trim();
+  var last = document.getElementById('reg-last').value.trim();
+  var email = document.getElementById('reg-email').value.trim();
+  var consent = document.getElementById('reg-consent').checked;
+  if (!first || !last || !email) { alert('Please enter your first name, surname and email.'); return; }
+  if (!consent) { alert('Please tick the consent box to continue.'); return; }
+  sbFetch('registrations', {method:'POST', body:{
+    id:'reg_'+Date.now(), first:first, last:last, email:email,
+    mobile:document.getElementById('reg-mobile').value.trim(),
+    address:document.getElementById('reg-address').value.trim(),
+    emergency_name:document.getElementById('reg-ec-name').value.trim(),
+    emergency_phone:document.getElementById('reg-ec-phone').value.trim(),
+    emergency_relation:document.getElementById('reg-ec-relation').value.trim(),
+    status:'pending', consent:true,
+    consent_date:new Date().toISOString(),
+    date:new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})
+  }}).then(function() {
+    document.getElementById('reg-modal').classList.remove('on');
+    alert('Thank you! The administrator will be in touch to set up your access.');
+  }).catch(function() { alert('Could not submit registration. Please try again.'); });
 }
-
-function castVoteEl(el) {
-  var sid = el.getAttribute('data-sid');
-  var oid = el.getAttribute('data-oid');
-  var optText = el.querySelector('span') ? el.querySelector('span').textContent : '';
-  pendingVotes[sid] = {oid: oid, text: optText};
-  renderSurveys();
-}
-
-function confirmVote(sid) {
-  var pending = pendingVotes[sid];
-  if (!pending) return;
-  castVote(sid, pending.oid);
-  delete pendingVotes[sid];
-}
-
-function cancelVote(sid) {
-  delete pendingVotes[sid];
-  renderSurveys();
-}
-
-function confirmVoteEl(el) { confirmVote(el.getAttribute('data-sid')); }
-function cancelVoteEl(el) { cancelVote(el.getAttribute('data-sid')); }
-
-function pickCatBtn(el) {
-  var c = el.getAttribute('data-cat') || '';
-  pickCat(c, el);
-}
-
-
-function loadTrustMsgs() {
-  var el = document.getElementById('trust-msgs');
-  if (!el) return;
-  el.innerHTML = '';
-  sbFetch('messages?order=created_at.desc').then(function(data) {
-    if (!data || !data.length) { el.innerHTML = ''; return; }
-    var TAGS = {
-      trust:  {bg:'#E1F5EE', c:'#0F6E56',  label:'Trust'},
-      panel:  {bg:'#EEEDFE', c:'#534AB7',  label:'Panel'},
-      notice: {bg:'#E6F1FB', c:'#185FA5',  label:'Notice'},
-      urgent: {bg:'#FAEEDA', c:'#854F0B',  label:'Urgent'}
-    };
-    var html = '';
-    for (var i = 0; i < data.length; i++) {
-      var m = data[i];
-      var ts = TAGS[m.tag] || TAGS.trust;
-      html += '<div class="card" style="border-left:3px solid #0F6E56;">';
-      html += '<span class="tag" style="background:' + ts.bg + ';color:' + ts.c + ';">' + ts.label + '</span>';
-      html += '<h3>' + m.title + '</h3><p>' + m.body + '</p>';
-      html += '<div class="newsdate">' + (m.date||'') + ' - Village Voice</div></div>';
-    }
-    el.innerHTML = html;
-  }).catch(function() { el.innerHTML = ''; });
-}
-
-function loginFromBtn(el) {
-  var uid = el.getAttribute('data-uid') || '';
-  var name = el.getAttribute('data-name') || '';
-  var cottage = el.getAttribute('data-cottage') || '';
-  var ini = el.getAttribute('data-ini') || '';
-  var av = el.getAttribute('data-av') || '';
-  doLogin(uid, name, cottage, ini, av, false);
-}
-
 </script>
 </body>
 </html>
