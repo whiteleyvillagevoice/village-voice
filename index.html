@@ -214,6 +214,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .news-filter:not(.on){opacity:0.6;}
 
 </style>
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js').then(function(reg) {
+    reg.update();
+  }).catch(function(){});
+}
+</script>
 </head>
 <body>
 <div class="app">
