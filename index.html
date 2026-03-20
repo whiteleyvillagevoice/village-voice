@@ -54,7 +54,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .sos-btn.on{display:flex;}
 
 /* HOME */
-.home-scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 0 80px;}
+.home-scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 0 90px;}
 .greeting{padding:16px 18px 0;font-size:20px;font-weight:700;color:#1a1a1a;line-height:1.3;}
 .sec-label{font-size:13px;font-weight:700;color:#888;padding:14px 18px 10px;}
 .tile-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 18px 4px;}
@@ -187,7 +187,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .btn-again{flex:1;padding:12px;background:#fff;color:#888;border:1px solid #e8e8e2;border-radius:10px;font-size:14px;cursor:pointer;font-family:inherit;touch-action:manipulation;}
 
 /* NAV */
-.nav{background:#fff;border-top:1px solid #e8e8e2;flex-shrink:0;display:none;}
+.nav{background:#fff;border-top:1px solid #e8e8e2;position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;z-index:30;display:none;}
 .nav.on{display:flex;}
 .nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 4px 7px;cursor:pointer;border:none;background:none;font-family:inherit;touch-action:manipulation;}
 .nav-btn:active{opacity:0.7;}
@@ -446,18 +446,18 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div class="form-group">
       <div class="form-label">Topic -- tap to select</div>
       <div class="cat-opts" id="cat-opts">
-        <button type="button" class="cat-opt" style="background:#E1F5EE;color:#0F6E56;border-color:#9FE1CB;">Activities</button>
-        <button type="button" class="cat-opt" style="background:#FAEEDA;color:#854F0B;border-color:#FAC775;">Cafe</button>
-        <button type="button" class="cat-opt" style="background:#FCEBEB;color:#A32D2D;border-color:#F7C1C1;">Concerns</button>
-        <button type="button" class="cat-opt" style="background:#EEEDFE;color:#534AB7;border-color:#CECBF6;">Decoration</button>
-        <button type="button" class="cat-opt" style="background:#E6F1FB;color:#185FA5;border-color:#B5D4F4;">Events</button>
-        <button type="button" class="cat-opt" style="background:#f0f0e8;color:#555;border-color:#ccc;">Floor coverings</button>
-        <button type="button" class="cat-opt" style="background:#E1F5EE;color:#0F6E56;border-color:#9FE1CB;">Grounds</button>
-        <button type="button" class="cat-opt" style="background:#FAEEDA;color:#854F0B;border-color:#FAC775;">Heating</button>
-        <button type="button" class="cat-opt" style="background:#FAEEDA;color:#854F0B;border-color:#FAC775;">Lighting</button>
-        <button type="button" class="cat-opt" style="background:#FCEBEB;color:#A32D2D;border-color:#F7C1C1;">Security</button>
-        <button type="button" class="cat-opt" style="background:#E6F1FB;color:#185FA5;border-color:#B5D4F4;">Transport</button>
-        <button type="button" class="cat-opt" style="background:#EEEDFE;color:#534AB7;border-color:#CECBF6;">Windows and doors</button>
+        <button type="button" class="cat-opt" data-cat="activities" style="background:#E1F5EE;color:#0F6E56;border-color:#9FE1CB;">Activities</button>
+        <button type="button" class="cat-opt" data-cat="cafe" style="background:#FAEEDA;color:#854F0B;border-color:#FAC775;">Cafe</button>
+        <button type="button" class="cat-opt" data-cat="concerns" style="background:#FCEBEB;color:#A32D2D;border-color:#F7C1C1;">Concerns</button>
+        <button type="button" class="cat-opt" data-cat="decoration" style="background:#EEEDFE;color:#534AB7;border-color:#CECBF6;">Decoration</button>
+        <button type="button" class="cat-opt" data-cat="events" style="background:#E6F1FB;color:#185FA5;border-color:#B5D4F4;">Events</button>
+        <button type="button" class="cat-opt" data-cat="floors" style="background:#f0f0e8;color:#555;border-color:#ccc;">Floor coverings</button>
+        <button type="button" class="cat-opt" data-cat="grounds" style="background:#E1F5EE;color:#0F6E56;border-color:#9FE1CB;">Grounds</button>
+        <button type="button" class="cat-opt" data-cat="heating" style="background:#FAEEDA;color:#854F0B;border-color:#FAC775;">Heating</button>
+        <button type="button" class="cat-opt" data-cat="lighting" style="background:#FAEEDA;color:#854F0B;border-color:#FAC775;">Lighting</button>
+        <button type="button" class="cat-opt" data-cat="security" style="background:#FCEBEB;color:#A32D2D;border-color:#F7C1C1;">Security</button>
+        <button type="button" class="cat-opt" data-cat="transport" style="background:#E6F1FB;color:#185FA5;border-color:#B5D4F4;">Transport</button>
+        <button type="button" class="cat-opt" data-cat="windows" style="background:#EEEDFE;color:#534AB7;border-color:#CECBF6;">Windows and doors</button>
       </div>
     </div>
     <div class="form-group"><label class="form-label">Subject</label><input class="form-input" id="pt" maxlength="80" placeholder="Brief description"/></div>
@@ -806,12 +806,14 @@ function openPost() {
 function closePost() { document.getElementById('post-modal').classList.remove('on'); }
 
 function pickCat(el) {
-  selCat = el.textContent.trim().toLowerCase().replace(/ /g,'_').replace('floor_coverings','floors').replace('windows_and_doors','windows').replace('floor_coverings','floors');
-  var catMap = {'activities':'activities','cafe':'cafe','concerns':'concerns','decoration':'decoration','events':'events','floor_coverings':'floors','floors':'floors','grounds':'grounds','heating':'heating','lighting':'lighting','security':'security','transport':'transport','windows_and_doors':'windows','windows':'windows'};
-  selCat = catMap[selCat] || selCat;
+  selCat = el.getAttribute('data-cat') || '';
   var opts = document.getElementById('cat-opts').querySelectorAll('.cat-opt');
-  for (var i = 0; i < opts.length; i++) opts[i].style.opacity = opts[i] === el ? '1' : '0.45';
+  for (var i = 0; i < opts.length; i++) {
+    opts[i].style.opacity = opts[i] === el ? '1' : '0.45';
+    opts[i].style.borderWidth = '2px';
+  }
   el.style.borderWidth = '3px';
+  el.style.opacity = '1';
 }
 
 function submitPost() {
@@ -1109,7 +1111,7 @@ function renderSurveys() {
           if (myVote) surveyVotes[sv.id] = myVote;
           var isClosed = sv.status === 'closed';
           var pending = pendingVotes[sv.id] || null;
-          var shtml = '<div class="survey-card"' + (isClosed ? ' style="background:#fafaf7;border-color:#e8e8d8;"' : '') + '>';
+          var shtml = '<div class="survey-card" id="sv-' + sv.id + '"' + (isClosed ? ' style="background:#fafaf7;border-color:#e8e8d8;"' : '') + '>';
           if (isClosed) shtml += '<div style="font-size:11px;font-weight:700;color:#888;background:#f0f0e8;padding:4px 10px;border-radius:20px;display:inline-block;margin-bottom:10px;">Closed -- final results</div>';
           shtml += '<div class="survey-q">' + (sv.title||'') + '</div>';
           shtml += '<div class="survey-sub">' + (sv.question||'') + '</div>';
