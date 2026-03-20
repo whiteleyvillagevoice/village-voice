@@ -211,15 +211,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 
 </style>
-<script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function() {
-    navigator.serviceWorker.register('./sw.js').then(function(reg) {
-      reg.update();
-    }).catch(function(){});
-  });
-}
-</script>
 </head>
 <body>
 <div class="app">
