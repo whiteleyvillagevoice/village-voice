@@ -160,7 +160,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .form-input{width:100%;padding:11px 12px;border:1px solid #ddd;border-radius:10px;font-size:14px;font-family:inherit;color:#1a1a1a;}
 .form-input:focus{outline:none;border-color:#0F6E56;}
 .cat-opts{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:4px;}
-.cat-opt{padding:8px 14px;border-radius:20px;border:2px solid #e8e8e2;font-size:13px;cursor:pointer;background:#fff;color:#888;font-family:inherit;font-weight:600;touch-action:manipulation;}
+.cat-opt{padding:11px 16px;border-radius:20px;border:2px solid #e8e8e2;font-size:14px;cursor:pointer;background:#fff;color:#888;font-family:inherit;font-weight:600;touch-action:manipulation;min-height:44px;}
 .submit-btn{width:100%;padding:14px;background:#0F6E56;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation;}
 .cancel-btn{width:100%;padding:10px;background:none;border:none;font-size:13px;color:#888;cursor:pointer;font-family:inherit;margin-top:6px;touch-action:manipulation;}
 .call-modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:50;align-items:center;justify-content:center;padding:24px;}
@@ -499,19 +499,19 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <h3>Share your view</h3>
     <p>Submissions are read by the Village Voice Panel. They do not go directly to the Trust.</p>
     <div class="form-group"><div class="form-label">Topic</div>
-      <div class="cat-opts">
-        <button class="cat-opt" onclick="pickCat('activities',this)">Activities</button>
-        <button class="cat-opt" onclick="pickCat('cafe',this)">Cafe</button>
-        <button class="cat-opt" onclick="pickCat('concerns',this)">Concerns</button>
-        <button class="cat-opt" onclick="pickCat('decoration',this)">Decoration</button>
-        <button class="cat-opt" onclick="pickCat('events',this)">Events</button>
-        <button class="cat-opt" onclick="pickCat('floors',this)">Floor coverings</button>
-        <button class="cat-opt" onclick="pickCat('grounds',this)">Grounds</button>
-        <button class="cat-opt" onclick="pickCat('heating',this)">Heating</button>
-        <button class="cat-opt" onclick="pickCat('lighting',this)">Lighting</button>
-        <button class="cat-opt" onclick="pickCat('security',this)">Security</button>
-        <button class="cat-opt" onclick="pickCat('transport',this)">Transport</button>
-        <button class="cat-opt" onclick="pickCat('windows',this)">Windows and doors</button>
+            <div class="cat-opts">
+        <button type="button" class="cat-opt" id="copt-activities" style="background:#E1F5EE;color:#0F6E56;border-color:#0F6E56;" onclick="pickCatBtn(this,'activities')">Activities</button>
+        <button type="button" class="cat-opt" id="copt-cafe" style="background:#FAEEDA;color:#854F0B;border-color:#854F0B;" onclick="pickCatBtn(this,'cafe')">Cafe</button>
+        <button type="button" class="cat-opt" id="copt-concerns" style="background:#FCEBEB;color:#A32D2D;border-color:#A32D2D;" onclick="pickCatBtn(this,'concerns')">Concerns</button>
+        <button type="button" class="cat-opt" id="copt-decoration" style="background:#EEEDFE;color:#534AB7;border-color:#534AB7;" onclick="pickCatBtn(this,'decoration')">Decoration</button>
+        <button type="button" class="cat-opt" id="copt-events" style="background:#E6F1FB;color:#185FA5;border-color:#185FA5;" onclick="pickCatBtn(this,'events')">Events</button>
+        <button type="button" class="cat-opt" id="copt-floors" style="background:#f0f0e8;color:#555555;border-color:#555555;" onclick="pickCatBtn(this,'floors')">Floor coverings</button>
+        <button type="button" class="cat-opt" id="copt-grounds" style="background:#E1F5EE;color:#0F6E56;border-color:#0F6E56;" onclick="pickCatBtn(this,'grounds')">Grounds</button>
+        <button type="button" class="cat-opt" id="copt-heating" style="background:#FAEEDA;color:#854F0B;border-color:#854F0B;" onclick="pickCatBtn(this,'heating')">Heating</button>
+        <button type="button" class="cat-opt" id="copt-lighting" style="background:#FAEEDA;color:#854F0B;border-color:#854F0B;" onclick="pickCatBtn(this,'lighting')">Lighting</button>
+        <button type="button" class="cat-opt" id="copt-security" style="background:#FCEBEB;color:#A32D2D;border-color:#A32D2D;" onclick="pickCatBtn(this,'security')">Security</button>
+        <button type="button" class="cat-opt" id="copt-transport" style="background:#E6F1FB;color:#185FA5;border-color:#185FA5;" onclick="pickCatBtn(this,'transport')">Transport</button>
+        <button type="button" class="cat-opt" id="copt-windows" style="background:#EEEDFE;color:#534AB7;border-color:#534AB7;" onclick="pickCatBtn(this,'windows')">Windows and doors</button>
       </div>
     </div>
     <div class="form-group"><label class="form-label">Subject</label><input class="form-input" id="pt" maxlength="80" placeholder="Brief description"/></div>
@@ -876,11 +876,18 @@ function openPost() {
   selCat = '';
   document.getElementById('pt').value = '';
   document.getElementById('pb').value = '';
-  var opts = document.querySelectorAll('.cat-opt');
-  for (var i = 0; i < opts.length; i++) {
-    opts[i].style.background = '#fff';
-    opts[i].style.color = '#888';
-    opts[i].style.borderColor = '#e8e8e2';
+  var cats2 = ['activities','cafe','concerns','decoration','events','floors','grounds','heating','lighting','security','transport','windows'];
+  var bgs2   = ['E1F5EE','FAEEDA','FCEBEB','EEEDFE','E6F1FB','f0f0e8','E1F5EE','FAEEDA','FAEEDA','FCEBEB','E6F1FB','EEEDFE'];
+  var clrs2  = ['0F6E56','854F0B','A32D2D','534AB7','185FA5','555555','0F6E56','854F0B','854F0B','A32D2D','185FA5','534AB7'];
+  for (var i = 0; i < cats2.length; i++) {
+    var btn2 = document.getElementById('copt-' + cats2[i]);
+    if (!btn2) continue;
+    btn2.style.background = '#' + bgs2[i];
+    btn2.style.color = '#' + clrs2[i];
+    btn2.style.borderColor = '#' + clrs2[i];
+    btn2.style.borderWidth = '2px';
+    btn2.style.fontWeight = '600';
+    btn2.style.boxShadow = 'none';
   }
   document.getElementById('post-modal').classList.add('on');
 }
@@ -888,13 +895,29 @@ function closePost() { document.getElementById('post-modal').classList.remove('o
 
 function pickCat(c, el) {
   selCat = c;
-  var opts = document.querySelectorAll('.cat-opt');
-  for (var i = 0; i < opts.length; i++) {
-    opts[i].style.background = '#fff';
-    opts[i].style.color = '#888';
-    opts[i].style.borderColor = '#e8e8e2';
+  var cats = ['activities','cafe','concerns','decoration','events','floors','grounds','heating','lighting','security','transport','windows'];
+  var bgs   = ['E1F5EE','FAEEDA','FCEBEB','EEEDFE','E6F1FB','f0f0e8','E1F5EE','FAEEDA','FAEEDA','FCEBEB','E6F1FB','EEEDFE'];
+  var clrs  = ['0F6E56','854F0B','A32D2D','534AB7','185FA5','555555','0F6E56','854F0B','854F0B','A32D2D','185FA5','534AB7'];
+  for (var i = 0; i < cats.length; i++) {
+    var btn = document.getElementById('copt-' + cats[i]);
+    if (!btn) continue;
+    if (cats[i] === c) {
+      btn.style.background = '#' + bgs[i];
+      btn.style.color = '#' + clrs[i];
+      btn.style.borderColor = '#' + clrs[i];
+      btn.style.borderWidth = '3px';
+      btn.style.fontWeight = '700';
+      btn.style.boxShadow = '0 2px 6px rgba(0,0,0,0.12)';
+    } else {
+      btn.style.background = '#' + bgs[i] + '88';
+      btn.style.color = '#' + clrs[i] + '99';
+      btn.style.borderColor = '#' + clrs[i] + '44';
+      btn.style.borderWidth = '2px';
+      btn.style.fontWeight = '600';
+      btn.style.boxShadow = 'none';
+    }
   }
-  var colors = {
+  var UNUSED_colors = {
     activities: {bg:'#E1F5EE',c:'#0F6E56',b:'#0F6E56'},
     cafe:       {bg:'#FAEEDA',c:'#854F0B',b:'#854F0B'},
     concerns:   {bg:'#FCEBEB',c:'#A32D2D',b:'#A32D2D'},
@@ -1349,6 +1372,10 @@ function cancelVote(sid) {
 
 function confirmVoteEl(el) { confirmVote(el.getAttribute('data-sid')); }
 function cancelVoteEl(el) { cancelVote(el.getAttribute('data-sid')); }
+
+function pickCatBtn(el, c) {
+  pickCat(c, el);
+}
 
 </script>
 </body>
