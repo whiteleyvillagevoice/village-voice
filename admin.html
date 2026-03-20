@@ -299,43 +299,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
         </div>
         <div class="form-group"><label class="form-label">Title</label><input class="form-input" id="doc-title" placeholder="e.g. Resident Handbook 2026" maxlength="80"/></div>
         <div class="form-group"><label class="form-label">Description</label><input class="form-input" id="doc-desc" placeholder="Brief description" maxlength="100"/></div>
-        <div class="form-group">
-          <label class="form-label">Document URL</label>
-          <input class="form-input" id="doc-url" type="url" placeholder="Paste any URL, Google Drive link or GitHub file path..." maxlength="500" oninput="handleDocUrl(this.value)"/>
-          <div id="doc-url-hint" style="font-size:11px;color:#0F6E56;margin-top:5px;display:none;padding:7px 10px;background:#E1F5EE;border-radius:8px;line-height:1.6;"></div>
-          <div style="margin-top:8px;background:#f8f8f4;border-radius:8px;padding:10px 12px;">
-            <div style="font-size:11px;font-weight:700;color:#888;margin-bottom:5px;">Supported sources</div>
-            <div style="font-size:11px;color:#666;line-height:1.8;">
-              <b>Google Drive:</b> Share the file, copy link, paste here -- auto-converted<br/>
-              <b>GitHub file:</b> Upload to your repo, then use: https://whiteleyvillagevoice.github.io/village-voice/filename.pdf<br/>
-              <b>Any URL:</b> Any publicly accessible web page or document link
-            </div>
-          </div>
-        </div>
+        <div class="form-group"><label class="form-label">URL</label><input class="form-input" id="doc-url" type="url" placeholder="https://..." maxlength="500"/></div>
         <button class="btn-save" onclick="saveDocument()">Save document</button>
         <button class="btn-delete" id="doc-btn-delete" onclick="deleteDocument()" style="display:none;">Remove this document</button>
         <button class="btn-outline" onclick="clearDocForm()" style="display:block;margin-top:8px;width:100%;text-align:center;">Clear form</button>
-      </div>
-      <div class="panel" style="background:#f8f8f4;border-color:#e8e8e2;">
-        <div class="panel-title" style="color:#888;font-size:13px;">
-          <svg viewBox="0 0 24 24" fill="none" style="width:15px;height:15px;"><circle cx="12" cy="12" r="10" stroke="#888" stroke-width="2"/><line x1="12" y1="8" x2="12" y2="12" stroke="#888" stroke-width="2" stroke-linecap="round"/><line x1="12" y1="16" x2="12.01" y2="16" stroke="#888" stroke-width="2" stroke-linecap="round"/></svg>
-          How to host a PDF in the app
-        </div>
-        <div style="font-size:12px;color:#666;line-height:1.8;">
-          <b>Option 1 -- GitHub (free, permanent)</b><br/>
-          1. Go to your GitHub repository<br/>
-          2. Click Add file > Upload files<br/>
-          3. Upload your PDF (e.g. handbook.pdf)<br/>
-          4. Commit the file<br/>
-          5. The URL will be: https://whiteleyvillagevoice.github.io/village-voice/handbook.pdf<br/>
-          6. Paste that URL into the Document URL field above<br/><br/>
-          <b>Option 2 -- Google Drive</b><br/>
-          1. Upload your PDF to Google Drive<br/>
-          2. Right-click > Share > Change to Anyone with the link<br/>
-          3. Copy the share link and paste it above -- it will be auto-converted<br/><br/>
-          <b>Option 3 -- Any public URL</b><br/>
-          Paste any publicly accessible link to a document or web page
-        </div>
       </div>
       <div class="panel">
         <div class="panel-title">Documents <span id="doc-count" style="font-size:12px;font-weight:400;color:#aaa;"></span></div>
@@ -943,48 +910,6 @@ function handleCCClick(e, idx) {
 }
 function handleDocClick(e, idx) {
   if (e.detail >= 2) loadDocIntoForm(window._docData[idx]);
-}
-
-function handleDocUrl(val) {
-  var hint = document.getElementById('doc-url-hint');
-  if (!val) { hint.style.display = 'none'; return; }
-  
-  // Convert Google Drive share link to direct preview link
-  var gdrive = val.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
-  if (gdrive) {
-    var fileId = gdrive[1];
-    var directUrl = 'https://drive.google.com/file/d/' + fileId + '/preview';
-    document.getElementById('doc-url').value = directUrl;
-    hint.textContent = 'Google Drive link converted to direct preview link.';
-    hint.style.display = 'block';
-    return;
-  }
-  
-  // Detect Google Drive docs/sheets/slides
-  var gdoc = val.match(/docs\.google\.com\/(document|spreadsheets|presentation)\/d\/([a-zA-Z0-9_-]+)/);
-  if (gdoc) {
-    hint.textContent = 'Google Docs link detected. Tip: use File > Share > Publish to web for best results on mobile.';
-    hint.style.display = 'block';
-    return;
-  }
-  
-  // Detect GitHub raw file
-  if (val.indexOf('github.com') > -1 && val.indexOf('/blob/') > -1) {
-    var rawUrl = val.replace('github.com', 'raw.githubusercontent.com').replace('/blob/', '/');
-    document.getElementById('doc-url').value = rawUrl;
-    hint.textContent = 'GitHub link converted to direct file link.';
-    hint.style.display = 'block';
-    return;
-  }
-  
-  // Detect GitHub Pages hosted file
-  if (val.indexOf('whiteleyvillagevoice.github.io') > -1) {
-    hint.textContent = 'GitHub Pages link detected -- this will work perfectly for files uploaded to your repository.';
-    hint.style.display = 'block';
-    return;
-  }
-  
-  hint.style.display = 'none';
 }
 
 </script>
