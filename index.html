@@ -1418,6 +1418,7 @@ function openDocModalEl(el) {
 // SURVEYS
 var storedSurveys = [];
 var surveyVotes = {};
+var pendingVotes = {};
 
 function loadSurveys() {
   sbFetch('surveys?order=created_at.desc').then(function(data) {
@@ -1477,7 +1478,7 @@ function renderSurveys() {
           var myVote = surveyVotes[survey.id] || null;
           var hasVoted = myVote !== null;
           var isClosed = survey.status === 'closed';
-          var showResults = hasVoted || isClosed;
+          var pending = pendingVotes[survey.id] || null;
           var shtml = '<div class="survey-card"' + (isClosed ? ' style="background:#fafaf7;border-color:#e8e8d8;"' : '') + '>';
           if (isClosed) shtml += '<div style="font-size:11px;font-weight:700;color:#888;background:#f0f0e8;padding:4px 10px;border-radius:20px;display:inline-block;margin-bottom:10px;">Closed -- final results</div>';
           shtml += '<div class="survey-q">' + survey.title + '</div>';
@@ -1491,21 +1492,35 @@ function renderSurveys() {
               var barColor = isSelected ? '#0F6E56' : '#9FE1CB';
               shtml += '<div style="margin-bottom:8px;">';
               shtml += '<div style="display:flex;justify-content:space-between;margin-bottom:3px;">';
-              shtml += '<span style="font-size:13px;color:#1a1a1a;' + (isSelected ? 'font-weight:600;' : '') + '">' + opt.option_text + (isSelected ? ' (your vote)' : '') + '</span>';
+              shtml += '<span style="font-size:13px;color:#1a1a1a;' + (isSelected ? 'font-weight:600;' : '') + '">' + opt.option_text + (isSelected ? ' -- your vote' : '') + '</span>';
               shtml += '<span style="font-size:13px;font-weight:700;color:#0F6E56;">' + pct + '%</span>';
               shtml += '</div>';
               shtml += '<div style="height:8px;background:#f0f0ea;border-radius:4px;overflow:hidden;">';
               shtml += '<div style="height:100%;background:' + barColor + ';border-radius:4px;width:' + pct + '%;"></div></div>';
               shtml += '</div>';
+            } else if (pending) {
+              var isPending = (pending.oid === opt.id);
+              shtml += '<button type="button" class="survey-opt' + (isPending ? ' selected' : '') + '" style="cursor:default;">';
+              shtml += '<span style="flex:1;">' + opt.option_text + '</span>';
+              if (isPending) shtml += '<span style="font-size:11px;color:#0F6E56;font-weight:700;">selected</span>';
+              shtml += '</button>';
             } else {
-              var cls = 'survey-opt';
-              shtml += '<button type="button" class="' + cls + '" data-sid="' + survey.id + '" data-oid="' + opt.id + '" onclick="castVoteEl(this)">';
+              shtml += '<button type="button" class="survey-opt" data-sid="' + survey.id + '" data-oid="' + opt.id + '" onclick="castVoteEl(this)">';
               shtml += '<span style="flex:1;">' + opt.option_text + '</span>';
               shtml += '</button>';
             }
           }
+          if (pending && !hasVoted && !isClosed) {
+            shtml += '<div style="background:#E1F5EE;border-radius:10px;padding:12px 14px;margin-top:8px;">';
+            shtml += '<div style="font-size:14px;color:#0F6E56;font-weight:600;margin-bottom:10px;">You selected: ' + pending.text + '</div>';
+            shtml += '<div style="font-size:13px;color:#666;margin-bottom:12px;">Is that correct? You cannot change your answer once submitted.</div>';
+            shtml += '<div style="display:flex;gap:8px;">';
+            shtml += '<button type="button" style="flex:2;padding:11px;background:#0F6E56;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;touch-action:manipulation;" data-sid="' + survey.id + '" onclick="confirmVoteEl(this)">Confirm my answer</button>';
+            shtml += '<button type="button" style="flex:1;padding:11px;background:#fff;color:#888;border:1px solid #e8e8e2;border-radius:10px;font-size:14px;cursor:pointer;font-family:inherit;touch-action:manipulation;" data-sid="' + survey.id + '" onclick="cancelVoteEl(this)">Choose again</button>';
+            shtml += '</div></div>';
+          }
           shtml += '<div class="survey-meta">' + total + ' response' + (total !== 1 ? 's' : '');
-          if (!hasVoted && !isClosed) shtml += ' -- tap an option to share your view';
+          if (!hasVoted && !isClosed && !pending) shtml += ' -- tap an option to share your view';
           shtml += '</div></div>';
           
           var placeholder = document.getElementById('survey-' + survey.id);
@@ -1543,8 +1558,25 @@ function loadSurveyCount() {
 function castVoteEl(el) {
   var sid = el.getAttribute('data-sid');
   var oid = el.getAttribute('data-oid');
-  castVote(sid, oid);
+  var optText = el.querySelector('span') ? el.querySelector('span').textContent : '';
+  pendingVotes[sid] = {oid: oid, text: optText};
+  renderSurveys();
 }
+
+function confirmVote(sid) {
+  var pending = pendingVotes[sid];
+  if (!pending) return;
+  castVote(sid, pending.oid);
+  delete pendingVotes[sid];
+}
+
+function cancelVote(sid) {
+  delete pendingVotes[sid];
+  renderSurveys();
+}
+
+function confirmVoteEl(el) { confirmVote(el.getAttribute('data-sid')); }
+function cancelVoteEl(el) { cancelVote(el.getAttribute('data-sid')); }
 
 </script>
 </body>
