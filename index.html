@@ -1619,43 +1619,59 @@ function loadStories() {
   var list = document.getElementById('stories-list');
   if (!list) return;
   list.innerHTML = '<div class="loading">Loading stories...</div>';
-  sbFetch('stories?status=eq.active&sharing=in.(community,public)&order=created_at.desc')
-    .then(function(data) {
-      if (!data || data.length === 0) {
-        list.innerHTML = '<div style="text-align:center;padding:30px;color:#aaa;"><p style="font-size:15px;margin-bottom:8px;">No stories yet.</p><p style="font-size:13px;">Be the first to share yours!</p></div>';
-        return;
-      }
-      var html = '';
-      data.forEach(function(s) {
-        var d = new Date(s.created_at);
-        var dateStr = d.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
-        var mins = s.duration_seconds ? Math.floor(s.duration_seconds/60)+'m '+(s.duration_seconds%60)+'s' : '';
-        var stitle = s.title || (s.prompt ? s.prompt.substring(0,50) : 'Story');
-        html += '<div class="card story-card" style="margin-bottom:12px;cursor:pointer;border-left:3px solid #6D28D9;" data-sid="'+s.id+'" data-sname="'+escHtml(s.resident_name)+'" data-sprompt="'+escHtml(s.prompt||'')+'" data-saudio="'+escHtml(s.audio_url||'')+'" data-stx="'+escHtml((s.transcript||'').substring(0,300))+'" data-stitle="'+escHtml(stitle)+'">';
-        html += '<div style="display:flex;align-items:center;gap:10px;">';
-        html += '<div style="width:38px;height:38px;border-radius:50%;background:#EDE9FE;display:flex;align-items:center;justify-content:center;flex-shrink:0;">';
-        html += '<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#6D28D9" stroke-width="1.5"/><path d="M12 6v6l4 2" stroke="#6D28D9" stroke-width="1.5" stroke-linecap="round"/></svg></div>';
-        html += '<div style="flex:1;min-width:0;">';
-        html += '<div style="font-weight:700;font-size:14px;color:#333;">'+escHtml(stitle)+'</div>';
-        html += '<div style="font-size:12px;color:#6D28D9;">'+escHtml(s.resident_name)+'</div>';
-        html += '<div style="font-size:11px;color:#aaa;margin-top:2px;">'+dateStr+(mins?' &middot; '+mins:'')+'</div>';
-        html += '</div>';
-        html += '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#6D28D9" stroke-width="1.5"/><path d="M10 8l6 4-6 4V8z" fill="#6D28D9"/></svg>';
-        html += '</div>';
-        if (s.transcript) html += '<p style="font-size:12px;color:#666;margin-top:8px;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">'+escHtml(s.transcript.substring(0,200))+'</p>';
-        html += '</div>';
-      });
-      list.innerHTML = html;
-      var cards = list.querySelectorAll('.story-card');
-      for (var i = 0; i < cards.length; i++) {
-        cards[i].addEventListener('click', function() {
-          openPlayer(this.getAttribute('data-stitle'), this.getAttribute('data-sname'), this.getAttribute('data-sprompt'), this.getAttribute('data-saudio'), this.getAttribute('data-stx'));
-        });
-      }
-    }).catch(function() {
-      list.innerHTML = '<div style="color:#A32D2D;padding:16px;font-size:13px;">Could not load stories.</div>';
+  var communityP = sbFetch('stories?status=eq.active&sharing=in.(community,public)&order=created_at.desc');
+  var ownP = currentUser.id ? sbFetch('stories?resident_id=eq.' + currentUser.id + '&order=created_at.desc') : Promise.resolve([]);
+  Promise.all([communityP, ownP]).then(function(results) {
+    var community = results[0] || [];
+    var own = results[1] || [];
+    var seen = {}, merged = [];
+    own.forEach(function(s) { if (!seen[s.id]) { seen[s.id] = true; merged.push(s); } });
+    community.forEach(function(s) { if (!seen[s.id]) { seen[s.id] = true; merged.push(s); } });
+    merged.sort(function(a,b) { return new Date(b.created_at) - new Date(a.created_at); });
+    var data = merged;
+    if (!data || data.length === 0) {
+      list.innerHTML = '<div style="text-align:center;padding:30px;color:#aaa;"><p style="font-size:15px;margin-bottom:8px;">No stories yet.</p><p style="font-size:13px;">Be the first to share yours!</p></div>';
+      return;
+    }
+    var html = '';
+    data.forEach(function(s) {
+      var d = new Date(s.created_at);
+      var dateStr = d.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
+      var mins = s.duration_seconds ? Math.floor(s.duration_seconds/60)+'m '+(s.duration_seconds%60)+'s' : '';
+      var stitle = s.title || (s.prompt ? s.prompt.substring(0,50) : 'My story');
+      var isOwn = currentUser.id && s.resident_id === currentUser.id;
+      var statusNote = '';
+      if (isOwn && s.status === 'pending') statusNote = '<span style="font-size:11px;color:#854F0B;background:#FAEEDA;padding:1px 7px;border-radius:10px;margin-left:6px;">Awaiting approval</span>';
+      if (isOwn && s.status === 'declined') statusNote = '<span style="font-size:11px;color:#A32D2D;background:#FCEBEB;padding:1px 7px;border-radius:10px;margin-left:6px;">Declined</span>';
+      if (isOwn && s.status === 'private') statusNote = '<span style="font-size:11px;color:#5f5e5a;background:#f1efe8;padding:1px 7px;border-radius:10px;margin-left:6px;">Private</span>';
+      html += '<div class="card story-card" style="margin-bottom:12px;cursor:pointer;border-left:3px solid ' + (isOwn ? '#6D28D9' : '#9FE1CB') + ';" data-sid="'+s.id+'" data-sname="'+escHtml(s.resident_name)+'" data-sprompt="'+escHtml(s.prompt||'')+'" data-saudio="'+escHtml(s.audio_url||'')+'" data-stx="'+escHtml((s.transcript||'').substring(0,300))+'" data-stitle="'+escHtml(stitle)+'">';
+      html += '<div style="display:flex;align-items:center;gap:10px;">';
+      html += '<div style="width:38px;height:38px;border-radius:50%;background:#EDE9FE;display:flex;align-items:center;justify-content:center;flex-shrink:0;">';
+      html += '<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#6D28D9" stroke-width="1.5"/><path d="M12 6v6l4 2" stroke="#6D28D9" stroke-width="1.5" stroke-linecap="round"/></svg></div>';
+      html += '<div style="flex:1;min-width:0;">';
+      html += '<div style="font-weight:700;font-size:14px;color:#333;">'+escHtml(stitle)+statusNote+'</div>';
+      html += '<div style="font-size:12px;color:#6D28D9;">'+escHtml(s.resident_name)+(isOwn?' (you)':'')+'</div>';
+      html += '<div style="font-size:11px;color:#aaa;margin-top:2px;">'+dateStr+(mins?' &middot; '+mins:'')+'</div>';
+      html += '</div>';
+      if (s.audio_url) html += '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#6D28D9" stroke-width="1.5"/><path d="M10 8l6 4-6 4V8z" fill="#6D28D9"/></svg>';
+      html += '</div>';
+      if (s.transcript) html += '<p style="font-size:12px;color:#666;margin-top:8px;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">'+escHtml(s.transcript.substring(0,200))+'</p>';
+      html += '</div>';
     });
+    list.innerHTML = html;
+    var cards = list.querySelectorAll('.story-card');
+    for (var i = 0; i < cards.length; i++) {
+      cards[i].addEventListener('click', function() {
+        var au = this.getAttribute('data-saudio');
+        if (!au) return;
+        openPlayer(this.getAttribute('data-stitle'), this.getAttribute('data-sname'), this.getAttribute('data-sprompt'), au, this.getAttribute('data-stx'));
+      });
+    }
+  }).catch(function() {
+    list.innerHTML = '<div style="color:#A32D2D;padding:16px;font-size:13px;">Could not load stories.</div>';
+  });
 }
+
 
 function openStoryRecorder() {
   if (!currentUser) return;
