@@ -1,4 +1,8 @@
-<!DOCTYPE html>
+<!DOCTYP
+    <button class="nav-btn" id="nav-stories" onclick="showAdminSection('stories')">
+      <div class="nav-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.5"><path d="M12 2a10 10 0 100 20A10 10 0 0012 2z"/><path d="M12 6v6l4 2" stroke-linecap="round"/></svg></div>
+      <span class="nav-lbl">Stories</span>
+    </button>E html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -447,6 +451,61 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <button type="button" class="btn-outline" onclick="closeResEdit()" style="flex:1;text-align:center;">Cancel</button>
     </div>
   </div>
+  <div id="sec-stories" class="section" style="display:none;">
+    <div class="panel">
+      <div class="panel-title">
+        <svg viewBox="0 0 24 24" fill="none" width="20" height="20"><path d="M12 2a10 10 0 100 20A10 10 0 0012 2z" stroke="#0F6E56" stroke-width="2"/><path d="M12 6v6l4 2" stroke="#0F6E56" stroke-width="2" stroke-linecap="round"/></svg>
+        Community Stories
+      </div>
+
+      <!-- Settings -->
+      <div style="background:#f5f5f0;border-radius:10px;padding:14px 16px;margin-bottom:20px;">
+        <p style="font-size:13px;font-weight:700;color:#333;margin-bottom:12px;">Recording settings</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:10px;">
+          <div>
+            <label style="font-size:12px;color:#666;display:block;margin-bottom:4px;">Max duration (seconds)</label>
+            <input type="number" id="setting-stories_max_duration_seconds" value="600" min="60" max="1200" style="width:100%;padding:8px;border:1px solid #e8e8e2;border-radius:6px;font-size:13px;font-family:inherit;">
+          </div>
+          <div>
+            <label style="font-size:12px;color:#666;display:block;margin-bottom:4px;">Weekly limit per resident</label>
+            <input type="number" id="setting-stories_weekly_limit" value="3" min="1" max="20" style="width:100%;padding:8px;border:1px solid #e8e8e2;border-radius:6px;font-size:13px;font-family:inherit;">
+          </div>
+          <div>
+            <label style="font-size:12px;color:#666;display:block;margin-bottom:4px;">Title max duration (seconds)</label>
+            <input type="number" id="setting-stories_title_max_seconds" value="15" min="5" max="30" style="width:100%;padding:8px;border:1px solid #e8e8e2;border-radius:6px;font-size:13px;font-family:inherit;">
+          </div>
+          <div>
+            <label style="font-size:12px;color:#666;display:block;margin-bottom:4px;">Admin review required</label>
+            <select id="setting-stories_review_required" style="width:100%;padding:8px;border:1px solid #e8e8e2;border-radius:6px;font-size:13px;font-family:inherit;">
+              <option value="true">Yes — approve before publishing</option>
+              <option value="false">No — publish immediately</option>
+            </select>
+          </div>
+        </div>
+        <button type="button" id="save-settings-btn" class="btn-primary" style="font-size:13px;padding:8px 16px;">Save settings</button>
+      </div>
+
+      <!-- Prompts -->
+      <div style="margin-bottom:20px;">
+        <p style="font-size:13px;font-weight:700;color:#333;margin-bottom:10px;">Story prompts</p>
+        <div id="prompts-admin-list" style="margin-bottom:10px;"></div>
+        <div style="display:flex;gap:8px;">
+          <input type="text" id="new-prompt-text" placeholder="Add a new prompt question..." style="flex:1;padding:10px;border:1px solid #e8e8e2;border-radius:8px;font-size:13px;font-family:inherit;">
+          <button type="button" id="add-prompt-btn" class="btn-primary" style="white-space:nowrap;">Add</button>
+        </div>
+      </div>
+
+      <hr style="border:none;border-top:1px solid #f0f0ea;margin:16px 0;">
+
+      <!-- Stories list -->
+      <div style="display:flex;gap:8px;margin-bottom:14px;">
+        <input type="text" id="stories-admin-search" placeholder="Search by resident name..." style="flex:1;padding:10px;border:1px solid #e8e8e2;border-radius:8px;font-size:13px;font-family:inherit;">
+      </div>
+      <div id="stories-admin-list"><div class="loading">Loading stories...</div></div>
+    </div>
+  </div>
+
+
 </div>
 
 <script>
@@ -537,6 +596,7 @@ function showAdminSection(sec) {
   document.getElementById('nav-' + sec).classList.add('on');
   document.getElementById('admin-app').scrollTop = 0;
   document.getElementById('status-bar').style.display = 'none';
+  if (sec === 'stories') { setTimeout(loadAdminStories, 50); }
 }
 
 function showStatus(msg, ok) {
@@ -1152,6 +1212,218 @@ function renderSurveyList() {
 
 function closeSurveyEl(el) { closeSurvey(el.getAttribute('data-svid')); }
 function deleteSurveyEl(el) { deleteSurvey(el.getAttribute('data-svid')); }
+
+
+
+
+// ══════════════════════════════
+// ADMIN — VOICE MEMORIES STORIES
+// ══════════════════════════════
+var allAdminStories = [];
+
+function loadAdminStories() {
+  var list = document.getElementById('stories-admin-list');
+  if (!list) return;
+  list.innerHTML = '<div class="loading">Loading...</div>';
+  sbFetch('stories?order=created_at.desc')
+    .then(function(data) {
+      allAdminStories = data || [];
+      renderAdminStories(allAdminStories);
+    }).catch(function() {
+      list.innerHTML = '<div style="color:#A32D2D;padding:12px;font-size:13px;">Could not load stories.</div>';
+    });
+  loadAdminPrompts();
+  loadStorySettings();
+}
+
+function loadStorySettings() {
+  sbFetch('community_settings?select=setting_key,setting_value')
+    .then(function(data) {
+      if (!data) return;
+      data.forEach(function(s) {
+        var el = document.getElementById('setting-' + s.setting_key);
+        if (el) el.value = s.setting_value;
+      });
+    });
+}
+
+function saveStorySetting(key) {
+  var el = document.getElementById('setting-' + key);
+  if (!el) return;
+  sbFetch('community_settings?setting_key=eq.' + key, {
+    method: 'PATCH',
+    headers: { 'Prefer': 'return=representation' },
+    body: JSON.stringify({ setting_value: el.value })
+  }).then(function() { showStatus('Setting saved.', true); })
+    .catch(function() { showStatus('Could not save setting.', false); });
+}
+
+function renderAdminStories(stories) {
+  var list = document.getElementById('stories-admin-list');
+  if (!stories || stories.length === 0) {
+    list.innerHTML = '<div style="color:#aaa;padding:16px;font-size:13px;text-align:center;">No stories yet.</div>';
+    return;
+  }
+
+  // Pending review section
+  var pending = stories.filter(function(s) { return s.status === 'pending'; });
+  var active  = stories.filter(function(s) { return s.status !== 'pending'; });
+
+  var html = '';
+
+  if (pending.length > 0) {
+    html += '<div style="background:#FAEEDA;border-radius:10px;padding:12px 14px;margin-bottom:16px;">';
+    html += '<p style="font-size:13px;font-weight:700;color:#633806;margin-bottom:10px;">&#9679; ' + pending.length + ' story' + (pending.length>1?'s':'') + ' awaiting review</p>';
+    pending.forEach(function(s) {
+      html += renderStoryRow(s, true);
+    });
+    html += '</div>';
+  }
+
+  if (active.length > 0) {
+    html += '<p style="font-size:12px;color:#888;margin-bottom:8px;">All stories (' + active.length + ')</p>';
+    active.forEach(function(s) { html += renderStoryRow(s, false); });
+  }
+
+  list.innerHTML = html;
+
+  // Attach listeners
+  list.querySelectorAll('[data-approve]').forEach(function(btn) {
+    btn.addEventListener('click', function() { approveStory(this.getAttribute('data-approve')); });
+  });
+  list.querySelectorAll('[data-decline]').forEach(function(btn) {
+    btn.addEventListener('click', function() { declineStory(this.getAttribute('data-decline')); });
+  });
+  list.querySelectorAll('[data-stid]').forEach(function(btn) {
+    btn.addEventListener('click', function() { deleteAdminStory(this.getAttribute('data-stid')); });
+  });
+
+  var searchEl = document.getElementById('stories-admin-search');
+  if (searchEl) searchEl.oninput = filterAdminStories;
+}
+
+function renderStoryRow(s, isPending) {
+  var d = new Date(s.created_at);
+  var dateStr = d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+  var mins = s.duration_seconds ? Math.floor(s.duration_seconds/60)+'m '+(s.duration_seconds%60)+'s' : '--';
+  var sharing = s.sharing || 'community';
+  var badgeColors = {
+    private:   'background:#f1efe8;color:#5f5e5a',
+    community: 'background:#e1f5ee;color:#0a4f3f',
+    family:    'background:#e6f1fb;color:#0c447c',
+    public:    'background:#EEEDFE;color:#3C3489'
+  };
+  var statusColors = {
+    pending:  'background:#FAEEDA;color:#633806',
+    active:   'background:#e1f5ee;color:#0a4f3f',
+    declined: 'background:#FCEBEB;color:#A32D2D',
+    removed:  'background:#f1efe8;color:#5f5e5a'
+  };
+  var badge = '<span style="'+(badgeColors[sharing]||'')+';padding:2px 8px;border-radius:20px;font-size:11px;">'+sharing.charAt(0).toUpperCase()+sharing.slice(1)+'</span>';
+  var statusBadge = '<span style="'+(statusColors[s.status]||'')+';padding:2px 8px;border-radius:20px;font-size:11px;">'+s.status+'</span>';
+  var stitle = s.title || (s.prompt ? s.prompt.substring(0,40) : 'Story');
+  var bg = isPending ? 'transparent' : '#fff';
+  var html = '<div style="background:'+bg+';border:0.5px solid #e8e8e2;border-radius:10px;padding:12px 14px;margin-bottom:8px;">';
+  html += '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;flex-wrap:wrap;">';
+  html += '<div style="flex:1;min-width:0;">';
+  html += '<div style="font-weight:700;font-size:13px;color:#333;">'+escAdminHtml(stitle)+'</div>';
+  html += '<div style="font-size:12px;color:#555;margin-top:2px;">'+escAdminHtml(s.resident_name)+' &middot; '+dateStr+' &middot; '+mins+'</div>';
+  if (s.prompt) html += '<div style="font-size:11px;color:#888;margin-top:2px;font-style:italic;">'+escAdminHtml(s.prompt.substring(0,60))+'</div>';
+  html += '</div>';
+  html += '<div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">';
+  html += badge + ' ' + statusBadge;
+  html += '</div></div>';
+  if (s.transcript) html += '<p style="font-size:12px;color:#666;margin-top:8px;font-style:italic;line-height:1.5;">'+escAdminHtml(s.transcript.substring(0,200))+'...</p>';
+  html += '<div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;">';
+  if (s.audio_url) html += '<a href="'+s.audio_url+'" target="_blank" style="font-size:12px;color:#0F6E56;font-weight:600;padding:5px 10px;border:1px solid #0F6E56;border-radius:6px;text-decoration:none;">Listen</a>';
+  if (isPending) {
+    html += '<button type="button" class="btn-small" data-approve="'+s.id+'" style="background:#e1f5ee;color:#0a4f3f;border-color:#9FE1CB;">Approve</button>';
+    html += '<button type="button" class="btn-small btn-remove" data-decline="'+s.id+'">Decline</button>';
+  }
+  html += '<button type="button" class="btn-small btn-remove" data-stid="'+s.id+'">Delete</button>';
+  html += '</div></div>';
+  return html;
+}
+
+function approveStory(id) {
+  sbFetch('stories?id=eq.'+id, {
+    method: 'PATCH',
+    body: JSON.stringify({ status: 'active' })
+  }).then(function() { showStatus('Story approved.', true); loadAdminStories(); })
+    .catch(function() { showStatus('Could not approve story.', false); });
+}
+
+function declineStory(id) {
+  if (!confirm('Decline this story? The resident will not be notified automatically.')) return;
+  sbFetch('stories?id=eq.'+id, {
+    method: 'PATCH',
+    body: JSON.stringify({ status: 'declined' })
+  }).then(function() { showStatus('Story declined.', true); loadAdminStories(); })
+    .catch(function() { showStatus('Could not decline story.', false); });
+}
+
+function filterAdminStories() {
+  var q = document.getElementById('stories-admin-search').value.toLowerCase();
+  renderAdminStories(allAdminStories.filter(function(s) {
+    return s.resident_name.toLowerCase().indexOf(q) >= 0;
+  }));
+}
+
+function deleteAdminStory(id) {
+  if (!confirm('Delete this story permanently? This cannot be undone.')) return;
+  sbFetch('stories?id=eq.'+id, { method: 'DELETE' })
+    .then(function() { showStatus('Story deleted.', true); loadAdminStories(); })
+    .catch(function() { showStatus('Could not delete story.', false); });
+}
+
+function loadAdminPrompts() {
+  sbFetch('story_prompts?order=display_order.asc')
+    .then(function(data) {
+      var list = document.getElementById('prompts-admin-list');
+      if (!list) return;
+      if (!data || data.length === 0) {
+        list.innerHTML = '<div style="color:#aaa;font-size:13px;padding:8px 0;">No prompts added yet.</div>';
+        return;
+      }
+      var html = '';
+      data.forEach(function(p) {
+        html += '<div style="display:flex;align-items:center;gap:8px;padding:7px 10px;background:#f9f9f5;border-radius:8px;margin-bottom:6px;">';
+        html += '<span style="flex:1;font-size:13px;color:#333;">'+escAdminHtml(p.prompt_text)+'</span>';
+        html += '<button type="button" class="btn-small btn-remove" data-pid="'+p.id+'">Remove</button>';
+        html += '</div>';
+      });
+      list.innerHTML = html;
+      list.querySelectorAll('[data-pid]').forEach(function(btn) {
+        btn.addEventListener('click', function() { deleteAdminPrompt(this.getAttribute('data-pid')); });
+      });
+    });
+}
+
+function addPrompt() {
+  var inp = document.getElementById('new-prompt-text');
+  var txt = inp ? inp.value.trim() : '';
+  if (!txt) return;
+  sbFetch('story_prompts', {
+    method: 'POST',
+    headers: { 'Prefer': 'return=representation' },
+    body: JSON.stringify({ prompt_text: txt, active: true })
+  }).then(function() {
+    inp.value = '';
+    showStatus('Prompt added.', true);
+    loadAdminPrompts();
+  }).catch(function() { showStatus('Could not add prompt.', false); });
+}
+
+function deleteAdminPrompt(id) {
+  if (!confirm('Remove this prompt?')) return;
+  sbFetch('story_prompts?id=eq.'+id, { method: 'DELETE' })
+    .then(function() { showStatus('Prompt removed.', true); loadAdminPrompts(); });
+}
+
+function escAdminHtml(str) {
+  if (!str) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
 
 </script>
 </body>
