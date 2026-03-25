@@ -463,7 +463,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
         <h2>Stories</h2>
         <button type="button" class="fab" id="stories-fab-btn" style="position:static;width:38px;height:38px;font-size:20px;" onclick="openStoryRecorder()">+</button>
       </div>
-      <p style="font-size:13px;color:#888;margin-bottom:16px;">Listen to the voices of our community. Share your own story.</p>
+      <p style="font-size:13px;color:#888;margin-bottom:8px;">Listen to the voices of our community. Share your own story.</p>
+      <div style="background:#f5f0ff;border-radius:10px;padding:10px 14px;margin-bottom:14px;border-left:3px solid #6D28D9;">
+        <p style="font-size:12px;color:#4C1D95;line-height:1.5;">Tip: after recording, always tap &#x2715; to close the recorder before leaving this page.</p>
+      </div>
       
       <div id="stories-list"><div class="loading">Loading stories...</div></div>
     </div>
@@ -1707,6 +1710,8 @@ function openStoryRecorder() {
 document.addEventListener('visibilitychange', function() {
   if (document.hidden) { stopAllRecording(); }
 });
+window.addEventListener('beforeunload', function() { stopAllRecording(); });
+window.addEventListener('pagehide', function() { stopAllRecording(); });
 
 function closeStoryRecorder() {
   stopAllRecording();
@@ -1754,6 +1759,7 @@ function selectPrompt(promptText) {
 // ── TITLE RECORDING (Step 2) ──
 function startTitleRecording() {
   navigator.mediaDevices.getUserMedia({ audio: true }).then(function(stream) {
+    activeTitleStream = stream;
     titleChunks = [];
     var opts = MediaRecorder.isTypeSupported('audio/webm;codecs=opus') ? {mimeType:'audio/webm;codecs=opus'} : {};
     titleRecorder = new MediaRecorder(stream, opts);
@@ -1768,6 +1774,7 @@ function startTitleRecording() {
       document.getElementById('title-rec-btn').style.background = '#6D28D9';
       document.getElementById('title-rec-btn').innerHTML = titleMicSVG();
       stream.getTracks().forEach(function(t) { t.stop(); });
+      activeTitleStream = null;
     };
     titleRecorder.start(500);
     titleSeconds = 0;
@@ -1813,6 +1820,7 @@ function toggleRecording() {
 
 function startRecording() {
   navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream) {
+    activeStream = stream;
     audioChunks = [];
     recordedBlob = null;
     var opts = MediaRecorder.isTypeSupported('audio/webm;codecs=opus') ? {mimeType:'audio/webm;codecs=opus'} : {};
@@ -1829,6 +1837,7 @@ function startRecording() {
       document.getElementById('rec-btn').innerHTML = mainMicSVG();
       document.getElementById('rec-warning').style.display = 'none';
       stream.getTracks().forEach(function(t) { t.stop(); });
+      activeStream = null;
     };
     mediaRecorder.start(1000);
     recordingSeconds = 0;
@@ -1860,9 +1869,21 @@ function stopRecording() {
   if (recordingTimer) { clearInterval(recordingTimer); recordingTimer = null; }
 }
 
+var activeStream = null;
+var activeTitleStream = null;
+
 function stopAllRecording() {
   stopRecording();
   stopTitleRecording();
+  // Release microphone streams
+  if (activeStream) {
+    activeStream.getTracks().forEach(function(t) { t.stop(); });
+    activeStream = null;
+  }
+  if (activeTitleStream) {
+    activeTitleStream.getTracks().forEach(function(t) { t.stop(); });
+    activeTitleStream = null;
+  }
 }
 
 // ── CONSENT (Step 4) ──
