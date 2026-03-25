@@ -1607,9 +1607,9 @@ function loadStorySettings(cb) {
 }
 
 function checkWeeklyQuota(cb) {
-  if (!currentUser || !currentUser.id) { cb(true); return; }
+  if (!currentUser || !currentUser.uid) { cb(true); return; }
   var weekAgo = new Date(Date.now() - 7*24*60*60*1000).toISOString();
-  sbFetch('stories?resident_id=eq.' + currentUser.id + '&created_at=gte.' + weekAgo + '&select=id')
+  sbFetch('stories?resident_id=eq.' + currentUser.uid + '&created_at=gte.' + weekAgo + '&select=id')
     .then(function(data) { cb(!data || data.length < storySettings.weeklyLimit); })
     .catch(function() { cb(true); });
 }
@@ -1620,7 +1620,7 @@ function loadStories() {
   if (!list) return;
   list.innerHTML = '<div class="loading">Loading stories...</div>';
   var communityP = sbFetch('stories?status=eq.active&sharing=in.(community,public)&order=created_at.desc');
-  var ownP = currentUser.id ? sbFetch('stories?resident_id=eq.' + currentUser.id + '&order=created_at.desc') : Promise.resolve([]);
+  var ownP = currentUser.uid ? sbFetch('stories?resident_id=eq.' + currentUser.uid + '&order=created_at.desc') : Promise.resolve([]);
   Promise.all([communityP, ownP]).then(function(results) {
     var community = results[0] || [];
     var own = results[1] || [];
@@ -1676,7 +1676,7 @@ function loadStories() {
 function openStoryRecorder() {
   if (!currentUser) return;
   // Check if suspended
-  if (currentUser.stories_suspended) {
+  if (currentUser.stories_suspended === true) {
     alert('Your access to post stories has been suspended. Please speak to your community administrator.');
     return;
   }
@@ -1916,8 +1916,8 @@ function saveStory() {
       method: 'POST',
       headers: { 'Prefer': 'return=representation' },
       body: JSON.stringify({
-        resident_id: currentUser.id || null,
-        resident_name: currentUser.first + ' ' + (currentUser.last||''),
+        resident_id: currentUser.uid || null,
+        resident_name: currentUser.name || 'Unknown',
         title: null,
         prompt: selectedPrompt || null,
         audio_url: audioUrl,
