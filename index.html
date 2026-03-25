@@ -320,8 +320,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div class="greeting" id="greeting"></div>
     <div class="sec-label">What do you need today?</div>
     <div class="tile-grid">
+      <div class="tile" style="background:#f5f0ff;border-color:#C4B5FD;" id="tile-stories" onclick="showSection('stories')"><div class="tile-icon" style="background:#EDE9FE;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2a10 10 0 100 20A10 10 0 0012 2z" stroke="#6D28D9" stroke-width="1.5"/><path d="M12 6v6l4 2" stroke="#6D28D9" stroke-width="1.5" stroke-linecap="round"/></svg></div><div><div class="tile-name">Stories</div><div class="tile-hint">Our community voices</div></div></div><div><div class="tile-name">Stories</div><div class="tile-hint">Our community voices</div></div></div>
       <div class="tile green" id="tile-board"><div class="tile-icon" style="background:#E1F5EE;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="#0F6E56" stroke-width="1.5" stroke-linecap="round"/></svg></div><div><div class="tile-name">Message Board</div><div class="tile-hint" id="board-count">submissions</div></div></div>
-      <div class="tile red" id="tile-emergency"><div class="tile-icon" style="background:#FCEBEB;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-.18-8.7A2 2 0 014.11 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" stroke="#A32D2D" stroke-width="1.5" stroke-linecap="round"/></svg></div><div><div class="tile-name">Emergency</div><div class="tile-hint">Contacts</div></div></div>
+      <div class="tile red" id="tile-emergency" onclick="showSection('emergency')"><div class="tile-icon" style="background:#FCEBEB;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-.18-8.7A2 2 0 014.11 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" stroke="#A32D2D" stroke-width="1.5" stroke-linecap="round"/></svg></div><div><div class="tile-name">Emergency</div><div class="tile-hint">Contacts</div></div></div><div><div class="tile-name">Emergency</div><div class="tile-hint">Contacts</div></div></div>
       <div class="tile blue" id="tile-services"><div class="tile-icon" style="background:#E6F1FB;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" stroke="#185FA5" stroke-width="1.5" stroke-linecap="round"/></svg></div><div><div class="tile-name">Local Services</div><div class="tile-hint">GP, pharmacy</div></div></div>
       <div class="tile purple" id="tile-events"><div class="tile-icon" style="background:#EEEDFE;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="18" rx="2" stroke="#534AB7" stroke-width="1.5"/><line x1="16" y1="2" x2="16" y2="6" stroke="#534AB7" stroke-width="1.5" stroke-linecap="round"/><line x1="8" y1="2" x2="8" y2="6" stroke="#534AB7" stroke-width="1.5" stroke-linecap="round"/><line x1="3" y1="10" x2="21" y2="10" stroke="#534AB7" stroke-width="1.5" stroke-linecap="round"/></svg></div><div><div class="tile-name">Events</div><div class="tile-hint">What's on</div></div></div>
       <div class="tile amber" id="tile-community"><div class="tile-icon" style="background:#FAEEDA;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" stroke="#854F0B" stroke-width="1.5" stroke-linecap="round"/><circle cx="9" cy="7" r="4" stroke="#854F0B" stroke-width="1.5"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke="#854F0B" stroke-width="1.5" stroke-linecap="round"/></svg></div><div><div class="tile-name">Community</div><div class="tile-hint">Contacts</div></div></div>
@@ -457,12 +458,155 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   </div>
 </div>
 
+    <div id="sec-stories" class="section">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+        <h2>Stories</h2>
+        <button type="button" class="fab" id="stories-fab-btn" style="position:static;width:38px;height:38px;font-size:20px;" onclick="openStoryRecorder()">+</button>
+      </div>
+      <p style="font-size:13px;color:#888;margin-bottom:16px;">Listen to the voices of our community. Share your own story.</p>
+      <div id="stories-list"><div class="loading">Loading stories...</div></div>
+    </div>
+
+    <!-- STORY RECORDER MODAL -->
+    <div id="story-modal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);z-index:200;padding:16px;overflow-y:auto;">
+      <div style="background:#fff;border-radius:18px;padding:22px 20px;max-width:420px;margin:0 auto;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+          <h3 style="color:#6D28D9;">Share your story</h3>
+          <button type="button" id="close-story-modal" style="background:none;border:none;font-size:22px;cursor:pointer;color:#aaa;padding:0;">&#x2715;</button>
+        </div>
+
+        <!-- STEP 1: Choose prompt -->
+        <div id="story-step-1">
+          <p style="font-size:13px;color:#666;margin-bottom:12px;">Choose a question to answer, or record freely:</p>
+          <div id="prompts-list" style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;max-height:280px;overflow-y:auto;"></div>
+          <button type="button" id="btn-free-prompt" style="width:100%;padding:11px;border-radius:10px;border:2px dashed #C4B5FD;background:#f9f7ff;color:#6D28D9;font-size:13px;cursor:pointer;font-family:inherit;touch-action:manipulation;">
+            Record freely — no prompt
+          </button>
+        </div>
+
+        <!-- STEP 2: Record title -->
+        <div id="story-step-2" style="display:none;">
+          <div style="background:#f5f0ff;border-radius:10px;padding:12px 14px;margin-bottom:14px;">
+            <p style="font-size:12px;color:#888;margin-bottom:3px;">Your prompt</p>
+            <p id="selected-prompt-display" style="font-size:13px;color:#4C1D95;font-weight:600;"></p>
+          </div>
+          <p style="font-size:13px;color:#555;font-weight:600;margin-bottom:6px;">Step 1 of 2 &mdash; Record a title</p>
+          <p style="font-size:12px;color:#888;margin-bottom:14px;">Speak a short title for your story (up to 15 seconds). For example: <em>"My years at sea"</em> or <em>"The day I met the Queen"</em>.</p>
+          <div style="text-align:center;">
+            <div id="title-rec-status" style="font-size:13px;color:#888;margin-bottom:10px;">Tap to record your title</div>
+            <button type="button" id="title-rec-btn" style="width:56px;height:56px;border-radius:50%;background:#6D28D9;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;touch-action:manipulation;">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="9" y="3" width="6" height="11" rx="3" fill="white"/><path d="M5 11a7 7 0 0014 0M12 18v3M9 21h6" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </button>
+            <div id="title-playback" style="display:none;margin-bottom:10px;">
+              <audio id="title-audio" controls style="width:100%;"></audio>
+            </div>
+          </div>
+          <button type="button" id="btn-confirm-title" style="display:none;width:100%;padding:12px;background:#6D28D9;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;margin-bottom:8px;">
+            Use this title &rarr;
+          </button>
+          <button type="button" id="btn-skip-title" style="width:100%;padding:10px;background:none;border:none;color:#aaa;font-size:13px;cursor:pointer;font-family:inherit;">
+            Skip title &mdash; use my prompt as the title
+          </button>
+        </div>
+
+        <!-- STEP 3: Record story -->
+        <div id="story-step-3" style="display:none;">
+          <div style="background:#f5f0ff;border-radius:10px;padding:10px 14px;margin-bottom:14px;">
+            <p style="font-size:12px;color:#888;margin-bottom:2px;">Your prompt</p>
+            <p id="story-prompt-display" style="font-size:13px;color:#4C1D95;font-weight:600;"></p>
+          </div>
+          <p style="font-size:13px;color:#555;font-weight:600;margin-bottom:4px;">Step 2 of 2 &mdash; Record your story</p>
+          <p style="font-size:12px;color:#aaa;margin-bottom:14px;">Speak naturally. Maximum 10 minutes.</p>
+          <div style="text-align:center;">
+            <div id="rec-status" style="font-size:13px;color:#888;margin-bottom:8px;">Tap to start recording</div>
+            <div id="rec-timer" style="font-size:28px;font-weight:700;color:#6D28D9;margin-bottom:10px;display:none;"></div>
+            <div id="rec-warning" style="display:none;font-size:12px;color:#A32D2D;margin-bottom:8px;font-weight:600;">1 minute remaining</div>
+            <button type="button" id="rec-btn" style="width:72px;height:72px;border-radius:50%;background:#6D28D9;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;touch-action:manipulation;">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><rect x="9" y="3" width="6" height="11" rx="3" fill="white"/><path d="M5 11a7 7 0 0014 0M12 18v3M9 21h6" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </button>
+            <div id="playback-area" style="display:none;margin-bottom:10px;">
+              <audio id="story-audio" controls style="width:100%;"></audio>
+            </div>
+          </div>
+          <button type="button" id="btn-to-consent" style="display:none;width:100%;padding:12px;background:#6D28D9;color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;">
+            Continue &rarr;
+          </button>
+        </div>
+
+        <!-- STEP 4: Consent -->
+        <div id="story-step-4" style="display:none;">
+          <p style="font-size:14px;color:#333;font-weight:600;margin-bottom:12px;">Who can listen to your story?</p>
+          <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;">
+            <label id="consent-label-private" style="display:flex;align-items:flex-start;gap:10px;padding:11px;border:2px solid #e8e8e2;border-radius:10px;cursor:pointer;background:#fff;">
+              <input type="radio" name="story-consent" value="private" style="margin-top:3px;accent-color:#6D28D9;">
+              <div><div style="font-size:13px;font-weight:600;color:#333;">Just me (private)</div><div style="font-size:12px;color:#888;">Only you can listen. Never shared.</div></div>
+            </label>
+            <label id="consent-label-community" style="display:flex;align-items:flex-start;gap:10px;padding:11px;border:2px solid #6D28D9;border-radius:10px;cursor:pointer;background:#f9f7ff;">
+              <input type="radio" name="story-consent" value="community" checked style="margin-top:3px;accent-color:#6D28D9;">
+              <div><div style="font-size:13px;font-weight:600;color:#6D28D9;">Our community</div><div style="font-size:12px;color:#888;">All registered residents can listen.</div></div>
+            </label>
+            <label id="consent-label-family" style="display:flex;align-items:flex-start;gap:10px;padding:11px;border:2px solid #e8e8e2;border-radius:10px;cursor:pointer;background:#fff;">
+              <input type="radio" name="story-consent" value="family" style="margin-top:3px;accent-color:#6D28D9;">
+              <div><div style="font-size:13px;font-weight:600;color:#333;">My family</div><div style="font-size:12px;color:#888;">A private link will be created for your family only.</div></div>
+            </label>
+            <label id="consent-label-public" style="display:flex;align-items:flex-start;gap:10px;padding:11px;border:2px solid #e8e8e2;border-radius:10px;cursor:pointer;background:#fff;">
+              <input type="radio" name="story-consent" value="public" style="margin-top:3px;accent-color:#6D28D9;">
+              <div><div style="font-size:13px;font-weight:600;color:#333;">Public</div><div style="font-size:12px;color:#888;">May be shared beyond this community with your agreement.</div></div>
+            </label>
+          </div>
+          <div id="public-consent-box" style="display:none;background:#faeeda;border-radius:10px;padding:12px 14px;margin-bottom:14px;">
+            <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;">
+              <input type="checkbox" id="public-consent-check" style="margin-top:3px;accent-color:#6D28D9;">
+              <span style="font-size:12px;color:#633806;line-height:1.5;">I agree that my story may be shared with partner organisations and made available beyond this community. I understand this means people outside this community may be able to listen to it.</span>
+            </label>
+          </div>
+          <div style="background:#f9f7ff;border-radius:10px;padding:12px 14px;margin-bottom:14px;border-left:3px solid #6D28D9;">
+            <p style="font-size:12px;color:#4C1D95;line-height:1.5;">By sharing your story you confirm it is your own personal experience and does not contain content that is offensive, defamatory or harmful to others. Stories that breach these guidelines will be removed and access to this feature may be withdrawn.</p>
+          </div>
+          <button type="button" id="btn-save-story" style="width:100%;padding:13px;background:#6D28D9;color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;">
+            Save my story
+          </button>
+          <div id="save-progress" style="display:none;text-align:center;padding:12px;font-size:13px;color:#6D28D9;line-height:1.5;"></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- STORY PLAYER MODAL -->
+    <div id="player-modal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);z-index:200;padding:16px;">
+      <div style="background:#fff;border-radius:18px;padding:22px 20px;max-width:420px;margin:0 auto;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+          <h3 id="player-name" style="color:#6D28D9;font-size:16px;"></h3>
+          <button type="button" id="close-player-btn" style="background:none;border:none;font-size:22px;cursor:pointer;color:#aaa;padding:0;">&#x2715;</button>
+        </div>
+        <p id="player-resident" style="font-size:12px;color:#888;margin-bottom:4px;"></p>
+        <p id="player-prompt" style="font-size:13px;color:#6D28D9;font-style:italic;margin-bottom:14px;"></p>
+        <audio id="player-audio" controls style="width:100%;margin-bottom:14px;"></audio>
+        <div id="player-transcript" style="display:none;font-size:13px;color:#444;line-height:1.7;max-height:200px;overflow-y:auto;background:#f9f7ff;border-radius:10px;padding:12px;"></div>
+      </div>
+    </div>
+
+
+    <div id="player-modal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.55);z-index:200;padding:20px;">
+      <div style="background:#fff;border-radius:18px;padding:22px 20px;max-width:420px;margin:0 auto;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+          <h3 id="player-name" style="color:#6D28D9;"></h3>
+          <button type="button" onclick="closePlayer()" style="background:none;border:none;font-size:20px;cursor:pointer;color:#aaa;padding:0;">&#x2715;</button>
+        </div>
+        <p id="player-prompt" style="font-size:13px;color:#888;font-style:italic;margin-bottom:14px;"></p>
+        <audio id="player-audio" controls style="width:100%;margin-bottom:14px;"></audio>
+        <div id="player-transcript" style="font-size:14px;color:#444;line-height:1.7;max-height:200px;overflow-y:auto;background:#f9f7ff;border-radius:10px;padding:12px;"></div>
+      </div>
+    </div>
+
+
 <!-- NAV -->
 <div class="nav" id="main-nav">
   <button type="button" class="nav-btn on" id="nav-home"><div class="nav-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div><span class="nav-lbl">Home</span></button>
   <button type="button" class="nav-btn" id="nav-news"><div class="nav-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.5"><path d="M4 22h16a2 2 0 002-2V4a2 2 0 00-2-2H8a2 2 0 00-2 2v16"/><path d="M2 20a2 2 0 004 0V4"/><line x1="10" y1="8" x2="18" y2="8" stroke-linecap="round"/><line x1="10" y1="12" x2="18" y2="12" stroke-linecap="round"/></svg></div><span class="nav-lbl">News</span></button>
   <button type="button" class="nav-btn" id="nav-events"><div class="nav-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6" stroke-linecap="round"/><line x1="8" y1="2" x2="8" y2="6" stroke-linecap="round"/><line x1="3" y1="10" x2="21" y2="10" stroke-linecap="round"/></svg></div><span class="nav-lbl">Events</span></button>
   <button type="button" class="nav-btn" id="nav-board"><div class="nav-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke-linecap="round"/></svg></div><span class="nav-lbl">Board</span></button>
+  <button type="button" class="nav-btn" id="nav-stories" onclick="navTo('stories')"><div class="nav-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.5"><path d="M12 2a10 10 0 100 20A10 10 0 0012 2z"/><path d="M12 6v6l4 2" stroke-linecap="round"/></svg></div><span class="nav-lbl">Stories</span></button>
   <button type="button" class="nav-btn" id="nav-emergency"><div class="nav-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-.18-8.7A2 2 0 014.11 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" stroke-linecap="round"/></svg></div><span class="nav-lbl">Contacts</span></button>
 </div>
 
@@ -742,6 +886,7 @@ function loadEmergencyContact(uid) {
 function goHome() { showScreen('s-home'); setNav('nav-home'); }
 
 function showSection(sec) {
+  if (sec === 'stories') { setTimeout(loadStories, 100); }
   showScreen('s-sections');
   var secs = document.querySelectorAll('.section');
   for (var i = 0; i < secs.length; i++) secs[i].classList.remove('on');
@@ -1274,6 +1419,41 @@ window.addEventListener('DOMContentLoaded', function() {
   document.getElementById('nav-board').addEventListener('click', function() { showSection('board'); });
   document.getElementById('nav-emergency').addEventListener('click', function() { showSection('emergency'); });
 
+  // Stories
+  if (document.getElementById('nav-stories')) {
+    document.getElementById('nav-stories').addEventListener('click', function() { showSection('stories'); });
+  }
+  if (document.getElementById('stories-fab-btn')) {
+    document.getElementById('stories-fab-btn').addEventListener('click', openStoryRecorder);
+  }
+  if (document.getElementById('close-story-modal')) {
+    document.getElementById('close-story-modal').addEventListener('click', closeStoryRecorder);
+  }
+  if (document.getElementById('btn-free-prompt')) {
+    document.getElementById('btn-free-prompt').addEventListener('click', function() { selectPrompt(''); });
+  }
+  if (document.getElementById('title-rec-btn')) {
+    document.getElementById('title-rec-btn').addEventListener('click', toggleTitleRecording);
+  }
+  if (document.getElementById('btn-confirm-title')) {
+    document.getElementById('btn-confirm-title').addEventListener('click', confirmTitle);
+  }
+  if (document.getElementById('btn-skip-title')) {
+    document.getElementById('btn-skip-title').addEventListener('click', skipTitle);
+  }
+  if (document.getElementById('rec-btn')) {
+    document.getElementById('rec-btn').addEventListener('click', toggleRecording);
+  }
+  if (document.getElementById('btn-to-consent')) {
+    document.getElementById('btn-to-consent').addEventListener('click', goToConsent);
+  }
+  if (document.getElementById('btn-save-story')) {
+    document.getElementById('btn-save-story').addEventListener('click', saveStory);
+  }
+  if (document.getElementById('close-player-btn')) {
+    document.getElementById('close-player-btn').addEventListener('click', closePlayer);
+  }
+
   // FAB
   document.getElementById('fab-btn').addEventListener('click', openPost);
 
@@ -1390,6 +1570,393 @@ function submitReg() {
     alert('Thank you! The administrator will be in touch to set up your access.');
   }).catch(function() { alert('Could not submit registration. Please try again.'); });
 }
+
+
+
+// ══════════════════════════════════════════════════
+// VOICE MEMORIES — STORIES (full build)
+// ══════════════════════════════════════════════════
+
+var mediaRecorder = null;
+var titleRecorder = null;
+var audioChunks = [];
+var titleChunks = [];
+var recordingTimer = null;
+var titleTimer = null;
+var recordingSeconds = 0;
+var titleSeconds = 0;
+var recordedBlob = null;
+var titleBlob = null;
+var selectedPrompt = '';
+var storySettings = { maxDuration: 600, weeklyLimit: 3, titleMax: 15, reviewRequired: true };
+
+// Load settings from Supabase
+function loadStorySettings(cb) {
+  sbFetch('community_settings?select=setting_key,setting_value')
+    .then(function(data) {
+      if (data) {
+        data.forEach(function(s) {
+          if (s.setting_key === 'stories_max_duration_seconds') storySettings.maxDuration = parseInt(s.setting_value) || 600;
+          if (s.setting_key === 'stories_weekly_limit') storySettings.weeklyLimit = parseInt(s.setting_value) || 3;
+          if (s.setting_key === 'stories_title_max_seconds') storySettings.titleMax = parseInt(s.setting_value) || 15;
+          if (s.setting_key === 'stories_review_required') storySettings.reviewRequired = s.setting_value !== 'false';
+        });
+      }
+      if (cb) cb();
+    }).catch(function() { if (cb) cb(); });
+}
+
+function checkWeeklyQuota(cb) {
+  if (!currentUser || !currentUser.id) { cb(true); return; }
+  var weekAgo = new Date(Date.now() - 7*24*60*60*1000).toISOString();
+  sbFetch('stories?resident_id=eq.' + currentUser.id + '&created_at=gte.' + weekAgo + '&select=id')
+    .then(function(data) { cb(!data || data.length < storySettings.weeklyLimit); })
+    .catch(function() { cb(true); });
+}
+
+function loadStories() {
+  if (!currentUser) return;
+  var list = document.getElementById('stories-list');
+  if (!list) return;
+  list.innerHTML = '<div class="loading">Loading stories...</div>';
+  sbFetch('stories?status=eq.active&sharing=in.(community,public)&order=created_at.desc')
+    .then(function(data) {
+      if (!data || data.length === 0) {
+        list.innerHTML = '<div style="text-align:center;padding:30px;color:#aaa;"><p style="font-size:15px;margin-bottom:8px;">No stories yet.</p><p style="font-size:13px;">Be the first to share yours!</p></div>';
+        return;
+      }
+      var html = '';
+      data.forEach(function(s) {
+        var d = new Date(s.created_at);
+        var dateStr = d.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
+        var mins = s.duration_seconds ? Math.floor(s.duration_seconds/60)+'m '+(s.duration_seconds%60)+'s' : '';
+        var stitle = s.title || (s.prompt ? s.prompt.substring(0,50) : 'Story');
+        html += '<div class="card story-card" style="margin-bottom:12px;cursor:pointer;border-left:3px solid #6D28D9;" data-sid="'+s.id+'" data-sname="'+escHtml(s.resident_name)+'" data-sprompt="'+escHtml(s.prompt||'')+'" data-saudio="'+escHtml(s.audio_url||'')+'" data-stx="'+escHtml((s.transcript||'').substring(0,300))+'" data-stitle="'+escHtml(stitle)+'">';
+        html += '<div style="display:flex;align-items:center;gap:10px;">';
+        html += '<div style="width:38px;height:38px;border-radius:50%;background:#EDE9FE;display:flex;align-items:center;justify-content:center;flex-shrink:0;">';
+        html += '<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#6D28D9" stroke-width="1.5"/><path d="M12 6v6l4 2" stroke="#6D28D9" stroke-width="1.5" stroke-linecap="round"/></svg></div>';
+        html += '<div style="flex:1;min-width:0;">';
+        html += '<div style="font-weight:700;font-size:14px;color:#333;">'+escHtml(stitle)+'</div>';
+        html += '<div style="font-size:12px;color:#6D28D9;">'+escHtml(s.resident_name)+'</div>';
+        html += '<div style="font-size:11px;color:#aaa;margin-top:2px;">'+dateStr+(mins?' &middot; '+mins:'')+'</div>';
+        html += '</div>';
+        html += '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#6D28D9" stroke-width="1.5"/><path d="M10 8l6 4-6 4V8z" fill="#6D28D9"/></svg>';
+        html += '</div>';
+        if (s.transcript) html += '<p style="font-size:12px;color:#666;margin-top:8px;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">'+escHtml(s.transcript.substring(0,200))+'</p>';
+        html += '</div>';
+      });
+      list.innerHTML = html;
+      var cards = list.querySelectorAll('.story-card');
+      for (var i = 0; i < cards.length; i++) {
+        cards[i].addEventListener('click', function() {
+          openPlayer(this.getAttribute('data-stitle'), this.getAttribute('data-sname'), this.getAttribute('data-sprompt'), this.getAttribute('data-saudio'), this.getAttribute('data-stx'));
+        });
+      }
+    }).catch(function() {
+      list.innerHTML = '<div style="color:#A32D2D;padding:16px;font-size:13px;">Could not load stories.</div>';
+    });
+}
+
+function openStoryRecorder() {
+  if (!currentUser) return;
+  // Check if suspended
+  if (currentUser.stories_suspended) {
+    alert('Your access to post stories has been suspended. Please speak to your community administrator.');
+    return;
+  }
+  loadStorySettings(function() {
+    checkWeeklyQuota(function(ok) {
+      if (!ok) {
+        alert('You have reached your limit of ' + storySettings.weeklyLimit + ' stories this week. Please try again next week.');
+        return;
+      }
+      loadPrompts();
+      goToStoryStep(1);
+      document.getElementById('story-modal').style.display = 'block';
+    });
+  });
+}
+
+function closeStoryRecorder() {
+  stopAllRecording();
+  document.getElementById('story-modal').style.display = 'none';
+  recordedBlob = null;
+  titleBlob = null;
+  audioChunks = [];
+  titleChunks = [];
+  selectedPrompt = '';
+  recordingSeconds = 0;
+  titleSeconds = 0;
+}
+
+function goToStoryStep(n) {
+  for (var i = 1; i <= 5; i++) {
+    var el = document.getElementById('story-step-' + i);
+    if (el) el.style.display = i === n ? 'block' : 'none';
+  }
+  if (n === 1) { stopAllRecording(); recordedBlob = null; titleBlob = null; }
+}
+
+function loadPrompts() {
+  sbFetch('story_prompts?active=eq.true&order=display_order.asc')
+    .then(function(data) {
+      var list = document.getElementById('prompts-list');
+      if (!list) return;
+      var html = '';
+      (data||[]).forEach(function(p) {
+        html += '<button type="button" class="prompt-btn" data-prompt="'+escHtml(p.prompt_text)+'" style="text-align:left;padding:11px 14px;border:1.5px solid #C4B5FD;border-radius:10px;background:#fff;cursor:pointer;font-size:13px;color:#4C1D95;font-family:inherit;line-height:1.4;touch-action:manipulation;width:100%;">'+escHtml(p.prompt_text)+'</button>';
+      });
+      list.innerHTML = html;
+      var btns = list.querySelectorAll('.prompt-btn');
+      for (var i = 0; i < btns.length; i++) {
+        btns[i].addEventListener('click', function() { selectPrompt(this.getAttribute('data-prompt')); });
+      }
+    });
+}
+
+function selectPrompt(promptText) {
+  selectedPrompt = promptText;
+  document.getElementById('selected-prompt-display').textContent = promptText || 'Recording freely — no prompt';
+  goToStoryStep(2);
+}
+
+// ── TITLE RECORDING (Step 2) ──
+function startTitleRecording() {
+  navigator.mediaDevices.getUserMedia({ audio: true }).then(function(stream) {
+    titleChunks = [];
+    var opts = MediaRecorder.isTypeSupported('audio/webm;codecs=opus') ? {mimeType:'audio/webm;codecs=opus'} : {};
+    titleRecorder = new MediaRecorder(stream, opts);
+    titleRecorder.ondataavailable = function(e) { if (e.data.size > 0) titleChunks.push(e.data); };
+    titleRecorder.onstop = function() {
+      titleBlob = new Blob(titleChunks, {type: titleRecorder.mimeType || 'audio/webm'});
+      var url = URL.createObjectURL(titleBlob);
+      document.getElementById('title-audio').src = url;
+      document.getElementById('title-playback').style.display = 'block';
+      document.getElementById('title-rec-status').textContent = 'Title recorded. Listen back or re-record.';
+      document.getElementById('btn-confirm-title').style.display = 'block';
+      document.getElementById('title-rec-btn').style.background = '#6D28D9';
+      document.getElementById('title-rec-btn').innerHTML = titleMicSVG();
+      stream.getTracks().forEach(function(t) { t.stop(); });
+    };
+    titleRecorder.start(500);
+    titleSeconds = 0;
+    document.getElementById('title-rec-status').textContent = 'Recording title... (max ' + storySettings.titleMax + 's)';
+    document.getElementById('title-rec-btn').style.background = '#A32D2D';
+    document.getElementById('title-rec-btn').innerHTML = stopSVG();
+    document.getElementById('title-playback').style.display = 'none';
+    document.getElementById('btn-confirm-title').style.display = 'none';
+    titleTimer = setInterval(function() {
+      titleSeconds++;
+      if (titleSeconds >= storySettings.titleMax) { stopTitleRecording(); }
+    }, 1000);
+  }).catch(function() { alert('Could not access microphone. Please allow microphone access and try again.'); });
+}
+
+function stopTitleRecording() {
+  if (titleRecorder && titleRecorder.state === 'recording') titleRecorder.stop();
+  if (titleTimer) { clearInterval(titleTimer); titleTimer = null; }
+}
+
+function toggleTitleRecording() {
+  if (titleRecorder && titleRecorder.state === 'recording') { stopTitleRecording(); }
+  else { startTitleRecording(); }
+}
+
+function confirmTitle() {
+  if (!titleBlob) { alert('Please record a title first.'); return; }
+  goToStoryStep(3);
+  document.getElementById('story-prompt-display').textContent = selectedPrompt || 'Free recording — no prompt';
+}
+
+function skipTitle() {
+  titleBlob = null;
+  goToStoryStep(3);
+  document.getElementById('story-prompt-display').textContent = selectedPrompt || 'Free recording — no prompt';
+}
+
+// ── MAIN RECORDING (Step 3) ──
+function toggleRecording() {
+  if (mediaRecorder && mediaRecorder.state === 'recording') { stopRecording(); }
+  else { startRecording(); }
+}
+
+function startRecording() {
+  navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream) {
+    audioChunks = [];
+    recordedBlob = null;
+    var opts = MediaRecorder.isTypeSupported('audio/webm;codecs=opus') ? {mimeType:'audio/webm;codecs=opus'} : {};
+    mediaRecorder = new MediaRecorder(stream, opts);
+    mediaRecorder.ondataavailable = function(e) { if (e.data.size > 0) audioChunks.push(e.data); };
+    mediaRecorder.onstop = function() {
+      recordedBlob = new Blob(audioChunks, {type: mediaRecorder.mimeType || 'audio/webm'});
+      var url = URL.createObjectURL(recordedBlob);
+      document.getElementById('story-audio').src = url;
+      document.getElementById('playback-area').style.display = 'block';
+      document.getElementById('btn-to-consent').style.display = 'block';
+      document.getElementById('rec-status').textContent = 'Recording saved. Listen back or continue.';
+      document.getElementById('rec-btn').style.background = '#6D28D9';
+      document.getElementById('rec-btn').innerHTML = mainMicSVG();
+      document.getElementById('rec-warning').style.display = 'none';
+      stream.getTracks().forEach(function(t) { t.stop(); });
+    };
+    mediaRecorder.start(1000);
+    recordingSeconds = 0;
+    document.getElementById('rec-status').textContent = 'Recording...';
+    document.getElementById('rec-timer').style.display = 'block';
+    document.getElementById('rec-timer').textContent = '0:00';
+    document.getElementById('playback-area').style.display = 'none';
+    document.getElementById('btn-to-consent').style.display = 'none';
+    document.getElementById('rec-warning').style.display = 'none';
+    document.getElementById('rec-btn').style.background = '#A32D2D';
+    document.getElementById('rec-btn').innerHTML = stopSVG();
+    recordingTimer = setInterval(function() {
+      recordingSeconds++;
+      var m = Math.floor(recordingSeconds/60);
+      var s = recordingSeconds % 60;
+      document.getElementById('rec-timer').textContent = m+':'+(s<10?'0':'')+s;
+      // Warning at 1 min before limit
+      if (recordingSeconds === storySettings.maxDuration - 60) {
+        document.getElementById('rec-warning').style.display = 'block';
+      }
+      // Hard stop at limit
+      if (recordingSeconds >= storySettings.maxDuration) { stopRecording(); }
+    }, 1000);
+  }).catch(function() { alert('Could not access microphone. Please allow microphone access and try again.'); });
+}
+
+function stopRecording() {
+  if (mediaRecorder && mediaRecorder.state === 'recording') mediaRecorder.stop();
+  if (recordingTimer) { clearInterval(recordingTimer); recordingTimer = null; }
+}
+
+function stopAllRecording() {
+  stopRecording();
+  stopTitleRecording();
+}
+
+// ── CONSENT (Step 4) ──
+function goToConsent() {
+  if (!recordedBlob) { alert('Please record your story first.'); return; }
+  goToStoryStep(4);
+  // Highlight default selection
+  highlightConsent('community');
+  var radios = document.querySelectorAll('input[name="story-consent"]');
+  for (var i = 0; i < radios.length; i++) {
+    radios[i].addEventListener('change', function() {
+      highlightConsent(this.value);
+      document.getElementById('public-consent-box').style.display = this.value === 'public' ? 'block' : 'none';
+    });
+  }
+}
+
+function highlightConsent(val) {
+  var labels = ['private','community','family','public'];
+  labels.forEach(function(l) {
+    var el = document.getElementById('consent-label-'+l);
+    if (el) el.style.borderColor = l === val ? '#6D28D9' : '#e8e8e2';
+    if (el) el.style.background = l === val ? '#f9f7ff' : '#fff';
+  });
+}
+
+// ── SAVE STORY ──
+function saveStory() {
+  if (!recordedBlob) { alert('Please record your story first.'); return; }
+  if (!currentUser) { alert('Please log in to save your story.'); return; }
+  var sharingEl = document.querySelector('input[name="story-consent"]:checked');
+  if (!sharingEl) { alert('Please choose who can listen to your story.'); return; }
+  var sharingVal = sharingEl.value;
+  if (sharingVal === 'public') {
+    var pub = document.getElementById('public-consent-check');
+    if (!pub || !pub.checked) {
+      alert('Please tick the public consent box to share your story publicly.');
+      return;
+    }
+  }
+  document.getElementById('btn-save-story').style.display = 'none';
+  document.getElementById('save-progress').style.display = 'block';
+  document.getElementById('save-progress').textContent = 'Uploading your story...';
+
+  var SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndramttbW1oZnRtampra21jemJ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5MjU5NzQsImV4cCI6MjA4OTUwMTk3NH0.VFceyx0IwbmWK8WJJzgeenGHE8kBbmBdoLrPp7IrM5M';
+  var ext = recordedBlob.type.includes('mp4') ? '.mp4' : '.webm';
+  var fileName = 'story-' + Date.now() + ext;
+  var storageUrl = 'https://wkjkmmmhftmjjkkmczbz.supabase.co/storage/v1/object/voice-memories/' + fileName;
+
+  fetch(storageUrl, {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + SUPA_KEY, 'Content-Type': recordedBlob.type, 'x-upsert': 'true' },
+    body: recordedBlob
+  }).then(function(res) {
+    if (!res.ok) throw new Error('Upload failed');
+    var audioUrl = 'https://wkjkmmmhftmjjkkmczbz.supabase.co/storage/v1/object/public/voice-memories/' + fileName;
+    document.getElementById('save-progress').textContent = 'Saving story details...';
+    var status = (sharingVal === 'private') ? 'active' : 'pending';
+    return sbFetch('stories', {
+      method: 'POST',
+      headers: { 'Prefer': 'return=representation' },
+      body: JSON.stringify({
+        resident_id: currentUser.id || null,
+        resident_name: currentUser.first + ' ' + (currentUser.last||''),
+        title: null,
+        prompt: selectedPrompt || null,
+        audio_url: audioUrl,
+        duration_seconds: recordingSeconds,
+        sharing: sharingVal,
+        public_consent: sharingVal === 'public',
+        status: status
+      })
+    });
+  }).then(function(data) {
+    var msg = sharingVal === 'private'
+      ? 'Your story has been saved privately.'
+      : 'Your story has been received and will appear in the community archive once approved by your administrator. Thank you.';
+    document.getElementById('save-progress').textContent = msg;
+    document.getElementById('save-progress').style.color = '#0F6E56';
+    setTimeout(function() {
+      closeStoryRecorder();
+      loadStories();
+      if (sharingVal === 'family' && data && data[0] && data[0].family_token) {
+        var fLink = window.location.origin + window.location.pathname + '?story=' + data[0].family_token;
+        alert('Your story has been saved!\n\nFamily link (share this with your family):\n' + fLink);
+      }
+    }, 2500);
+  }).catch(function() {
+    document.getElementById('save-progress').style.display = 'none';
+    document.getElementById('btn-save-story').style.display = 'block';
+    alert('Sorry, could not save your story. Please try again.');
+  
+
+});
+}
+
+// ── PLAYER ──
+function openPlayer(title, name, prompt, audioUrl, transcript) {
+  document.getElementById('player-name').textContent = title || (name + '\u2019s story');
+  document.getElementById('player-resident').textContent = name;
+  document.getElementById('player-prompt').textContent = prompt ? '\u201c' + prompt + '\u201d' : '';
+  var audio = document.getElementById('player-audio');
+  audio.src = audioUrl;
+  var txDiv = document.getElementById('player-transcript');
+  if (transcript) { txDiv.textContent = transcript; txDiv.style.display = 'block'; }
+  else { txDiv.style.display = 'none'; }
+  document.getElementById('player-modal').style.display = 'block';
+}
+
+function closePlayer() {
+  var audio = document.getElementById('player-audio');
+  if (audio) { audio.pause(); audio.src = ''; }
+  document.getElementById('player-modal').style.display = 'none';
+}
+
+// ── SVG HELPERS ──
+function titleMicSVG() { return '<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="9" y="3" width="6" height="11" rx="3" fill="white"/><path d="M5 11a7 7 0 0014 0M12 18v3M9 21h6" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>'; }
+function mainMicSVG()  { return '<svg width="28" height="28" viewBox="0 0 24 24" fill="none"><rect x="9" y="3" width="6" height="11" rx="3" fill="white"/><path d="M5 11a7 7 0 0014 0M12 18v3M9 21h6" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>'; }
+function stopSVG()     { return '<svg width="22" height="22" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2" fill="white"/></svg>'; }
+
+function escHtml(str) {
+  if (!str) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
 </script>
 </body>
 </html>
