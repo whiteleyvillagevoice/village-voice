@@ -773,7 +773,17 @@ var BH = [
 function sbFetch(path, opts) {
   var url = SUPA_URL + '/rest/v1/' + path;
   var headers = {'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Content-Type':'application/json','Prefer':'return=representation'};
-  return fetch(url, {method:opts&&opts.method?opts.method:'GET', headers:headers, body:opts&&opts.body?JSON.stringify(opts.body):undefined}).then(function(r){return r.json();});
+  var method = 'GET';
+  var body = undefined;
+  if (opts) {
+    if (opts.method) method = opts.method;
+    if (opts.body) body = typeof opts.body === 'string' ? opts.body : JSON.stringify(opts.body);
+    if (opts.headers) { for (var k in opts.headers) headers[k] = opts.headers[k]; }
+  }
+  return fetch(url, {method:method, headers:headers, body:body}).then(function(r) {
+    if (!r.ok) return r.text().then(function(t) { throw new Error(r.status + ': ' + t); });
+    return r.text().then(function(t) { return t ? JSON.parse(t) : null; });
+  });
 }
 
 // CLOCK
@@ -1925,7 +1935,7 @@ function saveStory() {
     return sbFetch('stories', {
       method: 'POST',
       headers: { 'Prefer': 'return=representation' },
-      body: JSON.stringify({
+      body: {
         resident_id: currentUser.uid || null,
         resident_name: currentUser.name || 'Unknown',
         title: null,
@@ -1935,7 +1945,7 @@ function saveStory() {
         sharing: sharingVal,
         public_consent: sharingVal === 'public',
         status: status
-      })
+      }
     });
   }).then(function(data) {
     var msg = sharingVal === 'private'
@@ -2000,7 +2010,7 @@ function testStorySave() {
   sbFetch('stories', {
     method: 'POST',
     headers: { 'Prefer': 'return=representation' },
-    body: JSON.stringify({
+    body: {
       resident_id: currentUser.uid,
       resident_name: currentUser.name,
       title: 'Test story',
@@ -2010,7 +2020,7 @@ function testStorySave() {
       sharing: 'private',
       public_consent: false,
       status: 'active'
-    })
+    }
   }).then(function(data) {
     res.textContent = 'SUCCESS! Saved with id: ' + (data && data[0] ? data[0].id : JSON.stringify(data));
     res.style.color = 'green';
