@@ -1890,7 +1890,8 @@ function saveStory() {
   }
   document.getElementById('btn-save-story').style.display = 'none';
   document.getElementById('save-progress').style.display = 'block';
-  document.getElementById('save-progress').textContent = 'Uploading your story...';
+  document.getElementById('save-progress').textContent = 'Uploading your story... (this may take a moment)';
+  console.log('Recording blob size:', recordedBlob ? recordedBlob.size : 0, 'type:', recordedBlob ? recordedBlob.type : 'none');
 
   var SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndramttbW1oZnRtampra21jemJ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5MjU5NzQsImV4cCI6MjA4OTUwMTk3NH0.VFceyx0IwbmWK8WJJzgeenGHE8kBbmBdoLrPp7IrM5M';
   var ext = recordedBlob.type.includes('mp4') ? '.mp4' : '.webm';
@@ -1902,7 +1903,12 @@ function saveStory() {
     headers: { 'Authorization': 'Bearer ' + SUPA_KEY, 'Content-Type': recordedBlob.type, 'x-upsert': 'true' },
     body: recordedBlob
   }).then(function(res) {
-    if (!res.ok) throw new Error('Upload failed');
+    if (!res.ok) {
+      return res.text().then(function(t) {
+        console.error('Storage error:', res.status, t);
+        throw new Error('Storage upload failed (' + res.status + '): ' + t.substring(0,100));
+      });
+    }
     var audioUrl = 'https://wkjkmmmhftmjjkkmczbz.supabase.co/storage/v1/object/public/voice-memories/' + fileName;
     document.getElementById('save-progress').textContent = 'Saving story details...';
     var status = (sharingVal === 'private') ? 'active' : 'pending';
@@ -1935,10 +1941,10 @@ function saveStory() {
         alert('Your story has been saved!\n\nFamily link (share this with your family):\n' + fLink);
       }
     }, 2500);
-  }).catch(function() {
+  }).catch(function(err) {
     document.getElementById('save-progress').style.display = 'none';
     document.getElementById('btn-save-story').style.display = 'block';
-    alert('Sorry, could not save your story. Please try again.');
+    alert('Error: ' + (err && err.message ? err.message : 'Unknown error') + '\nPlease screenshot this message.');
   
 
 });
