@@ -1713,6 +1713,10 @@ function openStoryRecorder() {
   });
 }
 
+document.addEventListener('visibilitychange', function() {
+  if (document.hidden) { stopAllRecording(); }
+});
+
 function closeStoryRecorder() {
   stopAllRecording();
   document.getElementById('story-modal').style.display = 'none';

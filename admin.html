@@ -833,6 +833,17 @@ function renderAdminStories(stories) {
     rest.forEach(function(s) { html += storyRowHTML(s, false); });
   }
   list.innerHTML = html;
+  list.querySelectorAll('[data-listen]').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      openAudioPlayer(
+        this.getAttribute('data-listen'),
+        this.getAttribute('data-lname'),
+        this.getAttribute('data-lprompt'),
+        this.getAttribute('data-audio'),
+        this.getAttribute('data-lpend') === 'true'
+      );
+    });
+  });
   list.querySelectorAll('[data-approve]').forEach(function(btn) { btn.addEventListener('click', function() { approveStory(this.getAttribute('data-approve')); }); });
   list.querySelectorAll('[data-decline]').forEach(function(btn) { btn.addEventListener('click', function() { declineStory(this.getAttribute('data-decline')); }); });
   list.querySelectorAll('[data-delstory]').forEach(function(btn) { btn.addEventListener('click', function() { deleteAdminStory(this.getAttribute('data-delstory')); }); });
@@ -842,31 +853,34 @@ function renderAdminStories(stories) {
 
 function storyRowHTML(s, isPending) {
   var d = new Date(s.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
-  var mins = s.duration_seconds ? Math.floor(s.duration_seconds/60) + 'm ' + (s.duration_seconds%60) + 's' : '--';
+  var mins = s.duration_seconds ? Math.floor(s.duration_seconds/60)+'m '+(s.duration_seconds%60)+'s' : '--';
   var stitle = s.title || (s.prompt ? s.prompt.substring(0,40) : 'Story');
-  var sharingColors = { private:'badge-grey', community:'badge-green', family:'badge-blue', public:'badge-purple' };
-  var statusColors  = { pending:'badge-amber', active:'badge-green', declined:'badge-red', removed:'badge-grey' };
+  var sharingColors = {private:'badge-grey',community:'badge-green',family:'badge-blue',public:'badge-purple'};
+  var statusColors  = {pending:'badge-amber',active:'badge-green',declined:'badge-red',removed:'badge-grey'};
   var html = '<div class="story-row">';
   html += '<div class="story-row-header">';
-  html += '<div><div style="font-weight:700;font-size:13px;">' + escH(stitle) + '</div>';
-  html += '<div class="story-meta">' + escH(s.resident_name) + ' &middot; ' + d + ' &middot; ' + mins + '</div>';
-  if (s.prompt) html += '<div class="story-meta" style="font-style:italic;">' + escH(s.prompt.substring(0,60)) + '</div>';
+  html += '<div><div style="font-weight:700;font-size:13px;">'+escH(stitle)+'</div>';
+  html += '<div class="story-meta">'+escH(s.resident_name)+' &middot; '+d+' &middot; '+mins+'</div>';
+  if (s.prompt) html += '<div class="story-meta" style="font-style:italic;">'+escH(s.prompt.substring(0,60))+'</div>';
   html += '</div>';
   html += '<div style="display:flex;gap:4px;flex-wrap:wrap;">';
-  html += '<span class="badge ' + (sharingColors[s.sharing]||'badge-grey') + '">' + (s.sharing||'') + '</span>';
-  html += '<span class="badge ' + (statusColors[s.status]||'badge-grey') + '">' + (s.status||'') + '</span>';
+  html += '<span class="badge '+(sharingColors[s.sharing]||'badge-grey')+'">'+(s.sharing||'')+'</span>';
+  html += '<span class="badge '+(statusColors[s.status]||'badge-grey')+'">'+(s.status||'')+'</span>';
   html += '</div></div>';
-  if (s.transcript) html += '<div class="story-transcript">' + escH(s.transcript.substring(0,200)) + '</div>';
+  if (s.transcript) html += '<div class="story-transcript">'+escH(s.transcript.substring(0,200))+'</div>';
   html += '<div class="story-actions">';
-  if (s.audio_url) html += '<a href="' + escH(s.audio_url) + '" target="_blank" style="font-size:12px;color:#0F6E56;font-weight:600;padding:5px 10px;border:1px solid #0F6E56;border-radius:6px;text-decoration:none;">Listen</a>';
-  if (isPending) {
-    html += '<button type="button" class="btn-small btn-approve" data-approve="' + s.id + '">Approve</button>';
-    html += '<button type="button" class="btn-small btn-remove" data-decline="' + s.id + '">Decline</button>';
+  if (s.audio_url) {
+    html += '<button type="button" class="btn-small" style="border-color:#0F6E56;color:#0F6E56;background:#e1f5ee;" data-listen="'+s.id+'" data-audio="'+escH(s.audio_url)+'" data-lname="'+escH(s.resident_name)+'" data-lprompt="'+escH(s.prompt||'')+'" data-lpend="'+(isPending?'true':'false')+'">&#9654; Listen</button>';
   }
-  html += '<button type="button" class="btn-small btn-remove" data-delstory="' + s.id + '">Delete</button>';
+  if (isPending) {
+    html += '<button type="button" class="btn-small btn-approve" data-approve="'+s.id+'">Approve</button>';
+    html += '<button type="button" class="btn-small btn-remove" data-decline="'+s.id+'">Decline</button>';
+  }
+  html += '<button type="button" class="btn-small btn-remove" data-delstory="'+s.id+'">Delete</button>';
   html += '</div></div>';
   return html;
 }
+
 
 function approveStory(id) {
   sbFetch('stories?id=eq.' + id, { method: 'PATCH', body: JSON.stringify({ status: 'active' }) })
@@ -923,6 +937,57 @@ document.getElementById('add-prompt-btn').addEventListener('click', function() {
     .catch(function() { showStatus('Could not add prompt.', false); });
 });
 
+
+// ── AUDIO PLAYER MODAL ──
+var currentPlayStoryId = null;
+
+function openAudioPlayer(storyId, name, prompt, audioUrl, isPending) {
+  currentPlayStoryId = storyId;
+  document.getElementById('audio-modal-name').textContent = name;
+  document.getElementById('audio-modal-prompt').textContent = prompt || '';
+  document.getElementById('audio-modal-player').src = audioUrl;
+  document.getElementById('audio-modal-approve').style.display = isPending ? 'block' : 'none';
+  document.getElementById('audio-modal-decline').style.display = isPending ? 'block' : 'none';
+  var modal = document.getElementById('audio-modal');
+  modal.style.display = 'flex';
+}
+
+function closeAudioPlayer() {
+  var player = document.getElementById('audio-modal-player');
+  player.pause();
+  player.src = '';
+  document.getElementById('audio-modal').style.display = 'none';
+  currentPlayStoryId = null;
+}
+
+document.getElementById('audio-modal-close').addEventListener('click', closeAudioPlayer);
+
+document.getElementById('audio-modal-approve').addEventListener('click', function() {
+  if (!currentPlayStoryId) return;
+  approveStory(currentPlayStoryId);
+  closeAudioPlayer();
+});
+
+document.getElementById('audio-modal-decline').addEventListener('click', function() {
+  if (!currentPlayStoryId) return;
+  declineStory(currentPlayStoryId);
+  closeAudioPlayer();
+});
 </script>
+
+<!-- AUDIO PLAYER MODAL -->
+<div id="audio-modal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);z-index:100;padding:20px;display:none;align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:16px;padding:24px 20px;max-width:420px;width:100%;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+      <h3 id="audio-modal-name" style="color:#0F6E56;font-size:16px;"></h3>
+      <button type="button" id="audio-modal-close" style="background:none;border:none;font-size:24px;cursor:pointer;color:#aaa;padding:0;line-height:1;">&#x2715;</button>
+    </div>
+    <p id="audio-modal-prompt" style="font-size:13px;color:#888;font-style:italic;margin-bottom:14px;"></p>
+    <audio id="audio-modal-player" controls style="width:100%;margin-bottom:16px;"></audio>
+    <button type="button" id="audio-modal-approve" style="display:none;width:100%;padding:12px;background:#0F6E56;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;margin-bottom:8px;">Approve and publish</button>
+    <button type="button" id="audio-modal-decline" style="display:none;width:100%;padding:12px;background:#FCEBEB;color:#A32D2D;border:1px solid #F7C1C1;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;">Decline</button>
+  </div>
+</div>
+
 </body>
 </html>
