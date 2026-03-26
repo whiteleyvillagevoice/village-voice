@@ -611,13 +611,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div id="player-modal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);z-index:200;padding:16px;">
       <div style="background:#fff;border-radius:18px;padding:22px 20px;max-width:420px;margin:0 auto;">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
-          <h3 id="player-name" style="color:#6D28D9;font-size:16px;"></h3>
-          <button type="button" id="close-player-btn" style="background:none;border:none;font-size:22px;cursor:pointer;color:#aaa;padding:0;">&#x2715;</button>
+          <h3 id="player-name" style="color:#6D28D9;font-size:16px;flex:1;padding-right:8px;"></h3>
+          <button type="button" id="close-player-btn" style="width:36px;height:36px;background:#f0f0ea;border:none;border-radius:8px;font-size:18px;cursor:pointer;color:#555;display:flex;align-items:center;justify-content:center;flex-shrink:0;touch-action:manipulation;">&#x2715;</button>
         </div>
         <p id="player-resident" style="font-size:12px;color:#888;margin-bottom:4px;"></p>
         <p id="player-prompt" style="font-size:13px;color:#6D28D9;font-style:italic;margin-bottom:14px;"></p>
         <audio id="player-audio" controls style="width:100%;margin-bottom:14px;"></audio>
-        <div id="player-transcript" style="display:none;font-size:13px;color:#444;line-height:1.7;max-height:200px;overflow-y:auto;background:#f9f7ff;border-radius:10px;padding:12px;"></div>
+        <div id="player-transcript" style="display:none;font-size:13px;color:#444;line-height:1.7;max-height:180px;overflow-y:auto;background:#f9f7ff;border-radius:10px;padding:12px;margin-bottom:12px;"></div>
+        <div id="player-delete-btn-wrap" style="display:none;margin-bottom:8px;">
+          <button type="button" id="player-delete-btn" style="width:100%;padding:11px;background:#FCEBEB;color:#A32D2D;border:1px solid #F7C1C1;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;touch-action:manipulation;">Delete my story</button>
+        </div>
+        <button type="button" id="player-close-bottom" style="width:100%;padding:12px;background:#f0f0ea;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;font-family:inherit;touch-action:manipulation;color:#333;">Close</button>
       </div>
     </div>
 
@@ -1505,6 +1509,12 @@ window.addEventListener('DOMContentLoaded', function() {
   if (document.getElementById('close-player-btn')) {
     document.getElementById('close-player-btn').addEventListener('click', closePlayer);
   }
+  if (document.getElementById('player-close-bottom')) {
+    document.getElementById('player-close-bottom').addEventListener('click', closePlayer);
+  }
+  document.getElementById('player-modal').addEventListener('click', function(e) {
+    if (e.target === this) closePlayer();
+  });
 
   // FAB
   document.getElementById('fab-btn').addEventListener('click', openPost);
@@ -1696,7 +1706,7 @@ function loadStories() {
       if (isOwn && s.status === 'pending') statusNote = '<span style="font-size:11px;color:#854F0B;background:#FAEEDA;padding:1px 7px;border-radius:10px;margin-left:6px;">Awaiting approval</span>';
       if (isOwn && s.status === 'declined') statusNote = '<span style="font-size:11px;color:#A32D2D;background:#FCEBEB;padding:1px 7px;border-radius:10px;margin-left:6px;">Declined</span>';
       if (isOwn && s.status === 'private') statusNote = '<span style="font-size:11px;color:#5f5e5a;background:#f1efe8;padding:1px 7px;border-radius:10px;margin-left:6px;">Private</span>';
-      html += '<div class="card story-card" style="margin-bottom:12px;cursor:pointer;border-left:3px solid ' + (isOwn ? '#6D28D9' : '#9FE1CB') + ';" data-sid="'+s.id+'" data-sname="'+escHtml(s.resident_name)+'" data-sprompt="'+escHtml(s.prompt||'')+'" data-saudio="'+escHtml(s.audio_url||'')+'" data-stx="'+escHtml((s.transcript||'').substring(0,300))+'" data-stitle="'+escHtml(stitle)+'">';
+      html += '<div class="card story-card" style="margin-bottom:12px;cursor:pointer;border-left:3px solid ' + (isOwn ? '#6D28D9' : '#9FE1CB') + ';" data-sid="'+s.id+'" data-sresid="'+escHtml(s.resident_id||'')+'" data-sname="'+escHtml(s.resident_name)+'" data-sprompt="'+escHtml(s.prompt||'')+'" data-saudio="'+escHtml(s.audio_url||'')+'" data-stx="'+escHtml((s.transcript||'').substring(0,300))+'" data-stitle="'+escHtml(stitle)+'">';
       html += '<div style="display:flex;align-items:center;gap:10px;">';
       html += '<div style="width:38px;height:38px;border-radius:50%;background:#EDE9FE;display:flex;align-items:center;justify-content:center;flex-shrink:0;">';
       html += '<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#6D28D9" stroke-width="1.5"/><path d="M12 6v6l4 2" stroke="#6D28D9" stroke-width="1.5" stroke-linecap="round"/></svg></div>';
@@ -1718,7 +1728,9 @@ function loadStories() {
         if (e.target.classList.contains('story-delete-btn')) return;
         var au = this.getAttribute('data-saudio');
         if (!au) return;
-        openPlayer(this.getAttribute('data-stitle'), this.getAttribute('data-sname'), this.getAttribute('data-sprompt'), au, this.getAttribute('data-stx'));
+        var sid = this.getAttribute('data-sid');
+        var isOwn = currentUser && currentUser.uid && this.getAttribute('data-sresid') === currentUser.uid;
+        openPlayer(this.getAttribute('data-stitle'), this.getAttribute('data-sname'), this.getAttribute('data-sprompt'), au, this.getAttribute('data-stx'), sid, isOwn);
       });
     }
     var delBtns = list.querySelectorAll('.story-delete-btn');
