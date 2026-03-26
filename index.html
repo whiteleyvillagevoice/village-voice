@@ -1701,7 +1701,7 @@ function loadStories() {
       var dateStr = d.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
       var mins = s.duration_seconds ? Math.floor(s.duration_seconds/60)+'m '+(s.duration_seconds%60)+'s' : '';
       var stitle = s.title || (s.prompt ? s.prompt.substring(0,50) : 'My story');
-      var isOwn = currentUser.id && s.resident_id === currentUser.id;
+      var isOwn = currentUser && currentUser.uid && s.resident_id === currentUser.uid;
       var statusNote = '';
       if (isOwn && s.status === 'pending') statusNote = '<span style="font-size:11px;color:#854F0B;background:#FAEEDA;padding:1px 7px;border-radius:10px;margin-left:6px;">Awaiting approval</span>';
       if (isOwn && s.status === 'declined') statusNote = '<span style="font-size:11px;color:#A32D2D;background:#FCEBEB;padding:1px 7px;border-radius:10px;margin-left:6px;">Declined</span>';
@@ -1729,7 +1729,7 @@ function loadStories() {
         var au = this.getAttribute('data-saudio');
         if (!au) return;
         var sid = this.getAttribute('data-sid');
-        var isOwn = currentUser && currentUser.uid && this.getAttribute('data-sresid') === currentUser.uid;
+        var sresid = this.getAttribute('data-sresid'); var isOwn = currentUser && currentUser.uid && (sresid === currentUser.uid || (!sresid && this.getAttribute('data-sname') === currentUser.name));
         openPlayer(this.getAttribute('data-stitle'), this.getAttribute('data-sname'), this.getAttribute('data-sprompt'), au, this.getAttribute('data-stx'), sid, isOwn);
       });
     }
