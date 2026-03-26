@@ -1039,7 +1039,13 @@ function closeAudioPlayer() {
   currentPlayStoryId = null;
 }
 
-document.getElementById('audio-modal-close').addEventListener('click', closeAudioPlayer);
+document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('audio-modal-close').addEventListener('click', closeAudioPlayer);
+  document.getElementById('audio-modal-close-bottom').addEventListener('click', closeAudioPlayer);
+  document.getElementById('audio-modal').addEventListener('click', function(e) {
+    if (e.target === this) closeAudioPlayer();
+  });
+});
 
 document.getElementById('audio-modal-approve').addEventListener('click', function() {
   if (!currentPlayStoryId) return;
@@ -1094,17 +1100,17 @@ function triggerTranscription(storyId, audioUrl, btn) {
 
 <!-- AUDIO PLAYER MODAL -->
 <div id="audio-modal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);z-index:100;padding:20px;align-items:center;justify-content:center;">
-  <div style="background:#fff;border-radius:16px;padding:24px 20px;max-width:420px;width:100%;">
+  <div style="background:#fff;border-radius:16px;padding:24px 20px;max-width:420px;width:100%;position:relative;">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
-      <h3 id="audio-modal-name" style="color:#0F6E56;font-size:16px;"></h3>
-      <button type="button" id="audio-modal-close" style="background:#f0f0ea;border:none;font-size:18px;cursor:pointer;color:#555;padding:6px 10px;border-radius:8px;line-height:1;touch-action:manipulation;">&#x2715;</button>
+      <h3 id="audio-modal-name" style="color:#0F6E56;font-size:16px;flex:1;padding-right:10px;"></h3>
+      <button type="button" id="audio-modal-close" style="width:36px;height:36px;background:#f0f0ea;border:none;border-radius:8px;font-size:18px;cursor:pointer;color:#555;display:flex;align-items:center;justify-content:center;flex-shrink:0;touch-action:manipulation;">&#x2715;</button>
     </div>
     <p id="audio-modal-prompt" style="font-size:13px;color:#888;font-style:italic;margin-bottom:14px;"></p>
     <audio id="audio-modal-player" controls style="width:100%;margin-bottom:16px;"></audio>
-    <button type="button" id="audio-modal-approve" style="display:none;width:100%;padding:12px;background:#0F6E56;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;margin-bottom:8px;">Approve and publish</button>
-    <button type="button" id="audio-modal-decline" style="display:none;width:100%;padding:12px;background:#FCEBEB;color:#A32D2D;border:1px solid #F7C1C1;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;">Decline</button>
+    <button type="button" id="audio-modal-approve" style="display:none;width:100%;padding:12px;background:#0F6E56;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;margin-bottom:8px;touch-action:manipulation;">Approve and publish</button>
+    <button type="button" id="audio-modal-decline" style="display:none;width:100%;padding:12px;background:#FCEBEB;color:#A32D2D;border:1px solid #F7C1C1;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;margin-bottom:8px;touch-action:manipulation;">Decline</button>
+    <button type="button" id="audio-modal-close-bottom" style="width:100%;padding:12px;background:#f0f0ea;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;font-family:inherit;touch-action:manipulation;color:#333;">Close</button>
   </div>
 </div>
 
-</body>
-</html>
+>
