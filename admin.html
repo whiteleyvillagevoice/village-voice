@@ -523,7 +523,7 @@ document.getElementById('ev-save-btn').addEventListener('click', function() {
   var body = { title: title, date: document.getElementById('ev-date').value || null, time: document.getElementById('ev-time').value || null, location: document.getElementById('ev-location').value.trim() || null, description: document.getElementById('ev-desc').value.trim() || null };
   var method = editEvId ? 'PATCH' : 'POST';
   var path = editEvId ? 'events?id=eq.' + editEvId : 'events';
-  sbFetch(path, { method: method, body: JSON.stringify(body) }).then(function() {
+  sbFetch(path, { method: method, body: body }).then(function() {
     showStatus(editEvId ? 'Event updated.' : 'Event added.', true);
     clearEvForm(); loadEvents();
   }).catch(function() { showStatus('Could not save event.', false); });
@@ -567,7 +567,7 @@ document.getElementById('news-save-btn').addEventListener('click', function() {
   var title = document.getElementById('news-title').value.trim();
   var body = document.getElementById('news-body').value.trim();
   if (!title || !body) { showStatus('Please enter both headline and message.', false); return; }
-  sbFetch('messages', { method: 'POST', body: JSON.stringify({ title: title, body: body, tag: document.getElementById('news-cat').value, label: document.getElementById('news-cat').options[document.getElementById('news-cat').selectedIndex].text, date: new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}) }) })
+  sbFetch('messages', { method: 'POST', body: { title: title, body: body, tag: document.getElementById('news-cat').value, label: document.getElementById('news-cat').options[document.getElementById('news-cat').selectedIndex].text, date: new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}) } })
     .then(function() { showStatus('Post published.', true); document.getElementById('news-title').value = ''; document.getElementById('news-body').value = ''; loadNews(); })
     .catch(function() { showStatus('Could not publish post.', false); });
 });
@@ -634,7 +634,7 @@ document.getElementById('res-save-btn').addEventListener('click', function() {
   var body = { first: first, last: last, address: document.getElementById('res-address').value.trim()||null, mobile: document.getElementById('res-mobile').value.trim()||null, status: document.getElementById('res-status').value, stories_suspended: document.getElementById('res-stories-suspended').value === 'true' };
   var method = editResId ? 'PATCH' : 'POST';
   var path = editResId ? 'residents?id=eq.' + editResId : 'residents';
-  sbFetch(path, { method: method, body: JSON.stringify(body) }).then(function() { showStatus('Resident saved.', true); closeResEdit(); loadResidents(); }).catch(function() { showStatus('Could not save resident.', false); });
+  sbFetch(path, { method: method, body: body }).then(function() { showStatus('Resident saved.', true); closeResEdit(); loadResidents(); }).catch(function() { showStatus('Could not save resident.', false); });
 });
 document.getElementById('res-cancel-btn').addEventListener('click', closeResEdit);
 document.getElementById('res-remove-btn').addEventListener('click', function() {
@@ -716,7 +716,7 @@ document.getElementById('cc-save-btn').addEventListener('click', function() {
   var body = { name: name, role: document.getElementById('cc-role').value.trim()||null, phone: document.getElementById('cc-phone').value.trim()||null, category: document.getElementById('cc-cat').value };
   var method = editCCId ? 'PATCH' : 'POST';
   var path = editCCId ? 'community_contacts?id=eq.' + editCCId : 'community_contacts';
-  sbFetch(path, { method: method, body: JSON.stringify(body) }).then(function() { showStatus('Contact saved.', true); clearCCForm(); loadCCList(); }).catch(function() { showStatus('Could not save contact.', false); });
+  sbFetch(path, { method: method, body: body }).then(function() { showStatus('Contact saved.', true); clearCCForm(); loadCCList(); }).catch(function() { showStatus('Could not save contact.', false); });
 });
 document.getElementById('cc-clear-btn').addEventListener('click', clearCCForm);
 document.getElementById('cc-delete-btn').addEventListener('click', function() {
@@ -761,7 +761,7 @@ document.getElementById('doc-save-btn').addEventListener('click', function() {
   var body = { title: title, url: url, category: document.getElementById('doc-cat').value };
   var method = editDocId ? 'PATCH' : 'POST';
   var path = editDocId ? 'documents?id=eq.' + editDocId : 'documents';
-  sbFetch(path, { method: method, body: JSON.stringify(body) }).then(function() { showStatus('Document saved.', true); clearDocForm(); loadDocList(); }).catch(function() { showStatus('Could not save document.', false); });
+  sbFetch(path, { method: method, body: body }).then(function() { showStatus('Document saved.', true); clearDocForm(); loadDocList(); }).catch(function() { showStatus('Could not save document.', false); });
 });
 document.getElementById('doc-clear-btn').addEventListener('click', clearDocForm);
 document.getElementById('doc-delete-btn').addEventListener('click', function() {
