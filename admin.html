@@ -105,10 +105,13 @@ label{font-size:13px;color:#555;display:block;margin-bottom:5px;font-weight:600;
 
 <!-- LOGIN SCREEN -->
 <div id="login-screen">
-  <div class="login-box">
-    <div class="login-logo">Village Voice</div>
+  <div class="login-box" style="max-width:420px;">
+    <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:4px;">
+      <span style="display:inline-flex;align-items:center;justify-content:center;width:56px;height:56px;border-radius:50%;background:#0F6E56;"><svg width="38" height="38" viewBox="0 0 38 38" fill="none"><path d="M4 7L15 29L26 7" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 7L23 29L34 7" stroke="white" stroke-width="3.5" stroke-opacity="0.55" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <div class="login-logo" style="margin-bottom:0;">Village Voice</div>
+    </div>
     <div class="login-sub">Administrator Portal</div>
-    <input type="password" id="pw-input" placeholder="Enter admin password" style="margin-bottom:12px;text-align:center;">
+    <input type="password" id="pw-input" placeholder="Enter admin password" style="margin-bottom:12px;text-align:center;padding:14px;font-size:16px;">
     <button type="button" class="btn-primary" id="pw-btn" style="width:100%;">Sign in</button>
     <div class="login-error" id="pw-error">Incorrect password. Please try again.</div>
   </div>
@@ -119,8 +122,13 @@ label{font-size:13px;color:#555;display:block;margin-bottom:5px;font-weight:600;
 
   <div class="admin-top">
     <div>
-      <div class="admin-title">Village Voice Admin</div>
-      <div class="admin-subtitle">Whiteley Village</div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span style="display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,0.15);flex-shrink:0;"><svg width="30" height="30" viewBox="0 0 38 38" fill="none"><path d="M4 7L15 29L26 7" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 7L23 29L34 7" stroke="white" stroke-width="3.5" stroke-opacity="0.55" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <div>
+          <div class="admin-title">Village Voice Admin</div>
+          <div class="admin-subtitle">Whiteley Village</div>
+        </div>
+      </div>
     </div>
     <button type="button" class="signout-btn" id="signout-btn">Sign out</button>
   </div>
@@ -167,15 +175,17 @@ label{font-size:13px;color:#555;display:block;margin-bottom:5px;font-weight:600;
           <div><label>Message</label><textarea id="news-body" rows="4" style="resize:none;" placeholder="Write your message here..."></textarea></div>
           <div><label>Category</label>
             <select id="news-cat">
-              <option value="Trust update">Trust update</option>
-              <option value="Community">Community</option>
-              <option value="Health">Health</option>
-              <option value="Events">Events</option>
-              <option value="Notice">Notice</option>
+              <option value="trust">Trust update</option>
+              <option value="panel">Panel report</option>
+              <option value="notice">Notice</option>
+              <option value="urgent">Urgent</option>
             </select>
           </div>
         </div>
-        <button type="button" class="btn-save" id="news-save-btn">Post to news feed</button>
+        <div style="display:flex;gap:9px;">
+          <button type="button" class="btn-save" id="news-save-btn" style="flex:2;">Post to news feed</button>
+          <button type="button" class="btn-outline" id="news-clear-btn" style="flex:1;text-align:center;">Clear</button>
+        </div>
       </div>
       <div class="panel">
         <div class="panel-title">Recent posts</div>
@@ -301,8 +311,12 @@ label{font-size:13px;color:#555;display:block;margin-bottom:5px;font-weight:600;
           <div><label>Option 2</label><input type="text" id="sv-opt2"></div>
           <div><label>Option 3 (optional)</label><input type="text" id="sv-opt3"></div>
           <div><label>Option 4 (optional)</label><input type="text" id="sv-opt4"></div>
+          <div><label>Option 5 (optional)</label><input type="text" id="sv-opt5"></div>
         </div>
-        <button type="button" class="btn-save" id="sv-create-btn">Create survey</button>
+        <div style="display:flex;gap:9px;">
+          <button type="button" class="btn-save" id="sv-create-btn" style="flex:2;">Create survey</button>
+          <button type="button" class="btn-outline" id="sv-clear-btn" style="flex:1;text-align:center;">Clear</button>
+        </div>
       </div>
       <div class="panel">
         <div class="panel-title">Active surveys</div>
@@ -350,31 +364,31 @@ label{font-size:13px;color:#555;display:block;margin-bottom:5px;font-weight:600;
   <!-- BOTTOM NAV -->
   <div class="admin-nav">
     <button class="nav-btn on" id="nav-events" onclick="showAdminSection('events')">
-      <div class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6" stroke-linecap="round"/><line x1="8" y1="2" x2="8" y2="6" stroke-linecap="round"/><line x1="3" y1="10" x2="21" y2="10" stroke-linecap="round"/></svg></div>
+      <div class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6" stroke-linecap="round"/><line x1="8" y1="2" x2="8" y2="6" stroke-linecap="round"/><line x1="3" y1="10" x2="21" y2="10" stroke-linecap="round"/></svg></div>
       <span class="nav-lbl">Events</span>
     </button>
     <button class="nav-btn" id="nav-news" onclick="showAdminSection('news')">
-      <div class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke-linecap="round"/></svg></div>
+      <div class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke-linecap="round"/></svg></div>
       <span class="nav-lbl">News</span>
     </button>
     <button class="nav-btn" id="nav-residents" onclick="showAdminSection('residents')">
-      <div class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" stroke-linecap="round"/><circle cx="9" cy="7" r="4"/></svg></div>
+      <div class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" stroke-linecap="round"/><circle cx="9" cy="7" r="4"/></svg></div>
       <span class="nav-lbl">Residents</span>
     </button>
     <button class="nav-btn" id="nav-community" onclick="showAdminSection('community')">
-      <div class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" stroke-linecap="round"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke-linecap="round"/></svg></div>
+      <div class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" stroke-linecap="round"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke-linecap="round"/></svg></div>
       <span class="nav-lbl">Community</span>
     </button>
     <button class="nav-btn" id="nav-documents" onclick="showAdminSection('documents')">
-      <div class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" stroke-linecap="round"/><polyline points="14 2 14 8 20 8" stroke-linecap="round"/></svg></div>
+      <div class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" stroke-linecap="round"/><polyline points="14 2 14 8 20 8" stroke-linecap="round"/></svg></div>
       <span class="nav-lbl">Docs</span>
     </button>
     <button class="nav-btn" id="nav-surveys" onclick="showAdminSection('surveys')">
-      <div class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.5"><path d="M9 11l3 3L22 4" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" stroke-linecap="round"/></svg></div>
+      <div class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.5"><path d="M9 11l3 3L22 4" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" stroke-linecap="round"/></svg></div>
       <span class="nav-lbl">Surveys</span>
     </button>
     <button class="nav-btn" id="nav-stories" onclick="showAdminSection('stories')">
-      <div class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.5"><path d="M12 2a10 10 0 100 20A10 10 0 0012 2z"/><path d="M12 6v6l4 2" stroke-linecap="round"/></svg></div>
+      <div class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.5"><path d="M12 2a10 10 0 100 20A10 10 0 0012 2z"/><path d="M12 6v6l4 2" stroke-linecap="round"/></svg></div>
       <span class="nav-lbl">Stories</span>
     </button>
   </div>
@@ -389,15 +403,27 @@ var editEvId = null, editCCId = null, editDocId = null, editResId = null;
 var allResidents = [], allAdminStories = [];
 
 function sbFetch(path, opts) {
-  opts = opts || {};
-  opts.headers = opts.headers || {};
-  opts.headers['apikey'] = SUPA_KEY;
-  opts.headers['Authorization'] = 'Bearer ' + SUPA_KEY;
-  opts.headers['Content-Type'] = opts.headers['Content-Type'] || 'application/json';
-  return fetch(SUPA_URL + '/rest/v1/' + path, opts).then(function(r) {
-    if (!r.ok) return r.text().then(function(t) { throw new Error(t); });
-    return r.text().then(function(t) { return t ? JSON.parse(t) : null; });
-  });
+  var method = 'GET';
+  var body = undefined;
+  var headers = {
+    'apikey': SUPA_KEY,
+    'Authorization': 'Bearer ' + SUPA_KEY,
+    'Content-Type': 'application/json'
+  };
+  if (opts) {
+    if (opts.method) method = opts.method;
+    if (opts.body) body = typeof opts.body === 'string' ? opts.body : JSON.stringify(opts.body);
+    if (opts.headers) { for (var k in opts.headers) headers[k] = opts.headers[k]; }
+  }
+  // Only add Prefer header for write operations
+  if (method === 'POST' || method === 'PATCH' || method === 'PUT') {
+    headers['Prefer'] = 'return=representation';
+  }
+  return fetch(SUPA_URL + '/rest/v1/' + path, { method: method, headers: headers, body: body })
+    .then(function(r) {
+      if (!r.ok) return r.text().then(function(t) { throw new Error(r.status + ': ' + t); });
+      return r.text().then(function(t) { return t ? JSON.parse(t) : null; });
+    });
 }
 
 function showStatus(msg, ok) {
@@ -514,7 +540,7 @@ function clearEvForm() {
 
 // ── NEWS ──
 function loadNews() {
-  sbFetch('trust_messages?order=created_at.desc&limit=20').then(function(data) {
+  sbFetch('messages?order=created_at.desc&limit=20').then(function(data) {
     var list = document.getElementById('news-list');
     if (!data || data.length === 0) { list.innerHTML = '<div style="color:#aaa;padding:12px;font-size:13px;">No posts yet.</div>'; return; }
     var html = '<table class="data-table"><tr><th>Headline</th><th>Category</th><th>Date</th><th></th></tr>';
@@ -528,7 +554,7 @@ function loadNews() {
     list.querySelectorAll('[data-msgid]').forEach(function(btn) {
       btn.addEventListener('click', function() {
         if (!confirm('Remove this post?')) return;
-        sbFetch('trust_messages?id=eq.' + this.getAttribute('data-msgid'), { method: 'DELETE' }).then(function() { showStatus('Post removed.', true); loadNews(); });
+        sbFetch('messages?id=eq.' + this.getAttribute('data-msgid'), { method: 'DELETE' }).then(function() { showStatus('Post removed.', true); loadNews(); });
       });
     });
   }).catch(function() { document.getElementById('news-list').innerHTML = '<div style="color:#A32D2D;padding:12px;font-size:13px;">Could not load posts.</div>'; });
@@ -538,7 +564,7 @@ document.getElementById('news-save-btn').addEventListener('click', function() {
   var title = document.getElementById('news-title').value.trim();
   var body = document.getElementById('news-body').value.trim();
   if (!title || !body) { showStatus('Please enter both headline and message.', false); return; }
-  sbFetch('trust_messages', { method: 'POST', body: JSON.stringify({ title: title, body: body, category: document.getElementById('news-cat').value }) })
+  sbFetch('messages', { method: 'POST', body: JSON.stringify({ title: title, body: body, tag: document.getElementById('news-cat').value, label: document.getElementById('news-cat').options[document.getElementById('news-cat').selectedIndex].text, date: new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}) }) })
     .then(function() { showStatus('Post published.', true); document.getElementById('news-title').value = ''; document.getElementById('news-body').value = ''; loadNews(); })
     .catch(function() { showStatus('Could not publish post.', false); });
 });
@@ -704,7 +730,7 @@ function loadDocList() {
     if (!data || data.length === 0) { list.innerHTML = '<div style="color:#aaa;padding:12px;font-size:13px;">No documents yet.</div>'; return; }
     var html = '<table class="data-table"><tr><th>Title</th><th>Category</th><th></th></tr>';
     data.forEach(function(d) {
-      html += '<tr><td><a href="' + escH(d.url||'#') + '" target="_blank" style="color:#0F6E56;font-weight:600;">' + escH(d.title) + '</a></td><td>' + escH(d.category||'') + '</td>';
+      html += '<tr><td>' + (d.url ? '<a href="' + escH(d.url) + '" target="_blank" style="color:#0F6E56;font-weight:600;">' + escH(d.title) + '</a>' : '<span style="color:#aaa;">' + escH(d.title) + ' (no link)</span>') + '</td><td>' + escH(d.category||'') + '</td>';
       html += '<td><button type="button" class="btn-small" data-docid="' + d.id + '">Edit</button></td></tr>';
     });
     html += '</table>';
@@ -744,45 +770,91 @@ function clearDocForm() { editDocId = null; ['doc-title','doc-url'].forEach(func
 
 // ── SURVEYS ──
 function loadAdminSurveys() {
-  sbFetch('surveys?order=created_at.desc').then(function(data) {
-    var list = document.getElementById('surveys-admin-list');
-    if (!data || data.length === 0) { list.innerHTML = '<div style="color:#aaa;padding:12px;font-size:13px;">No surveys yet.</div>'; return; }
-    var html = '';
-    data.forEach(function(sv) {
-      var total = (sv.options || []).reduce(function(s, o) { return s + (o.votes || 0); }, 0);
-      html += '<div style="border:1px solid #e8e8e2;border-radius:10px;padding:14px;margin-bottom:10px;">';
-      html += '<div style="font-weight:700;font-size:14px;margin-bottom:10px;">' + escH(sv.question) + '</div>';
-      (sv.options || []).forEach(function(o) {
-        var pct = total > 0 ? Math.round((o.votes||0)/total*100) : 0;
-        html += '<div style="margin-bottom:6px;">';
-        html += '<div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px;"><span>' + escH(o.text) + '</span><span style="font-weight:700;">' + pct + '% (' + (o.votes||0) + ')</span></div>';
-        html += '<div style="background:#f0f0ea;border-radius:4px;height:6px;"><div style="background:#0F6E56;height:6px;border-radius:4px;width:' + pct + '%;"></div></div>';
-        html += '</div>';
-      });
-      html += '<div style="font-size:12px;color:#888;margin-top:8px;">' + total + ' total votes</div>';
-      html += '<div style="display:flex;gap:8px;margin-top:10px;">';
-      html += '<button type="button" class="btn-small btn-remove" data-svid="' + sv.id + '">Delete survey</button>';
-      html += '</div></div>';
+  var list = document.getElementById('surveys-admin-list');
+  list.innerHTML = '<div class="loading">Loading surveys...</div>';
+  sbFetch('surveys?order=created_at.desc').then(function(surveys) {
+    if (!surveys || surveys.length === 0) {
+      list.innerHTML = '<div style="color:#aaa;padding:12px;font-size:13px;">No surveys yet.</div>';
+      return;
+    }
+    list.innerHTML = '';
+    surveys.forEach(function(sv) {
+      var div = document.createElement('div');
+      div.style.cssText = 'border:1px solid #e8e8e2;border-radius:10px;padding:14px;margin-bottom:10px;';
+      div.innerHTML = '<div style="font-weight:700;font-size:14px;margin-bottom:10px;">' + escH(sv.question||sv.title||'') + '</div>' +
+        '<div id="sv-opts-' + sv.id + '" style="color:#aaa;font-size:13px;">Loading results...</div>' +
+        '<div style="display:flex;gap:8px;margin-top:10px;">' +
+        '<button type="button" class="btn-small btn-remove" data-svid="' + sv.id + '">Delete survey</button>' +
+        '</div>';
+      list.appendChild(div);
+      // Load options and responses
+      Promise.all([
+        sbFetch('survey_options?survey_id=eq.' + sv.id + '&order=display_order.asc'),
+        sbFetch('survey_responses?survey_id=eq.' + sv.id + '&select=option_id')
+      ]).then(function(results) {
+        var opts = results[0] || [];
+        var responses = results[1] || [];
+        var total = responses.length;
+        var counts = {};
+        responses.forEach(function(r) { counts[r.option_id] = (counts[r.option_id]||0) + 1; });
+        var optsEl = document.getElementById('sv-opts-' + sv.id);
+        if (!optsEl) return;
+        if (!opts.length) { optsEl.textContent = 'No options found.'; return; }
+        var html = '';
+        opts.forEach(function(o) {
+          var cnt = counts[o.id] || 0;
+          var pct = total > 0 ? Math.round(cnt/total*100) : 0;
+          html += '<div style="margin-bottom:8px;">';
+          html += '<div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px;">';
+          html += '<span>' + escH(o.option_text) + '</span>';
+          html += '<span style="font-weight:700;color:#0F6E56;">' + pct + '% (' + cnt + ')</span></div>';
+          html += '<div style="background:#f0f0ea;border-radius:4px;height:6px;">';
+          html += '<div style="background:#0F6E56;height:6px;border-radius:4px;width:' + pct + '%;"></div></div>';
+          html += '</div>';
+        });
+        html += '<div style="font-size:12px;color:#888;margin-top:4px;">' + total + ' response' + (total!==1?'s':'') + '</div>';
+        optsEl.innerHTML = html;
+      }).catch(function() {});
     });
-    list.innerHTML = html;
     list.querySelectorAll('[data-svid]').forEach(function(btn) {
       btn.addEventListener('click', function() {
         if (!confirm('Delete this survey and all responses?')) return;
-        sbFetch('surveys?id=eq.' + this.getAttribute('data-svid'), { method: 'DELETE' }).then(function() { showStatus('Survey deleted.', true); loadAdminSurveys(); });
+        var sid = this.getAttribute('data-svid');
+        Promise.all([
+          sbFetch('survey_options?survey_id=eq.' + sid, { method: 'DELETE' }),
+          sbFetch('survey_responses?survey_id=eq.' + sid, { method: 'DELETE' })
+        ]).then(function() {
+          return sbFetch('surveys?id=eq.' + sid, { method: 'DELETE' });
+        }).then(function() { showStatus('Survey deleted.', true); loadAdminSurveys(); })
+        .catch(function() { showStatus('Could not delete survey.', false); });
       });
     });
-  }).catch(function() { document.getElementById('surveys-admin-list').innerHTML = '<div style="color:#A32D2D;padding:12px;font-size:13px;">Could not load surveys.</div>'; });
+  }).catch(function() {
+    list.innerHTML = '<div style="color:#A32D2D;padding:12px;font-size:13px;">Could not load surveys.</div>';
+  });
 }
 
 document.getElementById('sv-create-btn').addEventListener('click', function() {
   var q = document.getElementById('sv-question').value.trim();
   if (!q) { showStatus('Please enter a question.', false); return; }
-  var opts = [1,2,3,4].map(function(n) { return document.getElementById('sv-opt'+n).value.trim(); }).filter(Boolean);
+  var opts = [1,2,3,4,5].map(function(n) { return document.getElementById('sv-opt'+n).value.trim(); }).filter(Boolean);
   if (opts.length < 2) { showStatus('Please enter at least 2 options.', false); return; }
-  var options = opts.map(function(t) { return { text: t, votes: 0 }; });
-  sbFetch('surveys', { method: 'POST', body: JSON.stringify({ question: q, options: options, status: 'active' }) })
-    .then(function() { showStatus('Survey created.', true); [1,2,3,4].forEach(function(n) { document.getElementById('sv-opt'+n).value = ''; }); document.getElementById('sv-question').value = ''; loadAdminSurveys(); })
-    .catch(function() { showStatus('Could not create survey.', false); });
+  sbFetch('surveys', { method: 'POST', body: { question: q, title: q, status: 'active' } })
+    .then(function(data) {
+      var svId = data && data[0] ? data[0].id : null;
+      if (!svId) throw new Error('No survey id returned');
+      var promises = opts.map(function(t, i) {
+        return sbFetch('survey_options', { method: 'POST', body: { survey_id: svId, option_text: t, display_order: i + 1 } });
+      });
+      return Promise.all(promises);
+    })
+    .then(function() {
+      showStatus('Survey created.', true);
+      [1,2,3,4,5].forEach(function(n) { var el = document.getElementById('sv-opt'+n); if(el) el.value = ''; });
+      document.getElementById('sv-question').value = '';
+      loadAdminSurveys();
+    })
+    .catch(function(e) { showStatus('Could not create survey: ' + (e.message||''), false); });
 });
 
 // ── STORIES ──
@@ -847,6 +919,9 @@ function renderAdminStories(stories) {
   list.querySelectorAll('[data-approve]').forEach(function(btn) { btn.addEventListener('click', function() { approveStory(this.getAttribute('data-approve')); }); });
   list.querySelectorAll('[data-decline]').forEach(function(btn) { btn.addEventListener('click', function() { declineStory(this.getAttribute('data-decline')); }); });
   list.querySelectorAll('[data-delstory]').forEach(function(btn) { btn.addEventListener('click', function() { deleteAdminStory(this.getAttribute('data-delstory')); }); });
+  list.querySelectorAll('[data-transcribe]').forEach(function(btn) {
+    btn.addEventListener('click', function() { triggerTranscription(this.getAttribute('data-transcribe'), this.getAttribute('data-taudio'), this); });
+  });
   var search = document.getElementById('stories-admin-search');
   if (search) search.oninput = filterAdminStories;
 }
@@ -871,6 +946,7 @@ function storyRowHTML(s, isPending) {
   html += '<div class="story-actions">';
   if (s.audio_url) {
     html += '<button type="button" class="btn-small" style="border-color:#0F6E56;color:#0F6E56;background:#e1f5ee;" data-listen="'+s.id+'" data-audio="'+escH(s.audio_url)+'" data-lname="'+escH(s.resident_name)+'" data-lprompt="'+escH(s.prompt||'')+'" data-lpend="'+(isPending?'true':'false')+'">&#9654; Listen</button>';
+    html += '<button type="button" class="btn-small" style="border-color:#534AB7;color:#534AB7;background:#EEEDFE;" data-transcribe="'+s.id+'" data-taudio="'+escH(s.audio_url)+'">'+(s.transcript ? '&#8635; Re-transcribe' : '&#9881; Transcribe')+'</button>';
   }
   if (isPending) {
     html += '<button type="button" class="btn-small btn-approve" data-approve="'+s.id+'">Approve</button>';
@@ -972,7 +1048,45 @@ document.getElementById('audio-modal-decline').addEventListener('click', functio
   if (!currentPlayStoryId) return;
   declineStory(currentPlayStoryId);
   closeAudioPlayer();
+})
+// News clear
+document.getElementById('news-clear-btn').addEventListener('click', function() {
+  document.getElementById('news-title').value = '';
+  document.getElementById('news-body').value = '';
 });
+
+// Survey clear
+document.getElementById('sv-clear-btn').addEventListener('click', function() {
+  document.getElementById('sv-question').value = '';
+  [1,2,3,4,5].forEach(function(n) {
+    var el = document.getElementById('sv-opt' + n);
+    if (el) el.value = '';
+  });
+});
+
+// Fix survey create to include opt5
+;
+
+function triggerTranscription(storyId, audioUrl, btn) {
+  var orig = btn.textContent;
+  btn.textContent = 'Sending...';
+  btn.disabled = true;
+  fetch('https://voicevillage-webhook.onrender.com/transcribe', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ story_id: storyId, audio_url: audioUrl })
+  }).then(function(r) { return r.json(); })
+  .then(function(data) {
+    showStatus('Transcription started — check back in 30 seconds.', true);
+    btn.textContent = orig;
+    btn.disabled = false;
+    setTimeout(function() { loadAdminStories(); }, 35000);
+  }).catch(function() {
+    showStatus('Could not reach transcription service.', false);
+    btn.textContent = orig;
+    btn.disabled = false;
+  });
+}
 </script>
 
 <!-- AUDIO PLAYER MODAL -->
