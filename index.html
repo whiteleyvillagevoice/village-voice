@@ -68,8 +68,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .tile.teal2{background:#f0faf5;border-color:#9FE1CB;}
 .tile.coral{background:#fdf3f0;border-color:#F5C4B3;}
 .tile-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:6px;}
-.tile-name{font-size:16px;font-weight:700;color:#1a1a1a;}
-.tile-hint{font-size:12px;color:#888;margin-top:3px;}
+.tile-name{font-size:18px;font-weight:700;color:#1a1a1a;}
+.tile-hint{font-size:13px;color:#666;margin-top:3px;}
 .admin-btn{display:flex;align-items:center;gap:12px;padding:14px 16px;background:#f8f8f4;border:1px solid #e8e8e2;border-radius:12px;cursor:pointer;margin:14px 18px 4px;font-family:inherit;text-align:left;touch-action:manipulation;width:calc(100% - 36px);}
 .admin-icon{width:34px;height:34px;border-radius:50%;background:#EEEDFE;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 
@@ -193,9 +193,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .nav-btn:active{opacity:0.7;}
 .nav-icon{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;}
 .nav-btn.on .nav-icon{background:#0F6E56;}
-.nav-lbl{font-size:9px;color:#aaa;line-height:1.2;text-align:center;}
+.nav-lbl{font-size:9px;color:#111;line-height:1.2;text-align:center;}
 .nav-btn.on .nav-lbl{color:#0F6E56;font-weight:700;}
-.nav-btn svg{stroke:#aaa !important;}
+.nav-btn svg{stroke:#111 !important;}
 .nav-btn.on svg{stroke:#fff !important;}
 
 /* MODALS */
@@ -309,7 +309,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <!-- HOME SCREEN -->
 <div class="screen" id="s-home">
   <div class="topbar">
-    <div class="topbar-row1"><span class="app-title">Village Voice</span><span class="clock-time" id="clock-time"></span></div>
+    <div class="topbar-row1"><span style="display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;background:#0F6E56;color:#fff;font-weight:800;font-size:16px;margin-right:6px;vertical-align:middle;flex-shrink:0;">V</span><span class="app-title">Village Voice</span><span class="clock-time" id="clock-time"></span></div>
     <div class="clock-date" id="clock-date"></div>
     <div class="topbar-row2">
       <button class="signout-btn" id="signout-btn">Sign out</button>
@@ -320,15 +320,16 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div class="greeting" id="greeting"></div>
     <div class="sec-label">What do you need today?</div>
     <div class="tile-grid">
-      <div class="tile" style="background:#f5f0ff;border-color:#C4B5FD;" id="tile-stories" onclick="showSection('stories')"><div class="tile-icon" style="background:#EDE9FE;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2a10 10 0 100 20A10 10 0 0012 2z" stroke="#6D28D9" stroke-width="1.5"/><path d="M12 6v6l4 2" stroke="#6D28D9" stroke-width="1.5" stroke-linecap="round"/></svg></div><div><div class="tile-name">Stories</div><div class="tile-hint">Our community voices</div></div></div>
-      <div class="tile green" id="tile-board"><div class="tile-icon" style="background:#E1F5EE;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="#0F6E56" stroke-width="1.5" stroke-linecap="round"/></svg></div><div><div class="tile-name">Message Board</div><div class="tile-hint" id="board-count">submissions</div></div></div>
       <div class="tile red" id="tile-emergency" onclick="showSection('emergency')"><div class="tile-icon" style="background:#FCEBEB;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-.18-8.7A2 2 0 014.11 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" stroke="#A32D2D" stroke-width="1.5" stroke-linecap="round"/></svg></div><div><div class="tile-name">Emergency</div><div class="tile-hint">Contacts</div></div></div>
       <div class="tile blue" id="tile-services"><div class="tile-icon" style="background:#E6F1FB;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" stroke="#185FA5" stroke-width="1.5" stroke-linecap="round"/></svg></div><div><div class="tile-name">Local Services</div><div class="tile-hint">GP, pharmacy</div></div></div>
-      <div class="tile purple" id="tile-events"><div class="tile-icon" style="background:#EEEDFE;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="18" rx="2" stroke="#534AB7" stroke-width="1.5"/><line x1="16" y1="2" x2="16" y2="6" stroke="#534AB7" stroke-width="1.5" stroke-linecap="round"/><line x1="8" y1="2" x2="8" y2="6" stroke="#534AB7" stroke-width="1.5" stroke-linecap="round"/><line x1="3" y1="10" x2="21" y2="10" stroke="#534AB7" stroke-width="1.5" stroke-linecap="round"/></svg></div><div><div class="tile-name">Events</div><div class="tile-hint">What's on</div></div></div>
-      <div class="tile amber" id="tile-community"><div class="tile-icon" style="background:#FAEEDA;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" stroke="#854F0B" stroke-width="1.5" stroke-linecap="round"/><circle cx="9" cy="7" r="4" stroke="#854F0B" stroke-width="1.5"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke="#854F0B" stroke-width="1.5" stroke-linecap="round"/></svg></div><div><div class="tile-name">Community</div><div class="tile-hint">Contacts</div></div></div>
-      <div class="tile teal2" id="tile-documents"><div class="tile-icon" style="background:#E1F5EE;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" stroke="#0F6E56" stroke-width="1.5" stroke-linecap="round"/><polyline points="14 2 14 8 20 8" stroke="#0F6E56" stroke-width="1.5" stroke-linecap="round"/><line x1="16" y1="13" x2="8" y2="13" stroke="#0F6E56" stroke-width="1.5" stroke-linecap="round"/><line x1="16" y1="17" x2="8" y2="17" stroke="#0F6E56" stroke-width="1.5" stroke-linecap="round"/></svg></div><div><div class="tile-name">Documents</div><div class="tile-hint">Village resources</div></div></div>
-      <div class="tile coral" id="tile-surveys"><div class="tile-icon" style="background:#FAECE7;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 11l3 3L22 4" stroke="#993C1D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" stroke="#993C1D" stroke-width="1.5" stroke-linecap="round"/></svg></div><div><div class="tile-name">Surveys</div><div class="tile-hint" id="survey-count">Have your say</div></div></div>
       <div class="tile" id="tile-news" style="background:#f8f8f4;"><div class="tile-icon" style="background:#f0f0e8;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 22h16a2 2 0 002-2V4a2 2 0 00-2-2H8a2 2 0 00-2 2v16" stroke="#888" stroke-width="1.5"/><path d="M2 20a2 2 0 004 0V4" stroke="#888" stroke-width="1.5"/><line x1="10" y1="8" x2="18" y2="8" stroke="#888" stroke-width="1.5" stroke-linecap="round"/><line x1="10" y1="12" x2="18" y2="12" stroke="#888" stroke-width="1.5" stroke-linecap="round"/></svg></div><div><div class="tile-name">News</div><div class="tile-hint">Village updates</div></div></div>
+      <div class="tile purple" id="tile-events"><div class="tile-icon" style="background:#EEEDFE;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="18" rx="2" stroke="#534AB7" stroke-width="1.5"/><line x1="16" y1="2" x2="16" y2="6" stroke="#534AB7" stroke-width="1.5" stroke-linecap="round"/><line x1="8" y1="2" x2="8" y2="6" stroke="#534AB7" stroke-width="1.5" stroke-linecap="round"/><line x1="3" y1="10" x2="21" y2="10" stroke="#534AB7" stroke-width="1.5" stroke-linecap="round"/></svg></div><div><div class="tile-name">Events</div><div class="tile-hint">What's on</div></div></div>
+      <div class="tile green" id="tile-board"><div class="tile-icon" style="background:#E1F5EE;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="#0F6E56" stroke-width="1.5" stroke-linecap="round"/></svg></div><div><div class="tile-name">Message Board</div><div class="tile-hint" id="board-count">submissions</div></div></div>
+      <div class="tile amber" id="tile-community"><div class="tile-icon" style="background:#FAEEDA;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" stroke="#854F0B" stroke-width="1.5" stroke-linecap="round"/><circle cx="9" cy="7" r="4" stroke="#854F0B" stroke-width="1.5"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke="#854F0B" stroke-width="1.5" stroke-linecap="round"/></svg></div><div><div class="tile-name">Community</div><div class="tile-hint">Contacts</div></div></div>
+      <div class="tile" style="background:#f5f0ff;border-color:#C4B5FD;" id="tile-stories" onclick="showSection('stories')"><div class="tile-icon" style="background:#EDE9FE;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2a10 10 0 100 20A10 10 0 0012 2z" stroke="#6D28D9" stroke-width="1.5"/><path d="M12 6v6l4 2" stroke="#6D28D9" stroke-width="1.5" stroke-linecap="round"/></svg></div><div><div class="tile-name">Stories</div><div class="tile-hint">Our community voices</div></div></div>
+      <div class="tile coral" id="tile-surveys"><div class="tile-icon" style="background:#FAECE7;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 11l3 3L22 4" stroke="#993C1D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" stroke="#993C1D" stroke-width="1.5" stroke-linecap="round"/></svg></div><div><div class="tile-name">Surveys</div><div class="tile-hint" id="survey-count">Have your say</div></div></div>
+      <div class="tile teal2" id="tile-documents"><div class="tile-icon" style="background:#E1F5EE;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" stroke="#0F6E56" stroke-width="1.5" stroke-linecap="round"/><polyline points="14 2 14 8 20 8" stroke="#0F6E56" stroke-width="1.5" stroke-linecap="round"/><line x1="16" y1="13" x2="8" y2="13" stroke="#0F6E56" stroke-width="1.5" stroke-linecap="round"/><line x1="16" y1="17" x2="8" y2="17" stroke="#0F6E56" stroke-width="1.5" stroke-linecap="round"/></svg></div><div><div class="tile-name">Documents</div><div class="tile-hint">Village resources</div></div></div>
+      <div class="tile" style="background:#e6f1fb;border-color:#B5D4F4;" id="tile-weather" onclick="window.open('https://www.bbc.co.uk/weather','_blank')"><div class="tile-icon" style="background:#E6F1FB;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M18 10h-1.26A8 8 0 109 20h9a5 5 0 000-10z" stroke="#185FA5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="tile-name">Weather</div><div class="tile-hint">BBC Weather</div></div></div>
     </div>
     <button class="admin-btn" id="admin-btn">
       <div class="admin-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5z" stroke="#534AB7" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5" stroke="#534AB7" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
@@ -402,6 +403,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <!-- NEWS -->
     <div class="section" id="sec-news">
       <h2>Village News</h2>
+      <div style="margin-bottom:12px;">
+        <input type="text" id="news-search" placeholder="Search news..." style="width:100%;padding:10px 14px;border:1px solid #e8e8e2;border-radius:10px;font-size:14px;font-family:inherit;background:#fff;" oninput="filterNews()">
+      </div>
       <div id="trust-msgs"></div>
       <div class="card"><span class="tag tag-teal">Trust update</span><h3>Insulation programme -- phase 2 begins 24 March</h3><p>Loft insulation works will begin in Octagon Road properties from 24 March. Individual appointment letters have been posted. Contractors will carry Trust identification.</p><div class="newsdate">Today, 9:00am</div></div>
       <div class="card"><span class="tag tag-purple">Panel report</span><h3>Village Voice Panel -- February summary</h3><p>The Panel met on 12 February and discussed 14 resident submissions. Key themes included heating concerns and requests for improved social activities.</p><div class="newsdate">28 February</div></div>
@@ -591,23 +595,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </div>
 
 
-    <div id="player-modal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.55);z-index:200;padding:20px;">
-      <div style="background:#fff;border-radius:18px;padding:22px 20px;max-width:420px;margin:0 auto;">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
-          <h3 id="player-name" style="color:#6D28D9;"></h3>
-          <button type="button" onclick="closePlayer()" style="background:none;border:none;font-size:20px;cursor:pointer;color:#aaa;padding:0;">&#x2715;</button>
-        </div>
-        <p id="player-prompt" style="font-size:13px;color:#888;font-style:italic;margin-bottom:14px;"></p>
-        <audio id="player-audio" controls style="width:100%;margin-bottom:14px;"></audio>
-        <div id="player-transcript" style="font-size:14px;color:#444;line-height:1.7;max-height:200px;overflow-y:auto;background:#f9f7ff;border-radius:10px;padding:12px;"></div>
-      </div>
-    </div>
-
+   
 
 <!-- NAV -->
 <div class="nav" id="main-nav">
-  <button type="button" class="nav-btn on" id="nav-home"><div class="nav-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div><span class="nav-lbl">Home</span></button>
-  <button type="button" class="nav-btn" id="nav-news"><div class="nav-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.5"><path d="M4 22h16a2 2 0 002-2V4a2 2 0 00-2-2H8a2 2 0 00-2 2v16"/><path d="M2 20a2 2 0 004 0V4"/><line x1="10" y1="8" x2="18" y2="8" stroke-linecap="round"/><line x1="10" y1="12" x2="18" y2="12" stroke-linecap="round"/></svg></div><span class="nav-lbl">News</span></button>
+  <button type="button" class="nav-btn on" id="nav-home"><div class="nav-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div><span class="nav-lbl">Home</span></button>
+  <button type="button" class="nav-btn" id="nav-news"><div class="nav-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.5"><path d="M4 22h16a2 2 0 002-2V4a2 2 0 00-2-2H8a2 2 0 00-2 2v16"/><path d="M2 20a2 2 0 004 0V4"/><line x1="10" y1="8" x2="18" y2="8" stroke-linecap="round"/><line x1="10" y1="12" x2="18" y2="12" stroke-linecap="round"/></svg></div><span class="nav-lbl">News</span></button>
   <button type="button" class="nav-btn" id="nav-events"><div class="nav-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6" stroke-linecap="round"/><line x1="8" y1="2" x2="8" y2="6" stroke-linecap="round"/><line x1="3" y1="10" x2="21" y2="10" stroke-linecap="round"/></svg></div><span class="nav-lbl">Events</span></button>
   <button type="button" class="nav-btn" id="nav-board"><div class="nav-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke-linecap="round"/></svg></div><span class="nav-lbl">Board</span></button>
   <button type="button" class="nav-btn" id="nav-stories" onclick="navTo('stories')"><div class="nav-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="1.5"><path d="M12 2a10 10 0 100 20A10 10 0 0012 2z"/><path d="M12 6v6l4 2" stroke-linecap="round"/></svg></div><span class="nav-lbl">Stories</span></button>
@@ -1113,6 +1106,23 @@ function loadTrustMsgs() {
   }).catch(function(){ el.innerHTML = ''; });
 }
 
+// NEWS FILTER
+var allNewsItems = [];
+function filterNews() {
+  var q = (document.getElementById('news-search') ? document.getElementById('news-search').value : '').toLowerCase();
+  var el = document.getElementById('trust-msgs');
+  if (!el) return;
+  if (!q) { loadTrustMsgs(); return; }
+  var items = el.querySelectorAll('.card');
+  var count = 0;
+  for (var i = 0; i < items.length; i++) {
+    var txt = items[i].textContent.toLowerCase();
+    items[i].style.display = txt.indexOf(q) >= 0 ? 'block' : 'none';
+    if (txt.indexOf(q) >= 0) count++;
+  }
+}
+
+
 // COMMUNITY CONTACTS
 var CC_CATS = {
   staff:      {label:'Village staff and wardens', bg:'E1F5EE', col:'0F6E56'},
@@ -1424,6 +1434,7 @@ window.addEventListener('DOMContentLoaded', function() {
   document.getElementById('tile-community').addEventListener('click', function() { showSection('community'); });
   document.getElementById('tile-documents').addEventListener('click', function() { showSection('documents'); });
   document.getElementById('tile-surveys').addEventListener('click', function() { showSection('surveys'); });
+  document.getElementById('tile-weather').addEventListener('click', function() { window.open('https://www.bbc.co.uk/weather','_blank'); });
   document.getElementById('tile-news').addEventListener('click', function() { showSection('news'); });
 
   // NAV
