@@ -270,9 +270,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div class="screen on" id="s-login">
   <div class="login-scroll">
     <div class="login-wrap">
-      <div id="vv-logo" style="width:72px;height:72px;border-radius:50%;background:#0F6E56;display:flex;align-items:center;justify-content:center;position:relative;opacity:0;animation:vvFadeIn 0.3s ease 0.2s forwards;">
-        <svg style="position:absolute;animation:vvSpin1 2.6s cubic-bezier(0.4,0,0.2,1) forwards;" width="48" height="48" viewBox="0 0 38 38" fill="none"><path d="M4 7L15 29L26 7" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <svg style="position:absolute;animation:vvSpin2 2.6s cubic-bezier(0.4,0,0.2,1) forwards;opacity:0.55;" width="48" height="48" viewBox="0 0 38 38" fill="none"><path d="M12 7L23 29L34 7" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:4px;">
+        <div id="vv-logo" style="width:72px;height:72px;border-radius:50%;background:#0F6E56;display:flex;align-items:center;justify-content:center;position:relative;opacity:0;animation:vvFadeIn 0.3s ease 0.2s forwards;flex-shrink:0;">
+          <svg style="position:absolute;animation:vvSpin1 2.6s cubic-bezier(0.4,0,0.2,1) forwards;" width="48" height="48" viewBox="0 0 38 38" fill="none"><path d="M4 7L15 29L26 7" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <svg style="position:absolute;animation:vvSpin2 2.6s cubic-bezier(0.4,0,0.2,1) forwards;opacity:0.55;" width="48" height="48" viewBox="0 0 38 38" fill="none"><path d="M12 7L23 29L34 7" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div>
+          <div class="login-title" style="margin-bottom:2px;">Village Voice</div>
+          <div style="font-size:14px;color:#888;font-weight:500;">Whiteley Village</div>
+        </div>
       </div>
       <style>
         @keyframes vvFadeIn{0%{opacity:0;}100%{opacity:1;}}
@@ -290,8 +296,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
           100%{transform:rotate(2520deg) scale(1);}
         }
       </style>
-      <div class="login-title">Village Voice</div>
-      <div class="login-sub">Your companion for village life -- news, services, community and your voice.</div>
+      <div class="login-sub" style="margin-top:8px;">Your companion for village life — news, services, community and your voice.</div>
       <img src="village-banner.jpg" style="width:100%;border-radius:14px;display:block;margin-bottom:16px;" onerror="this.style.display='none'"/>
       <div class="login-label">Select your name to continue</div>
       <div id="resident-list"><div class="loading">Loading...</div></div>
@@ -309,7 +314,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <!-- HOME SCREEN -->
 <div class="screen" id="s-home">
   <div class="topbar">
-    <div class="topbar-row1"><span style="display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;background:#0F6E56;color:#fff;font-weight:800;font-size:16px;margin-right:6px;vertical-align:middle;flex-shrink:0;">V</span><span class="app-title">Village Voice</span><span class="clock-time" id="clock-time"></span></div>
+    <div class="topbar-row1"><span style="display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;background:#0F6E56;flex-shrink:0;margin-right:6px;vertical-align:middle;"><svg width="27" height="27" viewBox="0 0 38 38" fill="none"><path d="M4 7L15 29L26 7" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 7L23 29L34 7" stroke="white" stroke-width="3.5" stroke-opacity="0.55" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="app-title">Village Voice</span><span class="clock-time" id="clock-time"></span></div>
     <div class="clock-date" id="clock-date"></div>
     <div class="topbar-row2">
       <button class="signout-btn" id="signout-btn">Sign out</button>
@@ -342,7 +347,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <!-- SECTIONS SCREEN -->
 <div class="screen" id="s-sections">
   <div class="topbar">
-    <div class="topbar-row1"><span style="display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;background:#0F6E56;color:#fff;font-weight:800;font-size:16px;margin-right:6px;vertical-align:middle;flex-shrink:0;">V</span><span class="app-title">Village Voice</span><span class="clock-time" id="clock-time2"></span></div>
+    <div class="topbar-row1"><span style="display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;background:#0F6E56;flex-shrink:0;margin-right:6px;vertical-align:middle;"><svg width="27" height="27" viewBox="0 0 38 38" fill="none"><path d="M4 7L15 29L26 7" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 7L23 29L34 7" stroke="white" stroke-width="3.5" stroke-opacity="0.55" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="app-title">Village Voice</span><span class="clock-time" id="clock-time2"></span></div>
     <div class="clock-date" id="clock-date2"></div>
     <div class="topbar-row2">
       <button class="signout-btn" id="signout-btn2">Sign out</button>
